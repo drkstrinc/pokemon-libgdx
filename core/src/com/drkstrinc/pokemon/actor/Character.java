@@ -5,8 +5,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.drkstrinc.pokemon.Constants;
+import com.drkstrinc.pokemon.Pokemon;
 
 public abstract class Character {
 
@@ -105,6 +110,7 @@ public abstract class Character {
 					stepCount = 0;
 				}
 				isMoving = false;
+				Gdx.app.debug("TMX", "Position - X: " + getCoordX() + " Y: " + getCoordY());
 			}
 		} else {
 			setState(MovementState.IDLE);
@@ -126,7 +132,7 @@ public abstract class Character {
 			setDirection(Direction.DOWN);
 			if (currentX == targetX && currentY == targetY)
 				turnDown();
-			movementTimeout = 0.5f;
+			movementTimeout = 0.2f;
 		}
 	}
 
@@ -143,7 +149,7 @@ public abstract class Character {
 			setDirection(Direction.LEFT);
 			if (currentX == targetX && currentY == targetY)
 				turnLeft();
-			movementTimeout = 0.5f;
+			movementTimeout = 0.2f;
 		}
 	}
 
@@ -160,7 +166,7 @@ public abstract class Character {
 			setDirection(Direction.RIGHT);
 			if (currentX == targetX && currentY == targetY)
 				turnRight();
-			movementTimeout = 0.5f;
+			movementTimeout = 0.2f;
 		}
 	}
 
@@ -177,11 +183,34 @@ public abstract class Character {
 			setDirection(Direction.UP);
 			if (currentX == targetX && currentY == targetY)
 				turnUp();
-			movementTimeout = 0.5f;
+			movementTimeout = 0.2f;
 		}
 	}
 
-	public boolean canMove(Direction diretion) {
+	public boolean canMove(Direction direction) {
+		MapLayer collisionLayer = Pokemon.getCurrentMap().getLayers().get("Collision");
+		MapObjects objects = collisionLayer.getObjects();
+
+		for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
+
+			Rectangle rectangle = rectangleObject.getRectangle();
+			if (direction.equals(Direction.UP) && Intersector.overlaps(rectangle, new Rectangle(getX(),
+					getY() + Constants.TILE_HEIGHT, Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
+				return false;
+			} else if (direction.equals(Direction.DOWN) && Intersector.overlaps(rectangle, new Rectangle(getX(),
+					getY() - Constants.TILE_HEIGHT, Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
+				return false;
+			} else if (direction.equals(Direction.LEFT)
+					&& Intersector.overlaps(rectangle, new Rectangle(getX() - Constants.TILE_WIDTH, getY(),
+							Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
+				return false;
+			} else if (direction.equals(Direction.RIGHT)
+					&& Intersector.overlaps(rectangle, new Rectangle(getX() + Constants.TILE_WIDTH, getY(),
+							Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -277,6 +306,10 @@ public abstract class Character {
 		isMoving = false;
 		stepCount = 0;
 		updateActorSprite();
+	}
+
+	public void moveTo(int x, int y) {
+
 	}
 
 	public int getX() {

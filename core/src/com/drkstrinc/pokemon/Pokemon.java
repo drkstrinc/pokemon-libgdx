@@ -14,7 +14,7 @@ import com.drkstrinc.pokemon.actor.Player;
 
 public class Pokemon extends Game {
 
-	private TiledMap tiledMap;
+	private static TiledMap currentMap;
 
 	private OrthographicCamera camera;
 	private TiledMapRenderer tiledMapRenderer;
@@ -37,7 +37,7 @@ public class Pokemon extends Game {
 	}
 
 	private void setupPlayer() {
-		player = new Player("Gold", Player.Gender.MALE, startingCoordX, startingCoordY, Player.Direction.DOWN);
+		player = new Player("Kris", Player.Gender.FEMALE, startingCoordX, startingCoordY, Player.Direction.DOWN);
 	}
 
 	private void setupCamera() {
@@ -51,9 +51,23 @@ public class Pokemon extends Game {
 		font.setColor(Color.RED);
 	}
 
-	private void loadMap(String mapName) {
-		tiledMap = new TmxMapLoader().load("map/" + mapName + ".tmx");
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+	public void loadMap(String mapName) {
+		if (currentMap != null) {
+			Gdx.app.log("TMX", "Unloading Current Map");
+			currentMap.dispose();
+		}
+		Gdx.app.log("TMX", "Loading Map: " + mapName);
+		currentMap = new TmxMapLoader().load("map/" + mapName + ".tmx");
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(currentMap);
+		player.moveTo(startingCoordX, startingCoordY);
+	}
+
+	public static void setCurrentMap(TiledMap map) {
+		currentMap = map;
+	}
+
+	public static TiledMap getCurrentMap() {
+		return currentMap;
 	}
 
 	@Override

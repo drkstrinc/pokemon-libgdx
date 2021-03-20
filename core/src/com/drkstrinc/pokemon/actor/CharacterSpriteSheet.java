@@ -1,5 +1,6 @@
 package com.drkstrinc.pokemon.actor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -16,40 +17,42 @@ public class CharacterSpriteSheet {
 	private TextureRegion[] upFrames;
 
 	public CharacterSpriteSheet(String fileName) {
+		Gdx.app.log("GFX", "Loading Sprite Sheet: " + fileName);
 		spriteSheet = new Texture("image/characters/" + fileName);
 		TextureRegion[][] tempFrames = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / cols,
 				spriteSheet.getHeight() / rows);
 
-		loadFrames(tempFrames, cols, rows);
+		loadFrames(tempFrames);
 	}
 
-	private void loadFrames(TextureRegion[][] tempFrames, int cols, int rows) {
+	private void loadFrames(TextureRegion[][] tempFrames) {
 		downFrames = new TextureRegion[cols];
 		leftFrames = new TextureRegion[cols];
 		rightFrames = new TextureRegion[cols];
 		upFrames = new TextureRegion[cols];
 
+		String dir = "";
 		for (int col = 0; col < cols; col++) {
 			for (int row = 0; row < rows; row++) {
 				if (col == 0) {
 					downFrames[row] = tempFrames[0][row];
-					// System.out.print("Added Down Frame: ");
+					dir = "Down";
 				} else if (col == 1) {
 					leftFrames[row] = tempFrames[1][row];
-					// System.out.print("Added Left Frame: ");
+					dir = "Left";
 				} else if (col == 2) {
 					rightFrames[row] = tempFrames[2][row];
-					// System.out.print("Added Right Frame: ");
+					dir = "Right";
 				} else if (col == 3) {
 					upFrames[row] = tempFrames[3][row];
-					// System.out.print("Added Up Frame: ");
+					dir = "Up";
 				}
-				/*
-				 * System.out.print(row + "\tRegion X: " + tempFrames[col][row].getRegionX() +
-				 * "\tRegion Y: " + tempFrames[col][row].getRegionY() + "\tWidth: " +
-				 * tempFrames[col][row].getRegionWidth() + "\tHeight: " +
-				 * tempFrames[col][row].getRegionHeight() + System.lineSeparator());
-				 */
+
+				Gdx.app.debug("GFX",
+						"Adding " + dir + " Frame: " + row + "\tRegion X: " + tempFrames[col][row].getRegionX()
+								+ "\tRegion Y: " + tempFrames[col][row].getRegionY() + "\tWidth: "
+								+ tempFrames[col][row].getRegionWidth() + "\tHeight: "
+								+ tempFrames[col][row].getRegionHeight());
 			}
 		}
 	}
