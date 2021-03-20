@@ -1,5 +1,7 @@
 package com.drkstrinc.pokemon;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -10,7 +12,11 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+
+import com.drkstrinc.pokemon.actor.Actor;
 import com.drkstrinc.pokemon.actor.Player;
+import com.drkstrinc.pokemon.datatype.Direction;
+import com.drkstrinc.pokemon.datatype.Gender;
 
 public class Pokemon extends Game {
 
@@ -20,6 +26,7 @@ public class Pokemon extends Game {
 	private TiledMapRenderer tiledMapRenderer;
 
 	private Player player;
+	private ArrayList<Actor> actors;
 
 	private int startingCoordX = 170;
 	private int startingCoordY = 40;
@@ -29,20 +36,23 @@ public class Pokemon extends Game {
 
 	@Override
 	public void create() {
+		loadMap("johto");
+		loadActors();
+
 		setupPlayer();
 		setupCamera();
 		setupOther();
-
-		loadMap("johto");
 	}
 
 	private void setupPlayer() {
-		player = new Player("Kris", Player.Gender.FEMALE, startingCoordX, startingCoordY, Player.Direction.DOWN);
+		player = new Player("Gold", Gender.MALE, startingCoordX, startingCoordY, Direction.DOWN);
+
 	}
 
 	private void setupCamera() {
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.setToOrtho(false, Gdx.graphics.getWidth() / Constants.GAME_SCALE,
+				Gdx.graphics.getHeight() / Constants.GAME_SCALE);
 	}
 
 	private void setupOther() {
@@ -59,7 +69,15 @@ public class Pokemon extends Game {
 		Gdx.app.log("TMX", "Loading Map: " + mapName);
 		currentMap = new TmxMapLoader().load("map/" + mapName + ".tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(currentMap);
-		player.moveTo(startingCoordX, startingCoordY);
+		/*
+		 * if (player != null) { player.moveTo(startingCoordX, startingCoordY,
+		 * Direction.DOWN); }
+		 */
+	}
+
+	public void loadActors() {
+		actors = new ArrayList<Actor>();
+		actors.add(new Actor("NPC", "kris.png", 167, 41, Direction.DOWN));
 	}
 
 	public static void setCurrentMap(TiledMap map) {
@@ -81,6 +99,12 @@ public class Pokemon extends Game {
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
+		// Render Actors
+		for (Actor actor : actors) {
+			actor.update();
+			actor.render(batch, camera);
+		}
+
 		// Render Player
 		player.update();
 		player.render(batch, camera);
@@ -101,6 +125,7 @@ public class Pokemon extends Game {
 	public void dispose() {
 		font.dispose();
 		batch.dispose();
+		currentMap.dispose();
 	}
 
 }

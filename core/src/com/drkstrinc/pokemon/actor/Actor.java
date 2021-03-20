@@ -1,41 +1,25 @@
 package com.drkstrinc.pokemon.actor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+
 import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.Pokemon;
+import com.drkstrinc.pokemon.datatype.Direction;
+import com.drkstrinc.pokemon.datatype.MovementState;
 
-public abstract class Character {
-
-	public static enum Gender {
-		MALE, FEMALE
-	}
-
-	public static enum Direction {
-		DOWN, LEFT, RIGHT, UP
-	}
-
-	public static enum MovementState {
-		IDLE(0), WALKING(2), RUNNING(3), BIKING(4), SURFING(2), FLYING(2);
-
-		private final int speed;
-
-		MovementState(int speed) {
-			this.speed = speed;
-		}
-
-		public int getValue() {
-			return speed;
-		}
-	}
+public class Actor {
 
 	private String name;
 
@@ -53,11 +37,18 @@ public abstract class Character {
 	private Direction direction = Direction.DOWN;
 
 	protected ShapeRenderer actorBox;
-	protected CharacterSpriteSheet characterSpriteSheet;
+	protected ActorSpriteSheet actorSpriteSheet;
 	protected TextureRegion currentSprite;
 	protected int stepCount;
 
-	public Character(String name, int startX, int startY, Direction initialDirection) {
+	public Actor(String name, String spriteFileName, int startX, int startY, Direction initialDirection) {
+		this(name, startX, startY, initialDirection);
+		actorSpriteSheet = new ActorSpriteSheet(spriteFileName);
+	}
+
+	public Actor(String name, int startX, int startY, Direction initialDirection) {
+		Gdx.app.log("CHR", "Creating " + this.getClass().getSimpleName() + " " + name + " at " + startX + "," + startY
+				+ " facing " + initialDirection.toString());
 		this.name = name;
 		actorBox = new ShapeRenderer();
 
@@ -71,7 +62,28 @@ public abstract class Character {
 	}
 
 	public void render(SpriteBatch batch, OrthographicCamera camera) {
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 
+		// Invisible Box around Actor Sprite for Collision
+		actorBox.setProjectionMatrix(camera.combined);
+		actorBox.begin(ShapeType.Line);
+		actorBox.rect(currentX, currentY, Constants.TILE_WIDTH * Constants.GAME_SCALE,
+				Constants.TILE_HEIGHT * Constants.GAME_SCALE);
+		actorBox.setColor(Color.CLEAR);
+		actorBox.end();
+
+		// Update Actor Sprite
+		updateActorSprite();
+
+		int offsetX = (currentSprite.getRegionWidth() / 2 * Constants.GAME_SCALE)
+				- (Constants.TILE_WIDTH * Constants.GAME_SCALE) / 2;
+
+		// Render Actor Sprite
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		batch.draw(currentSprite, currentX - offsetX, currentY, currentSprite.getRegionWidth() * Constants.GAME_SCALE,
+				currentSprite.getRegionHeight() * Constants.GAME_SCALE);
+		batch.end();
 	}
 
 	public void update() {
@@ -219,43 +231,43 @@ public abstract class Character {
 			if (movementState.equals(MovementState.WALKING) || movementState.equals(MovementState.RUNNING)) {
 				if (direction.equals(Direction.DOWN)) {
 					if (stepCount == 0) {
-						currentSprite = characterSpriteSheet.getDownTexture(0);
+						currentSprite = actorSpriteSheet.getDownTexture(0);
 					} else if (stepCount == 1) {
-						currentSprite = characterSpriteSheet.getDownTexture(1);
+						currentSprite = actorSpriteSheet.getDownTexture(1);
 					} else if (stepCount == 2) {
-						currentSprite = characterSpriteSheet.getDownTexture(2);
+						currentSprite = actorSpriteSheet.getDownTexture(2);
 					} else if (stepCount == 3) {
-						currentSprite = characterSpriteSheet.getDownTexture(3);
+						currentSprite = actorSpriteSheet.getDownTexture(3);
 					}
 				} else if (direction.equals(Direction.LEFT)) {
 					if (stepCount == 0) {
-						currentSprite = characterSpriteSheet.getLeftTexture(0);
+						currentSprite = actorSpriteSheet.getLeftTexture(0);
 					} else if (stepCount == 1) {
-						currentSprite = characterSpriteSheet.getLeftTexture(1);
+						currentSprite = actorSpriteSheet.getLeftTexture(1);
 					} else if (stepCount == 2) {
-						currentSprite = characterSpriteSheet.getLeftTexture(2);
+						currentSprite = actorSpriteSheet.getLeftTexture(2);
 					} else if (stepCount == 3) {
-						currentSprite = characterSpriteSheet.getLeftTexture(3);
+						currentSprite = actorSpriteSheet.getLeftTexture(3);
 					}
 				} else if (direction.equals(Direction.RIGHT)) {
 					if (stepCount == 0) {
-						currentSprite = characterSpriteSheet.getRightTexture(0);
+						currentSprite = actorSpriteSheet.getRightTexture(0);
 					} else if (stepCount == 1) {
-						currentSprite = characterSpriteSheet.getRightTexture(1);
+						currentSprite = actorSpriteSheet.getRightTexture(1);
 					} else if (stepCount == 2) {
-						currentSprite = characterSpriteSheet.getRightTexture(2);
+						currentSprite = actorSpriteSheet.getRightTexture(2);
 					} else if (stepCount == 3) {
-						currentSprite = characterSpriteSheet.getRightTexture(3);
+						currentSprite = actorSpriteSheet.getRightTexture(3);
 					}
 				} else if (direction.equals(Direction.UP)) {
 					if (stepCount == 0) {
-						currentSprite = characterSpriteSheet.getUpTexture(0);
+						currentSprite = actorSpriteSheet.getUpTexture(0);
 					} else if (stepCount == 1) {
-						currentSprite = characterSpriteSheet.getUpTexture(1);
+						currentSprite = actorSpriteSheet.getUpTexture(1);
 					} else if (stepCount == 2) {
-						currentSprite = characterSpriteSheet.getUpTexture(2);
+						currentSprite = actorSpriteSheet.getUpTexture(2);
 					} else if (stepCount == 3) {
-						currentSprite = characterSpriteSheet.getUpTexture(3);
+						currentSprite = actorSpriteSheet.getUpTexture(3);
 					}
 				}
 			} else if (movementState.equals(MovementState.BIKING)) {
@@ -269,13 +281,13 @@ public abstract class Character {
 			}
 		} else {
 			if (direction.equals(Direction.DOWN)) {
-				currentSprite = characterSpriteSheet.getDownTexture(0);
+				currentSprite = actorSpriteSheet.getDownTexture(0);
 			} else if (direction.equals(Direction.LEFT)) {
-				currentSprite = characterSpriteSheet.getLeftTexture(0);
+				currentSprite = actorSpriteSheet.getLeftTexture(0);
 			} else if (direction.equals(Direction.RIGHT)) {
-				currentSprite = characterSpriteSheet.getRightTexture(0);
+				currentSprite = actorSpriteSheet.getRightTexture(0);
 			} else if (direction.equals(Direction.UP)) {
-				currentSprite = characterSpriteSheet.getUpTexture(0);
+				currentSprite = actorSpriteSheet.getUpTexture(0);
 			}
 		}
 	}
@@ -308,8 +320,21 @@ public abstract class Character {
 		updateActorSprite();
 	}
 
-	public void moveTo(int x, int y) {
-
+	public void moveTo(int x, int y, Direction direction) {
+		Gdx.app.log("CHR", "Moving " + this.getClass().getSimpleName() + " " + name + " to " + x + "," + y + " facing "
+				+ direction.toString());
+		currentX = x * Constants.TILE_WIDTH;
+		currentY = y * Constants.TILE_HEIGHT;
+		targetX = currentX;
+		targetY = currentY;
+		if (direction.equals(Direction.UP))
+			turnUp();
+		else if (direction.equals(Direction.DOWN))
+			turnDown();
+		else if (direction.equals(Direction.LEFT))
+			turnLeft();
+		else if (direction.equals(Direction.RIGHT))
+			turnRight();
 	}
 
 	public int getX() {
@@ -352,12 +377,12 @@ public abstract class Character {
 		this.movementState = movementState;
 	}
 
-	public CharacterSpriteSheet getCharacterSpriteSheet() {
-		return characterSpriteSheet;
+	public ActorSpriteSheet getCharacterSpriteSheet() {
+		return actorSpriteSheet;
 	}
 
-	public void setCharacterSpriteSheet(CharacterSpriteSheet characterSpriteSheet) {
-		this.characterSpriteSheet = characterSpriteSheet;
+	public void setCharacterSpriteSheet(ActorSpriteSheet characterSpriteSheet) {
+		this.actorSpriteSheet = characterSpriteSheet;
 	}
 
 	public String getName() {

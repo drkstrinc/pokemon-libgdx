@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class CharacterSpriteSheet {
+public class ActorSpriteSheet {
 
 	private final int cols = 4;
 	private final int rows = 4;
@@ -16,7 +16,7 @@ public class CharacterSpriteSheet {
 	private TextureRegion[] rightFrames;
 	private TextureRegion[] upFrames;
 
-	public CharacterSpriteSheet(String fileName) {
+	public ActorSpriteSheet(String fileName) {
 		Gdx.app.log("GFX", "Loading Sprite Sheet: " + fileName);
 		spriteSheet = new Texture("image/characters/" + fileName);
 		TextureRegion[][] tempFrames = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / cols,
