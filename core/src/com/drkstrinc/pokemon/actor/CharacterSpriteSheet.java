@@ -1,11 +1,7 @@
 package com.drkstrinc.pokemon.actor;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import net.dermetfan.gdx.graphics.g2d.AnimatedSprite;
 
 public class CharacterSpriteSheet {
 
@@ -19,18 +15,12 @@ public class CharacterSpriteSheet {
 	private TextureRegion[] rightFrames;
 	private TextureRegion[] upFrames;
 
-	private AnimatedSprite downAnimatedSprite;
-	private AnimatedSprite leftAnimatedSprite;
-	private AnimatedSprite rightAnimatedSprite;
-	private AnimatedSprite upAnimatedSprite;
-
 	public CharacterSpriteSheet(String fileName) {
 		spriteSheet = new Texture("image/characters/" + fileName);
 		TextureRegion[][] tempFrames = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / cols,
 				spriteSheet.getHeight() / rows);
 
 		loadFrames(tempFrames, cols, rows);
-		// loadSprites();
 	}
 
 	private void loadFrames(TextureRegion[][] tempFrames, int cols, int rows) {
@@ -62,34 +52,6 @@ public class CharacterSpriteSheet {
 				 */
 			}
 		}
-	}
-
-	private void loadSprites() {
-		Animation<TextureRegion> downAnimation = new Animation<TextureRegion>(1f / 4f, downFrames);
-		Animation<TextureRegion> leftAnimation = new Animation<TextureRegion>(1f / 4f, leftFrames);
-		Animation<TextureRegion> rightAnimation = new Animation<TextureRegion>(1f / 4f, rightFrames);
-		Animation<TextureRegion> upAnimation = new Animation<TextureRegion>(1f / 4f, upFrames);
-
-		downAnimation.setPlayMode(PlayMode.LOOP);
-		downAnimatedSprite = new AnimatedSprite(downAnimation);
-
-		leftAnimation.setPlayMode(PlayMode.LOOP);
-		leftAnimatedSprite = new AnimatedSprite(leftAnimation);
-
-		rightAnimation.setPlayMode(PlayMode.LOOP);
-		rightAnimatedSprite = new AnimatedSprite(rightAnimation);
-
-		upAnimation.setPlayMode(PlayMode.LOOP);
-		upAnimatedSprite = new AnimatedSprite(upAnimation);
-
-		pause();
-	}
-
-	public void pause() {
-		downAnimatedSprite.pause();
-		leftAnimatedSprite.pause();
-		rightAnimatedSprite.pause();
-		upAnimatedSprite.pause();
 	}
 
 	public Texture getSpriteSheet() {

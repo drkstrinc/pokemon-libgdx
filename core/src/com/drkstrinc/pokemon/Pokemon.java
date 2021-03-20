@@ -10,7 +10,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-
 import com.drkstrinc.pokemon.actor.Player;
 
 public class Pokemon extends Game {
@@ -69,10 +68,8 @@ public class Pokemon extends Game {
 		tiledMapRenderer.render();
 
 		// Render Player
-		player.render(batch, camera);
 		player.update();
-
-		// Render Objects
+		player.render(batch, camera);
 
 		// Render Debug Info
 		if (Constants.DEBUG) {
