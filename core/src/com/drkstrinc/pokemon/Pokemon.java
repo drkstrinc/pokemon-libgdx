@@ -1,13 +1,11 @@
 package com.drkstrinc.pokemon;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -15,13 +13,12 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import com.drkstrinc.pokemon.actor.Player;
 
-public class Pokemon extends ApplicationAdapter {
+public class Pokemon extends Game {
 
 	private TiledMap tiledMap;
 
 	private OrthographicCamera camera;
 	private TiledMapRenderer tiledMapRenderer;
-	private ShapeRenderer shape;
 
 	private Player player;
 
@@ -41,8 +38,7 @@ public class Pokemon extends ApplicationAdapter {
 	}
 
 	private void setupPlayer() {
-		player = new Player("Gold", startingCoordX, startingCoordY, "DOWN");
-		shape = new ShapeRenderer();
+		player = new Player("Gold", Player.Gender.MALE, startingCoordX, startingCoordY, Player.Direction.DOWN);
 	}
 
 	private void setupCamera() {
@@ -63,12 +59,8 @@ public class Pokemon extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		// Set the Camera's position to the Player's position
-		camera.position.x = player.getX() + Constants.TILE_WIDTH/2;
+		camera.position.x = player.getX() + Constants.TILE_WIDTH / 2;
 		camera.position.y = player.getY();
 		camera.update();
 
@@ -77,8 +69,10 @@ public class Pokemon extends ApplicationAdapter {
 		tiledMapRenderer.render();
 
 		// Render Player
-		player.render(shape, camera);
+		player.render(batch, camera);
 		player.update();
+
+		// Render Objects
 
 		// Render Debug Info
 		if (Constants.DEBUG) {

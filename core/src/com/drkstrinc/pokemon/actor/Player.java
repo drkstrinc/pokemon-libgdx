@@ -3,13 +3,28 @@ package com.drkstrinc.pokemon.actor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import com.drkstrinc.pokemon.Constants;
 
 public class Player {
+
+	public static enum Gender {
+		MALE, FEMALE
+	}
+
+	public static enum Direction {
+		DOWN, LEFT, RIGHT, UP
+	}
+
+	public static enum MovementState {
+		IDLE, WALKING, RUNNING, BIKING, SURFING, FLYING
+	}
 
 	private String name;
 
@@ -24,24 +39,48 @@ public class Player {
 	private int targetX = 0;
 	private int targetY = 0;
 
-	private String direction = "DOWN";
-	private String movementState = "IDLE";
+	private Direction direction = Direction.DOWN;
+	private MovementState movementState = MovementState.IDLE;
 
-	public Player(String name, int startX, int startY, String initialDirection) {
+	private ShapeRenderer playerBox;
+	private CharacterSpriteSheet characterSpriteSheet;
+	private TextureRegion currentSprite;
+
+	public Player(String name, Gender gender, int startX, int startY, Direction initialDirection) {
 		this.name = name;
+
+		playerBox = new ShapeRenderer();
+
+		if (gender.equals(Gender.MALE)) {
+			characterSpriteSheet = new CharacterSpriteSheet("gold.png");
+		} else {
+			characterSpriteSheet = new CharacterSpriteSheet("kris.png");
+		}
+		turnDown();
+
 		currentX = startX * Constants.TILE_WIDTH;
 		currentY = startY * Constants.TILE_HEIGHT;
 		targetX = currentX;
 		targetY = currentY;
+
 		direction = initialDirection;
 	}
 
-	public void render(ShapeRenderer shape, OrthographicCamera camera) {
-		shape.setProjectionMatrix(camera.combined);
-		shape.begin(ShapeType.Filled);
-		shape.rect(currentX, currentY, Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
-		shape.setColor(Color.BLACK);
-		shape.end();
+	public void render(SpriteBatch batch, OrthographicCamera camera) {
+		// Invisible Box around Player Sprite
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+		playerBox.setProjectionMatrix(camera.combined);
+		playerBox.begin(ShapeType.Line);
+		playerBox.rect(currentX, currentY, Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
+		playerBox.setColor(Color.CLEAR);
+		playerBox.end();
+
+		// Player Sprite
+		batch.begin();
+		batch.draw(currentSprite,
+				Gdx.graphics.getWidth() / 2 - characterSpriteSheet.getDownTexture(0).getRegionWidth() / 2,
+				Gdx.graphics.getHeight() / 2 - 1);
+		batch.end();
 	}
 
 	public void update() {
@@ -53,92 +92,101 @@ public class Player {
 
 		if (isMoving) {
 			if (moveSpeed == 1) {
-				setState("WALKING");
+				setState(MovementState.WALKING);
 			} else if (moveSpeed == 2) {
-				setState("RUNNING");
+				setState(MovementState.RUNNING);
 			}
 
 			if (getX() < targetX) {
-				// getSprite().translateX(moveSpeed);
 				currentX += moveSpeed;
 			}
 
 			if (getX() > targetX) {
-				// getSprite().translateX(-moveSpeed);
 				currentX -= moveSpeed;
 			}
 
 			if (getY() < targetY) {
-				// getSprite().translateY(moveSpeed);
 				currentY += moveSpeed;
 			}
 
 			if (getY() > targetY) {
-				// getSprite().translateY(-moveSpeed);
 				currentY -= moveSpeed;
 			}
 
 			if (Math.abs(getX() - targetX) <= 1 && Math.abs(getY() - targetY) <= 1) {
+				updatePlayerSprite();
 				currentX = targetX;
 				currentY = targetY;
 				isMoving = false;
 			}
 		} else {
-			setState("IDLE");
+			setState(MovementState.IDLE);
 		}
 
 		if (!lockMovement) {
 			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-				if (getDirection() == "UP") {
-					if (moveTimeout < 0 && canMove("UP")) {
+				if (getDirection().equals(Direction.UP)) {
+					if (moveTimeout < 0 && canMove(Direction.UP)) {
 						if (!isMoving) {
+							updatePlayerSprite();
 							isMoving = true;
 							targetY = getY() + Constants.TILE_HEIGHT;
 							targetX = getX();
 						}
 					}
 				} else {
-					setDirection("UP");
-					moveTimeout = 0.25f;
+					setDirection(Direction.UP);
+					if (currentX == targetX && currentY == targetY)
+						updatePlayerSprite();
+					moveTimeout = 0.2f;
 				}
 			} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-				if (getDirection() == "DOWN") {
-					if (moveTimeout < 0 && canMove("DOWN")) {
+				if (getDirection().equals(Direction.DOWN)) {
+					if (moveTimeout < 0 && canMove(Direction.DOWN)) {
 						if (!isMoving) {
+							updatePlayerSprite();
 							isMoving = true;
 							targetY = getY() - Constants.TILE_HEIGHT;
 							targetX = getX();
 						}
 					}
 				} else {
-					setDirection("DOWN");
-					moveTimeout = 0.25f;
+					setDirection(Direction.DOWN);
+					if (currentX == targetX && currentY == targetY)
+						updatePlayerSprite();
+					moveTimeout = 0.2f;
 				}
 			} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-				if (getDirection() == "LEFT") {
-					if (moveTimeout < 0 && canMove("LEFT")) {
+				if (getDirection().equals(Direction.LEFT)) {
+					if (moveTimeout < 0 && canMove(Direction.LEFT)) {
 						if (!isMoving) {
+							updatePlayerSprite();
 							isMoving = true;
 							targetY = getY();
 							targetX = getX() - Constants.TILE_WIDTH;
 						}
 					}
 				} else {
-					setDirection("LEFT");
-					moveTimeout = 0.25f;
+					setDirection(Direction.LEFT);
+					if (currentX == targetX && currentY == targetY)
+						updatePlayerSprite();
+					moveTimeout = 0.2f;
 				}
 			} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-				if (getDirection() == "RIGHT") {
-					if (moveTimeout < 0 && canMove("RIGHT")) {
+				if (getDirection().equals(Direction.RIGHT)) {
+					if (moveTimeout < 0 && canMove(Direction.RIGHT)) {
 						if (!isMoving) {
+							updatePlayerSprite();
 							isMoving = true;
 							targetY = getY();
 							targetX = getX() + Constants.TILE_WIDTH;
 						}
 					}
 				} else {
-					setDirection("RIGHT");
-					moveTimeout = 0.25f;
+					setDirection(Direction.RIGHT);
+					if (currentX == targetX && currentY == targetY)
+						updatePlayerSprite();
+					moveTimeout = 0.2f;
 				}
 			}
 
@@ -146,8 +194,40 @@ public class Player {
 		}
 	}
 
-	private boolean canMove(String diretion) {
+	public boolean canMove(Direction diretion) {
 		return true;
+	}
+
+	private void updatePlayerSprite() {
+		if (direction.equals(Direction.DOWN)) {
+			currentSprite = characterSpriteSheet.getDownTexture(0);
+		} else if (direction.equals(Direction.LEFT)) {
+			currentSprite = characterSpriteSheet.getLeftTexture(0);
+		} else if (direction.equals(Direction.RIGHT)) {
+			currentSprite = characterSpriteSheet.getRightTexture(0);
+		} else if (direction.equals(Direction.UP)) {
+			currentSprite = characterSpriteSheet.getUpTexture(0);
+		}
+	}
+
+	public void turnDown() {
+		direction = Direction.DOWN;
+		updatePlayerSprite();
+	}
+
+	public void turnLeft() {
+		direction = Direction.LEFT;
+		updatePlayerSprite();
+	}
+
+	public void turnRight() {
+		direction = Direction.RIGHT;
+		updatePlayerSprite();
+	}
+
+	public void turnUp() {
+		direction = Direction.UP;
+		updatePlayerSprite();
 	}
 
 	public int getX() {
@@ -174,20 +254,29 @@ public class Player {
 		currentY = y;
 	}
 
-	public String getDirection() {
+	public Direction getDirection() {
 		return direction;
 	}
 
-	public void setDirection(String direction) {
+	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 
-	public String getState() {
+	public MovementState getState() {
 		return movementState;
 	}
 
-	public void setState(String movementState) {
+	public void setState(MovementState movementState) {
 		this.movementState = movementState;
+	}
+
+	public CharacterSpriteSheet getCharacterSpriteSheet() {
+		return characterSpriteSheet;
+	}
+
+	public void setCharacterSpriteSheet(CharacterSpriteSheet characterSpriteSheet) {
+		this.characterSpriteSheet = characterSpriteSheet;
+
 	}
 
 	public String getName() {
