@@ -36,12 +36,14 @@ public class GameScreen extends ScreenAdapter {
 		setupInput();
 		setupOther();
 		game.getPlayer().unlockMovement();
+		for (Actor actor : World.getActors()) {
+			actor.unlockMovement();
+		}
 	}
 
 	private void setupCamera() {
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Gdx.graphics.getWidth() / Constants.GAME_SCALE,
-				Gdx.graphics.getHeight() / Constants.GAME_SCALE);
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(World.getCurrentMap());
 	}
 
@@ -52,7 +54,7 @@ public class GameScreen extends ScreenAdapter {
 				if (keyCode == Input.Keys.ENTER) {
 					game.setScreen(new MenuScreen(game));
 				} else if (keyCode == Input.Keys.B) {
-					// This is just for testing Screens
+					// TODO: Remove this later. This is just for testing Screens
 					game.setScreen(new BattleScreen(game));
 				}
 				return true;
@@ -73,9 +75,10 @@ public class GameScreen extends ScreenAdapter {
 		camera.position.y = game.getPlayer().getY();
 		camera.update();
 
-		// Render Map
 		tiledMapRenderer.setView(camera);
-		tiledMapRenderer.render();
+
+		// Render Map Layers below Actors
+		tiledMapRenderer.render(World.groundLayer);
 
 		// Render Actors
 		for (Actor actor : World.getActors()) {
@@ -86,6 +89,9 @@ public class GameScreen extends ScreenAdapter {
 		// Render Player
 		game.getPlayer().update();
 		game.getPlayer().render(batch, camera);
+
+		// Render Map Layers above Actors
+		tiledMapRenderer.render(World.aboveLayers);
 
 		// Render Debug Info
 		if (Constants.DEBUG) {
@@ -110,6 +116,9 @@ public class GameScreen extends ScreenAdapter {
 	public void hide() {
 		Gdx.input.setInputProcessor(null);
 		game.getPlayer().lockMovement();
+		for (Actor actor : World.getActors()) {
+			actor.lockMovement();
+		}
 	}
 
 }

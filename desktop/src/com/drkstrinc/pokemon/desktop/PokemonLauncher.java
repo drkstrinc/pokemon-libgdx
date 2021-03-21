@@ -12,9 +12,8 @@ public class PokemonLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
 		config.title = Constants.GAME_TITLE;
-		config.width = Constants.GAME_WIDTH * Constants.GAME_SCALE;
-		config.height = Constants.GAME_HEIGHT * Constants.GAME_SCALE;
-		// config.useHDPI = true;
+		config.width = Constants.GAME_WIDTH;
+		config.height = Constants.GAME_HEIGHT;
 		config.resizable = false;
 		config.vSyncEnabled = true;
 

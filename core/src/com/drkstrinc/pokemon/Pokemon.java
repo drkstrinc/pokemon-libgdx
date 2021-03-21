@@ -13,19 +13,20 @@ public class Pokemon extends Game {
 	private World currentWorld;
 	private Player player;
 
-	private int startingCoordX = 170;
-	private int startingCoordY = 40;
+	// Outside Player's House
+	private int startingCoordX = 28;
+	private int startingCoordY = 68;
 
 	@Override
 	public void create() {
-		currentWorld = new World("johto");
+		currentWorld = new World("Johto", this);
 		setupPlayer();
 
 		setScreen(new TitleScreen(this));
 	}
 
 	private void setupPlayer() {
-		player = new Player("Gold", Gender.MALE, startingCoordX, startingCoordY, Direction.DOWN);
+		player = new Player("Kris", Gender.FEMALE, startingCoordX, startingCoordY, Direction.DOWN);
 	}
 
 	public Player getPlayer() {

@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
 import com.drkstrinc.pokemon.Constants;
+import com.drkstrinc.pokemon.datatype.BrainType;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.MovementState;
 import com.drkstrinc.pokemon.world.World;
@@ -31,6 +32,7 @@ public class Actor {
 
 	private float movementTimeout = 1;
 
+	private boolean lockMovement = false;
 	private boolean isMoving = false;
 	private int movementSpeed = MovementState.WALKING.getValue();
 	private MovementState movementState = MovementState.IDLE;
@@ -41,9 +43,19 @@ public class Actor {
 	protected TextureRegion currentSprite;
 	protected int stepCount;
 
-	public Actor(String name, String spriteFileName, int startX, int startY, Direction initialDirection) {
+	private Brain brain;
+	private BrainType brainType;
+
+	public Actor(String name, String spriteFileName, BrainType brainType, int startX, int startY,
+			Direction initialDirection) {
 		this(name, startX, startY, initialDirection);
+		this.brainType = brainType;
 		actorSpriteSheet = new ActorSpriteSheet(spriteFileName);
+
+		// TODO: Create different type of NPCs that extend Actor with defined Brains
+		if (this.getClass().equals(Actor.class)) {
+			brain = new Brain(this);
+		}
 	}
 
 	public Actor(String name, int startX, int startY, Direction initialDirection) {
@@ -67,27 +79,27 @@ public class Actor {
 		// Invisible Box around Actor Sprite for Collision
 		actorBox.setProjectionMatrix(camera.combined);
 		actorBox.begin(ShapeType.Line);
-		actorBox.rect(currentX, currentY, Constants.TILE_WIDTH * Constants.GAME_SCALE,
-				Constants.TILE_HEIGHT * Constants.GAME_SCALE);
+		actorBox.rect(currentX, currentY, Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
 		actorBox.setColor(Color.CLEAR);
 		actorBox.end();
 
 		// Update Actor Sprite
 		updateActorSprite();
 
-		int offsetX = (currentSprite.getRegionWidth() / 2 * Constants.GAME_SCALE)
-				- (Constants.TILE_WIDTH * Constants.GAME_SCALE) / 2;
+		int offsetX = (currentSprite.getRegionWidth() / 2) - (Constants.TILE_WIDTH / 2);
 
 		// Render Actor Sprite
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(currentSprite, currentX - offsetX, currentY, currentSprite.getRegionWidth() * Constants.GAME_SCALE,
-				currentSprite.getRegionHeight() * Constants.GAME_SCALE);
+		batch.draw(currentSprite, currentX - offsetX, currentY, currentSprite.getRegionWidth(),
+				currentSprite.getRegionHeight());
 		batch.end();
 	}
 
 	public void update() {
-
+		if (!isMovementLocked()) {
+			handleMovement();
+		}
 	}
 
 	protected void handleMovement() {
@@ -122,7 +134,8 @@ public class Actor {
 					stepCount = 0;
 				}
 				isMoving = false;
-				Gdx.app.log("CHR", "Actor: " + name + " - X: " + getCoordX() + " Y: " + getCoordY());
+				Gdx.app.log("CHR",
+						this.getClass().getSimpleName() + " " + name + " - X: " + getCoordX() + " Y: " + getCoordY());
 			}
 		} else {
 			setState(MovementState.IDLE);
@@ -208,17 +221,25 @@ public class Actor {
 			Rectangle rectangle = rectangleObject.getRectangle();
 			if (direction.equals(Direction.UP) && Intersector.overlaps(rectangle, new Rectangle(getX(),
 					getY() + Constants.TILE_HEIGHT, Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
+				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
+						+ this.getClass().getSimpleName() + " " + name);
 				return false;
 			} else if (direction.equals(Direction.DOWN) && Intersector.overlaps(rectangle, new Rectangle(getX(),
 					getY() - Constants.TILE_HEIGHT, Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
+				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
+						+ this.getClass().getSimpleName() + " " + name);
 				return false;
 			} else if (direction.equals(Direction.LEFT)
 					&& Intersector.overlaps(rectangle, new Rectangle(getX() - Constants.TILE_WIDTH, getY(),
 							Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
+				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
+						+ this.getClass().getSimpleName() + " " + name);
 				return false;
 			} else if (direction.equals(Direction.RIGHT)
 					&& Intersector.overlaps(rectangle, new Rectangle(getX() + Constants.TILE_WIDTH, getY(),
 							Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
+				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
+						+ this.getClass().getSimpleName() + " " + name);
 				return false;
 			}
 		}
@@ -387,6 +408,30 @@ public class Actor {
 
 	public String getName() {
 		return name;
+	}
+
+	public void setBrainType(BrainType brainType) {
+		this.brainType = brainType;
+	}
+
+	public BrainType getBrainType() {
+		return brainType;
+	}
+
+	public Brain getBrain() {
+		return brain;
+	}
+
+	public boolean isMovementLocked() {
+		return lockMovement;
+	}
+
+	public void lockMovement() {
+		lockMovement = true;
+	}
+
+	public void unlockMovement() {
+		lockMovement = false;
 	}
 
 }

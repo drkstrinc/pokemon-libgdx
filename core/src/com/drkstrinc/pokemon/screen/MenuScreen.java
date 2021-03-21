@@ -53,8 +53,15 @@ public class MenuScreen extends ScreenAdapter {
 	}
 
 	@Override
+	public void dispose() {
+		font.dispose();
+		batch.dispose();
+	}
+
+	@Override
 	public void hide() {
 		Gdx.app.log("MNU", "Menu Closed");
 		Gdx.input.setInputProcessor(null);
+		this.dispose();
 	}
 }

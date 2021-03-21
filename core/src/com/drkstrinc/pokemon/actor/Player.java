@@ -9,22 +9,20 @@ import com.drkstrinc.pokemon.datatype.MovementState;
 
 public class Player extends Actor {
 
-	private boolean lockMovement = false;
-
 	public Player(String name, Gender gender, int startX, int startY, Direction initialDirection) {
 		super(name, startX, startY, initialDirection);
 
 		if (gender.equals(Gender.MALE)) {
-			actorSpriteSheet = new ActorSpriteSheet("gold.png");
+			actorSpriteSheet = new ActorSpriteSheet("Gold.png");
 		} else if (gender.equals(Gender.FEMALE)) {
-			actorSpriteSheet = new ActorSpriteSheet("kris.png");
+			actorSpriteSheet = new ActorSpriteSheet("Kris.png");
 		}
 		updateActorSprite();
 	}
 
 	@Override
 	public void update() {
-		if (!lockMovement) {
+		if (!isMovementLocked()) {
 			if (Gdx.input.isKeyPressed(Input.Keys.X)) {
 				setState(MovementState.RUNNING);
 			} else {
@@ -45,14 +43,6 @@ public class Player extends Actor {
 				stepCount = 1;
 			}
 		}
-	}
-
-	public void lockMovement() {
-		lockMovement = true;
-	}
-
-	public void unlockMovement() {
-		lockMovement = false;
 	}
 
 }

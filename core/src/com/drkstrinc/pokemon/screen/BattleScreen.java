@@ -57,8 +57,15 @@ public class BattleScreen extends ScreenAdapter {
 	}
 
 	@Override
+	public void dispose() {
+		font.dispose();
+		batch.dispose();
+	}
+
+	@Override
 	public void hide() {
 		Gdx.app.log("BTL", "Battle Ended");
 		Gdx.input.setInputProcessor(null);
+		this.dispose();
 	}
 }
