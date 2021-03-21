@@ -19,13 +19,15 @@ public class World {
 
 	private static TiledMap currentMap;
 
+	public static boolean retroMap = true;
 	public static int[] groundLayer = { 0, 1 };
 	public static int[] aboveLayers = { 2 };
 
 	private static ArrayList<Actor> actors;
 	private static ArrayList<Event> events;
 
-	public World(String mapName, Pokemon game) {
+	public World(Pokemon game, String mapName, boolean isRetro) {
+		retroMap = isRetro;
 		loadMap(mapName);
 		loadActors(mapName);
 	}
@@ -42,9 +44,16 @@ public class World {
 	public void loadActors(String mapName) {
 		// TODO: Load actors using mapName parameter from somewhere
 		actors = new ArrayList<Actor>();
-		actors.add(new Actor("NPC1", "Silver.png", BrainType.STATIONARY, 15, 72, Direction.RIGHT));
-		actors.add(new Actor("NPC2", "Lass.png", BrainType.RANDOMMOVEMENT, 20, 65, Direction.LEFT));
-		actors.add(new Actor("NPC3", "Man_1.png", BrainType.RANDOMMOVEMENT, 25, 63, Direction.UP));
+
+		if (retroMap) {
+			actors.add(new Actor("NPC1", "Silver.png", BrainType.STATIONARY, 160, 45, Direction.RIGHT));
+			actors.add(new Actor("NPC2", "Lass.png", BrainType.RANDOMMOVEMENT, 162, 40, Direction.LEFT));
+			actors.add(new Actor("NPC3", "Man_1.png", BrainType.RANDOMMOVEMENT, 168, 38, Direction.UP));
+		} else {
+			actors.add(new Actor("NPC1", "Silver.png", BrainType.STATIONARY, 15, 72, Direction.RIGHT));
+			actors.add(new Actor("NPC2", "Lass.png", BrainType.RANDOMMOVEMENT, 20, 65, Direction.LEFT));
+			actors.add(new Actor("NPC3", "Man_1.png", BrainType.RANDOMMOVEMENT, 25, 63, Direction.UP));
+		}
 
 	}
 

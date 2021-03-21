@@ -14,12 +14,14 @@ public class Pokemon extends Game {
 	private Player player;
 
 	// Outside Player's House
-	private int startingCoordX = 28;
-	private int startingCoordY = 68;
+	// private int startingCoordX = 28;
+	// private int startingCoordY = 68;
+	private int startingCoordX = 170;
+	private int startingCoordY = 41;
 
 	@Override
 	public void create() {
-		currentWorld = new World("NewBarkTown", this);
+		currentWorld = new World(this, "retro/Johto", true);
 		setupPlayer();
 
 		setScreen(new TitleScreen(this));

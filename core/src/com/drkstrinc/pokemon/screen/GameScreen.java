@@ -77,8 +77,14 @@ public class GameScreen extends ScreenAdapter {
 
 		tiledMapRenderer.setView(camera);
 
-		// Render Map Layers below Actors
-		tiledMapRenderer.render(World.groundLayer);
+		if (!World.retroMap) {
+			// Render Map Layers below Actors' Z-Axis
+			tiledMapRenderer.render(World.groundLayer);
+		} else {
+			// Retro Worlds don't utilize Z axis, render all Layers below Actors
+			tiledMapRenderer.render();
+
+		}
 
 		// Render Actors
 		for (Actor actor : World.getActors()) {
@@ -90,8 +96,10 @@ public class GameScreen extends ScreenAdapter {
 		game.getPlayer().update();
 		game.getPlayer().render(batch, camera);
 
-		// Render Map Layers above Actors
-		tiledMapRenderer.render(World.aboveLayers);
+		if (!World.retroMap) {
+			// Render Map Layers above Actors' Z-Axis
+			tiledMapRenderer.render(World.aboveLayers);
+		}
 
 		// Render Debug Info
 		if (Constants.DEBUG) {
