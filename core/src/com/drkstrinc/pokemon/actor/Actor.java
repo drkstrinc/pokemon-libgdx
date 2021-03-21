@@ -15,9 +15,9 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
 import com.drkstrinc.pokemon.Constants;
-import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.MovementState;
+import com.drkstrinc.pokemon.world.World;
 
 public class Actor {
 
@@ -122,7 +122,7 @@ public class Actor {
 					stepCount = 0;
 				}
 				isMoving = false;
-				Gdx.app.debug("TMX", "Position - X: " + getCoordX() + " Y: " + getCoordY());
+				Gdx.app.log("CHR", "Actor: " + name + " - X: " + getCoordX() + " Y: " + getCoordY());
 			}
 		} else {
 			setState(MovementState.IDLE);
@@ -200,7 +200,7 @@ public class Actor {
 	}
 
 	public boolean canMove(Direction direction) {
-		MapLayer collisionLayer = Pokemon.getCurrentMap().getLayers().get("Collision");
+		MapLayer collisionLayer = World.getCurrentMap().getLayers().get("Collision");
 		MapObjects objects = collisionLayer.getObjects();
 
 		for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {

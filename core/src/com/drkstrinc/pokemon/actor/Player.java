@@ -24,15 +24,15 @@ public class Player extends Actor {
 
 	@Override
 	public void update() {
-		if (Gdx.input.isKeyPressed(Input.Keys.X)) {
-			setState(MovementState.RUNNING);
-		} else {
-			setState(MovementState.WALKING);
-		}
-
-		handleMovement();
-
 		if (!lockMovement) {
+			if (Gdx.input.isKeyPressed(Input.Keys.X)) {
+				setState(MovementState.RUNNING);
+			} else {
+				setState(MovementState.WALKING);
+			}
+
+			handleMovement();
+
 			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 				moveUp();
 			} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
@@ -45,6 +45,14 @@ public class Player extends Actor {
 				stepCount = 1;
 			}
 		}
+	}
+
+	public void lockMovement() {
+		lockMovement = true;
+	}
+
+	public void unlockMovement() {
+		lockMovement = false;
 	}
 
 }
