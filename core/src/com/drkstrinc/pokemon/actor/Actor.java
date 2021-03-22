@@ -216,8 +216,8 @@ public class Actor {
 		MapLayer collisionLayer = World.getCurrentMap().getLayers().get("Collision");
 		MapObjects objects = collisionLayer.getObjects();
 
+		// Check Map Objects
 		for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
-
 			Rectangle rectangle = rectangleObject.getRectangle();
 			if (direction.equals(Direction.UP) && Intersector.overlaps(rectangle, new Rectangle(getX(),
 					getY() + Constants.TILE_HEIGHT, Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
@@ -241,6 +241,63 @@ public class Actor {
 				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
 						+ this.getClass().getSimpleName() + " " + name);
 				return false;
+			}
+		}
+
+		// Check Actors
+		for (Actor actor : World.getActors()) {
+			if (direction.equals(Direction.UP) && (getY() + Constants.TILE_WIDTH == actor.getY())) {
+				if (getX() == actor.getX()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.DOWN) && (getY() - Constants.TILE_WIDTH == actor.getY())) {
+				if (getX() == actor.getX()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.LEFT) && (getX() - Constants.TILE_WIDTH == actor.getX())) {
+				if (getY() == actor.getY()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.RIGHT) && (getX() + Constants.TILE_WIDTH == actor.getX())) {
+				if (getY() == actor.getY()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			}
+			if (direction.equals(Direction.UP) && (getTargetY() + Constants.TILE_WIDTH == actor.getTargetY())) {
+				if (getX() == actor.getX()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.DOWN)
+					&& (getTargetY() - Constants.TILE_WIDTH == actor.getTargetY())) {
+				if (getX() == actor.getX()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.LEFT)
+					&& (getTargetX() - Constants.TILE_WIDTH == actor.getTargetX())) {
+				if (getY() == actor.getY()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.RIGHT)
+					&& (getTargetX() + Constants.TILE_WIDTH == actor.getTargetX())) {
+				if (getY() == actor.getY()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
 			}
 		}
 
@@ -366,12 +423,28 @@ public class Actor {
 		return currentY;
 	}
 
+	public int getTargetX() {
+		return targetX;
+	}
+
+	public int getTargetY() {
+		return targetY;
+	}
+
 	public int getCoordX() {
 		return currentX / Constants.TILE_WIDTH;
 	}
 
 	public int getCoordY() {
 		return currentY / Constants.TILE_HEIGHT;
+	}
+
+	public int getTargetCoordX() {
+		return targetX / Constants.TILE_WIDTH;
+	}
+
+	public int getTargetCoordY() {
+		return targetY / Constants.TILE_WIDTH;
 	}
 
 	public void setX(int x) {

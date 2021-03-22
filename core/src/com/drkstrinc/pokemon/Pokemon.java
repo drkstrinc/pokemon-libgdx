@@ -29,6 +29,7 @@ public class Pokemon extends Game {
 
 	private void setupPlayer() {
 		player = new Player("Kris", Gender.FEMALE, startingCoordX, startingCoordY, Direction.DOWN);
+		World.addActor(player);
 	}
 
 	public Player getPlayer() {

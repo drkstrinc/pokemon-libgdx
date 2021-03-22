@@ -54,7 +54,14 @@ public class World {
 			actors.add(new Actor("NPC2", "Lass.png", BrainType.RANDOMMOVEMENT, 20, 65, Direction.LEFT));
 			actors.add(new Actor("NPC3", "Man_1.png", BrainType.RANDOMMOVEMENT, 25, 63, Direction.UP));
 		}
+	}
 
+	public static void addActor(Actor actor) {
+		actors.add(actor);
+	}
+
+	public static void removeActor(Actor actor) {
+		actors.remove(actor);
 	}
 
 	public static ArrayList<Actor> getActors() {

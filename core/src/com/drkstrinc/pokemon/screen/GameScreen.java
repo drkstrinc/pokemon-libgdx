@@ -86,15 +86,11 @@ public class GameScreen extends ScreenAdapter {
 
 		}
 
-		// Render Actors
+		// Render Actors (including Player)
 		for (Actor actor : World.getActors()) {
 			actor.update();
 			actor.render(batch, camera);
 		}
-
-		// Render Player
-		game.getPlayer().update();
-		game.getPlayer().render(batch, camera);
 
 		if (!World.retroMap) {
 			// Render Map Layers above Actors' Z-Axis
