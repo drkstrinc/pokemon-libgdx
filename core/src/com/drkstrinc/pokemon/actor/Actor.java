@@ -24,24 +24,23 @@ public class Actor {
 
 	private String name;
 
-	protected int currentX = 0;
-	protected int currentY = 0;
-
-	private int targetX = 0;
-	private int targetY = 0;
-
-	private float movementTimeout = 1;
-
 	private boolean lockMovement = false;
-	private boolean isMoving = false;
-	private int movementSpeed = MovementState.WALKING.getValue();
-	private MovementState movementState = MovementState.IDLE;
-	private Direction direction = Direction.DOWN;
+	private float movementTimeout = 0.2f;
+
+	protected int currentX;
+	protected int currentY;
+
+	private int targetX;
+	private int targetY;
+
+	private int movementSpeed;
+	private MovementState movementState;
+	private Direction direction;
 
 	protected ShapeRenderer actorBox;
 	protected ActorSpriteSheet actorSpriteSheet;
 	protected TextureRegion currentSprite;
-	protected int stepCount;
+	protected int spriteIndex;
 
 	private Brain brain;
 	private BrainType brainType;
@@ -64,13 +63,15 @@ public class Actor {
 		this.name = name;
 		actorBox = new ShapeRenderer();
 
-		stepCount = 0;
+		spriteIndex = 0;
 		currentX = startX * Constants.TILE_WIDTH;
 		currentY = startY * Constants.TILE_HEIGHT;
 		targetX = currentX;
 		targetY = currentY;
 
 		direction = initialDirection;
+		movementSpeed = MovementState.WALKING.getValue();
+		movementState = MovementState.IDLE;
 	}
 
 	public void render(SpriteBatch batch, OrthographicCamera camera) {
@@ -104,7 +105,7 @@ public class Actor {
 	}
 
 	protected void handleMovement() {
-		if (isMoving) {
+		if (!movementState.equals(MovementState.IDLE)) {
 			if (movementState.equals(MovementState.WALKING)) {
 				movementSpeed = MovementState.WALKING.getValue();
 			} else if (movementState.equals(MovementState.RUNNING)) {
@@ -130,16 +131,16 @@ public class Actor {
 			if (Math.abs(getX() - targetX) <= 1 && Math.abs(getY() - targetY) <= 1) {
 				currentX = targetX;
 				currentY = targetY;
-				stepCount++;
-				if (stepCount > 3) {
-					stepCount = 0;
+				spriteIndex++;
+				if (spriteIndex > 3) {
+					spriteIndex = 0;
 				}
-				isMoving = false;
+				setMovementState(MovementState.IDLE);
 				Gdx.app.log("CHR",
 						this.getClass().getSimpleName() + " " + name + " - X: " + getCoordX() + " Y: " + getCoordY());
 			}
 		} else {
-			setState(MovementState.IDLE);
+			setMovementState(MovementState.IDLE);
 		}
 
 		movementTimeout -= Gdx.graphics.getDeltaTime();
@@ -148,8 +149,8 @@ public class Actor {
 	public void moveDown() {
 		if (getDirection().equals(Direction.DOWN)) {
 			if (movementTimeout < 0 && canMove(Direction.DOWN)) {
-				if (!isMoving) {
-					isMoving = true;
+				if (movementState.equals(MovementState.IDLE)) {
+					setMovementState(MovementState.WALKING);
 					targetY = getY() - Constants.TILE_HEIGHT;
 					targetX = getX();
 				}
@@ -165,8 +166,8 @@ public class Actor {
 	public void moveLeft() {
 		if (getDirection().equals(Direction.LEFT)) {
 			if (movementTimeout < 0 && canMove(Direction.LEFT)) {
-				if (!isMoving) {
-					isMoving = true;
+				if (movementState.equals(MovementState.IDLE)) {
+					setMovementState(MovementState.WALKING);
 					targetY = getY();
 					targetX = getX() - Constants.TILE_WIDTH;
 				}
@@ -182,8 +183,8 @@ public class Actor {
 	public void moveRight() {
 		if (getDirection().equals(Direction.RIGHT)) {
 			if (movementTimeout < 0 && canMove(Direction.RIGHT)) {
-				if (!isMoving) {
-					isMoving = true;
+				if (movementState.equals(MovementState.IDLE)) {
+					setMovementState(MovementState.WALKING);
 					targetY = getY();
 					targetX = getX() + Constants.TILE_WIDTH;
 				}
@@ -199,8 +200,8 @@ public class Actor {
 	public void moveUp() {
 		if (getDirection().equals(Direction.UP)) {
 			if (movementTimeout < 0 && canMove(Direction.UP)) {
-				if (!isMoving) {
-					isMoving = true;
+				if (movementState.equals(MovementState.IDLE)) {
+					setMovementState(MovementState.WALKING);
 					targetY = getY() + Constants.TILE_HEIGHT;
 					targetX = getX();
 				}
@@ -218,6 +219,7 @@ public class Actor {
 		MapObjects objects = collisionLayer.getObjects();
 
 		// Check Map Objects
+		// TODO: Check individual Tile Properties instead ofCollision Layer
 		for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
 			Rectangle rectangle = rectangleObject.getRectangle();
 			if (direction.equals(Direction.UP) && Intersector.overlaps(rectangle, new Rectangle(getX(),
@@ -245,7 +247,7 @@ public class Actor {
 			}
 		}
 
-		// Check Actors
+		// Check Actors (Current, Actor Target, Other Actor Target)
 		for (Actor actor : World.getActors()) {
 			if (direction.equals(Direction.UP) && (getY() + Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
@@ -272,6 +274,33 @@ public class Actor {
 					return false;
 				}
 			}
+
+			if (direction.equals(Direction.UP) && (getTargetY() + Constants.TILE_WIDTH == actor.getY())) {
+				if (getX() == actor.getX()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.DOWN) && (getTargetY() - Constants.TILE_WIDTH == actor.getY())) {
+				if (getX() == actor.getX()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.LEFT) && (getTargetX() - Constants.TILE_WIDTH == actor.getX())) {
+				if (getY() == actor.getY()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			} else if (direction.equals(Direction.RIGHT) && (getTargetX() + Constants.TILE_WIDTH == actor.getX())) {
+				if (getY() == actor.getY()) {
+					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
+							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					return false;
+				}
+			}
+
 			if (direction.equals(Direction.UP) && (getTargetY() + Constants.TILE_WIDTH == actor.getTargetY())) {
 				if (getX() == actor.getX()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
@@ -306,58 +335,56 @@ public class Actor {
 	}
 
 	protected void updateActorSprite() {
-		if (isMoving) {
-			if (movementState.equals(MovementState.WALKING) || movementState.equals(MovementState.RUNNING)) {
-				if (direction.equals(Direction.DOWN)) {
-					if (stepCount == 0) {
-						currentSprite = actorSpriteSheet.getDownTexture(0);
-					} else if (stepCount == 1) {
-						currentSprite = actorSpriteSheet.getDownTexture(1);
-					} else if (stepCount == 2) {
-						currentSprite = actorSpriteSheet.getDownTexture(2);
-					} else if (stepCount == 3) {
-						currentSprite = actorSpriteSheet.getDownTexture(3);
-					}
-				} else if (direction.equals(Direction.LEFT)) {
-					if (stepCount == 0) {
-						currentSprite = actorSpriteSheet.getLeftTexture(0);
-					} else if (stepCount == 1) {
-						currentSprite = actorSpriteSheet.getLeftTexture(1);
-					} else if (stepCount == 2) {
-						currentSprite = actorSpriteSheet.getLeftTexture(2);
-					} else if (stepCount == 3) {
-						currentSprite = actorSpriteSheet.getLeftTexture(3);
-					}
-				} else if (direction.equals(Direction.RIGHT)) {
-					if (stepCount == 0) {
-						currentSprite = actorSpriteSheet.getRightTexture(0);
-					} else if (stepCount == 1) {
-						currentSprite = actorSpriteSheet.getRightTexture(1);
-					} else if (stepCount == 2) {
-						currentSprite = actorSpriteSheet.getRightTexture(2);
-					} else if (stepCount == 3) {
-						currentSprite = actorSpriteSheet.getRightTexture(3);
-					}
-				} else if (direction.equals(Direction.UP)) {
-					if (stepCount == 0) {
-						currentSprite = actorSpriteSheet.getUpTexture(0);
-					} else if (stepCount == 1) {
-						currentSprite = actorSpriteSheet.getUpTexture(1);
-					} else if (stepCount == 2) {
-						currentSprite = actorSpriteSheet.getUpTexture(2);
-					} else if (stepCount == 3) {
-						currentSprite = actorSpriteSheet.getUpTexture(3);
-					}
+		if (movementState.equals(MovementState.WALKING)) {
+			if (direction.equals(Direction.DOWN)) {
+				if (spriteIndex == 0) {
+					currentSprite = actorSpriteSheet.getDownTexture(0);
+				} else if (spriteIndex == 1) {
+					currentSprite = actorSpriteSheet.getDownTexture(1);
+				} else if (spriteIndex == 2) {
+					currentSprite = actorSpriteSheet.getDownTexture(2);
+				} else if (spriteIndex == 3) {
+					currentSprite = actorSpriteSheet.getDownTexture(3);
 				}
-			} else if (movementState.equals(MovementState.BIKING)) {
-
-			} else if (movementState.equals(MovementState.SURFING)) {
-
-			} else if (movementState.equals(MovementState.FLYING)) {
-
-			} else {
-
+			} else if (direction.equals(Direction.LEFT)) {
+				if (spriteIndex == 0) {
+					currentSprite = actorSpriteSheet.getLeftTexture(0);
+				} else if (spriteIndex == 1) {
+					currentSprite = actorSpriteSheet.getLeftTexture(1);
+				} else if (spriteIndex == 2) {
+					currentSprite = actorSpriteSheet.getLeftTexture(2);
+				} else if (spriteIndex == 3) {
+					currentSprite = actorSpriteSheet.getLeftTexture(3);
+				}
+			} else if (direction.equals(Direction.RIGHT)) {
+				if (spriteIndex == 0) {
+					currentSprite = actorSpriteSheet.getRightTexture(0);
+				} else if (spriteIndex == 1) {
+					currentSprite = actorSpriteSheet.getRightTexture(1);
+				} else if (spriteIndex == 2) {
+					currentSprite = actorSpriteSheet.getRightTexture(2);
+				} else if (spriteIndex == 3) {
+					currentSprite = actorSpriteSheet.getRightTexture(3);
+				}
+			} else if (direction.equals(Direction.UP)) {
+				if (spriteIndex == 0) {
+					currentSprite = actorSpriteSheet.getUpTexture(0);
+				} else if (spriteIndex == 1) {
+					currentSprite = actorSpriteSheet.getUpTexture(1);
+				} else if (spriteIndex == 2) {
+					currentSprite = actorSpriteSheet.getUpTexture(2);
+				} else if (spriteIndex == 3) {
+					currentSprite = actorSpriteSheet.getUpTexture(3);
+				}
 			}
+		} else if (movementState.equals(MovementState.RUNNING)) {
+
+		} else if (movementState.equals(MovementState.BIKING)) {
+
+		} else if (movementState.equals(MovementState.SURFING)) {
+
+		} else if (movementState.equals(MovementState.FLYING)) {
+
 		} else {
 			if (direction.equals(Direction.DOWN)) {
 				currentSprite = actorSpriteSheet.getDownTexture(0);
@@ -372,30 +399,30 @@ public class Actor {
 	}
 
 	public void turnDown() {
-		direction = Direction.DOWN;
-		isMoving = false;
-		stepCount = 0;
+		setDirection(Direction.DOWN);
+		setMovementState(MovementState.IDLE);
+		spriteIndex = 0;
 		updateActorSprite();
 	}
 
 	public void turnLeft() {
-		direction = Direction.LEFT;
-		isMoving = false;
-		stepCount = 0;
+		setDirection(Direction.LEFT);
+		setMovementState(MovementState.IDLE);
+		spriteIndex = 0;
 		updateActorSprite();
 	}
 
 	public void turnRight() {
-		direction = Direction.RIGHT;
-		isMoving = false;
-		stepCount = 0;
+		setDirection(Direction.RIGHT);
+		setMovementState(MovementState.IDLE);
+		spriteIndex = 0;
 		updateActorSprite();
 	}
 
 	public void turnUp() {
-		direction = Direction.UP;
-		isMoving = false;
-		stepCount = 0;
+		setDirection(Direction.UP);
+		setMovementState(MovementState.IDLE);
+		spriteIndex = 0;
 		updateActorSprite();
 	}
 
@@ -416,44 +443,52 @@ public class Actor {
 			turnRight();
 	}
 
-	public int getX() {
-		return currentX;
-	}
-
-	public int getY() {
-		return currentY;
-	}
-
-	public int getTargetX() {
-		return targetX;
-	}
-
-	public int getTargetY() {
-		return targetY;
-	}
-
 	public int getCoordX() {
 		return currentX / Constants.TILE_WIDTH;
 	}
 
-	public int getCoordY() {
-		return currentY / Constants.TILE_HEIGHT;
-	}
-
-	public int getTargetCoordX() {
-		return targetX / Constants.TILE_WIDTH;
-	}
-
-	public int getTargetCoordY() {
-		return targetY / Constants.TILE_WIDTH;
+	public int getX() {
+		return currentX;
 	}
 
 	public void setX(int x) {
 		currentX = x;
 	}
 
+	public int getCoordY() {
+		return currentY / Constants.TILE_HEIGHT;
+	}
+
+	public int getY() {
+		return currentY;
+	}
+
 	public void setY(int y) {
 		currentY = y;
+	}
+
+	public int getTargetCoordX() {
+		return targetX / Constants.TILE_WIDTH;
+	}
+
+	public int getTargetX() {
+		return targetX;
+	}
+
+	public void setTargetX(int targetX) {
+		this.targetX = targetX;
+	}
+
+	public int getTargetCoordY() {
+		return targetY / Constants.TILE_WIDTH;
+	}
+
+	public int getTargetY() {
+		return targetY;
+	}
+
+	public void setTargetY(int targetY) {
+		this.targetY = targetY;
 	}
 
 	public Direction getDirection() {
@@ -464,11 +499,11 @@ public class Actor {
 		this.direction = direction;
 	}
 
-	public MovementState getState() {
+	public MovementState getMovementState() {
 		return movementState;
 	}
 
-	public void setState(MovementState movementState) {
+	public void setMovementState(MovementState movementState) {
 		this.movementState = movementState;
 	}
 
@@ -484,12 +519,16 @@ public class Actor {
 		return name;
 	}
 
-	public void setBrainType(BrainType brainType) {
-		this.brainType = brainType;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public BrainType getBrainType() {
 		return brainType;
+	}
+
+	public void setBrainType(BrainType brainType) {
+		this.brainType = brainType;
 	}
 
 	public Brain getBrain() {

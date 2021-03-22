@@ -24,9 +24,7 @@ public class Player extends Actor {
 	public void update() {
 		if (!isMovementLocked()) {
 			if (Gdx.input.isKeyPressed(Input.Keys.X)) {
-				setState(MovementState.RUNNING);
-			} else {
-				setState(MovementState.WALKING);
+				setMovementState(MovementState.RUNNING);
 			}
 
 			handleMovement();
@@ -40,7 +38,7 @@ public class Player extends Actor {
 			} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				moveRight();
 			} else {
-				stepCount = 1;
+				spriteIndex = 1;
 			}
 		}
 	}

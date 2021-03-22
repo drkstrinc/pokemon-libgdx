@@ -6,12 +6,15 @@ public class Constants {
 
 	public static final String GAME_TITLE = "Pokemon libGDX";
 
-	public static final int GAME_WIDTH = 512; // NDS Width
-	public static final int GAME_HEIGHT = 384; // NDS Height
+	// NDS
+	// public static final int GAME_WIDTH = 512; // NDS Width
+	// public static final int GAME_HEIGHT = 384; // NDS Height
 
-	// Other Common Pokemon Resolutions
-	// public static final int GAME_WIDTH = 480; // GBA Width
-	// public static final int GAME_HEIGHT = 320; // GBA Height
+	// GBA
+	public static final int GAME_WIDTH = 480; // GBA Width
+	public static final int GAME_HEIGHT = 320; // GBA Height
+
+	// GBC
 	// public static final int GAME_WIDTH = 320; // GBC Width
 	// public static final int GAME_HEIGHT = 288; // GBC Height
 

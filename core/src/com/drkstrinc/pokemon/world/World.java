@@ -46,13 +46,13 @@ public class World {
 		actors = new ArrayList<Actor>();
 
 		if (retroMap) {
-			actors.add(new Actor("NPC1", "Silver.png", BrainType.STATIONARY, 160, 45, Direction.RIGHT));
-			actors.add(new Actor("NPC2", "Lass.png", BrainType.RANDOMMOVEMENT, 162, 40, Direction.LEFT));
-			actors.add(new Actor("NPC3", "Man_1.png", BrainType.RANDOMMOVEMENT, 168, 38, Direction.UP));
+			actors.add(new Actor("Silver", "Silver.png", BrainType.STATIONARY, 160, 45, Direction.RIGHT));
+			actors.add(new Actor("Lass", "Lass.png", BrainType.RANDOMMOVEMENT, 162, 40, Direction.LEFT));
+			actors.add(new Actor("Man", "Man_1.png", BrainType.RANDOMMOVEMENT, 168, 38, Direction.UP));
 		} else {
-			actors.add(new Actor("NPC1", "Silver.png", BrainType.STATIONARY, 15, 72, Direction.RIGHT));
-			actors.add(new Actor("NPC2", "Lass.png", BrainType.RANDOMMOVEMENT, 20, 65, Direction.LEFT));
-			actors.add(new Actor("NPC3", "Man_1.png", BrainType.RANDOMMOVEMENT, 25, 63, Direction.UP));
+			actors.add(new Actor("Silver", "Silver.png", BrainType.STATIONARY, 15, 72, Direction.RIGHT));
+			actors.add(new Actor("Lass", "Lass.png", BrainType.RANDOMMOVEMENT, 20, 65, Direction.LEFT));
+			actors.add(new Actor("Man", "Man_1.png", BrainType.RANDOMMOVEMENT, 25, 63, Direction.UP));
 		}
 	}
 
