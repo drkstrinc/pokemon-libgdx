@@ -87,11 +87,12 @@ public class Actor {
 		updateActorSprite();
 
 		int offsetX = (currentSprite.getRegionWidth() / 2) - (Constants.TILE_WIDTH / 2);
+		int offsetY = 6;
 
 		// Render Actor Sprite
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(currentSprite, currentX - offsetX, currentY, currentSprite.getRegionWidth(),
+		batch.draw(currentSprite, currentX - offsetX, currentY - offsetY, currentSprite.getRegionWidth(),
 				currentSprite.getRegionHeight());
 		batch.end();
 	}
