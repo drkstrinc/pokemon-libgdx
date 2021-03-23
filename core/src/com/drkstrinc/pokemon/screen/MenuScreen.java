@@ -35,7 +35,7 @@ public class MenuScreen extends ScreenAdapter {
 			public boolean keyDown(int keyCode) {
 				if (keyCode == Input.Keys.X) {
 
-					game.setScreen(new GameScreen(game));
+					game.setScreen(Pokemon.getGameScreen());
 				}
 				return true;
 			}

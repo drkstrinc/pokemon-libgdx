@@ -33,12 +33,10 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void show() {
 		setupCamera();
+		setupSound();
 		setupInput();
 		setupOther();
-		game.getPlayer().unlockMovement();
-		for (Actor actor : World.getActors()) {
-			actor.unlockMovement();
-		}
+		unlockActors();
 	}
 
 	private void setupCamera() {
@@ -68,11 +66,27 @@ public class GameScreen extends ScreenAdapter {
 		font.setColor(Color.RED);
 	}
 
+	private void setupSound() {
+		World.getMidiPlayer().play();
+	}
+
+	private void unlockActors() {
+		for (Actor actor : World.getActors()) {
+			actor.unlockMovement();
+		}
+	}
+
+	private void lockActors() {
+		for (Actor actor : World.getActors()) {
+			actor.lockMovement();
+		}
+	}
+
 	@Override
 	public void render(float delta) {
 		// Set the Camera's position to the Player's position
-		camera.position.x = game.getPlayer().getX() + Constants.TILE_WIDTH / 2;
-		camera.position.y = game.getPlayer().getY();
+		camera.position.x = Pokemon.getPlayer().getX() + Constants.TILE_WIDTH / 2;
+		camera.position.y = Pokemon.getPlayer().getY();
 		camera.update();
 
 		tiledMapRenderer.setView(camera);
@@ -105,9 +119,9 @@ public class GameScreen extends ScreenAdapter {
 
 	private void renderDebugInfo() {
 		batch.begin();
-		font.draw(batch, "X: " + game.getPlayer().getCoordX() + " Y: " + game.getPlayer().getCoordY(),
-				game.getPlayer().getX() - (game.getPlayer().getCurrentSprite().getRegionWidth() / 2),
-				game.getPlayer().getY() - 5);
+		font.draw(batch, "X: " + Pokemon.getPlayer().getCoordX() + " Y: " + Pokemon.getPlayer().getCoordY(),
+				Pokemon.getPlayer().getX() - (Pokemon.getPlayer().getCurrentSprite().getRegionWidth() / 2),
+				Pokemon.getPlayer().getY() - 5);
 		batch.end();
 	}
 
@@ -120,10 +134,7 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void hide() {
 		Gdx.input.setInputProcessor(null);
-		game.getPlayer().lockMovement();
-		for (Actor actor : World.getActors()) {
-			actor.lockMovement();
-		}
+		lockActors();
 	}
 
 }

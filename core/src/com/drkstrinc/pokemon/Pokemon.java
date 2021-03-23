@@ -5,13 +5,15 @@ import com.badlogic.gdx.Game;
 import com.drkstrinc.pokemon.actor.Player;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
+import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.screen.TitleScreen;
 import com.drkstrinc.pokemon.world.World;
 
 public class Pokemon extends Game {
 
-	private World currentWorld;
-	private Player player;
+	private static GameScreen gs;
+
+	private static Player player;
 
 	// Outside Player's House
 	// private int startingCoordX = 28;
@@ -21,23 +23,23 @@ public class Pokemon extends Game {
 
 	@Override
 	public void create() {
-		currentWorld = new World(this, "retro/Johto", true);
-		setupPlayer();
+		newPlayer();
+		new World(this, "retro/Johto", true);
+		gs = new GameScreen(this);
 
 		setScreen(new TitleScreen(this));
 	}
 
-	private void setupPlayer() {
+	private void newPlayer() {
 		player = new Player("Kris", Gender.FEMALE, startingCoordX, startingCoordY, Direction.DOWN);
-		World.addActor(player);
 	}
 
-	public Player getPlayer() {
+	public static Player getPlayer() {
 		return player;
 	}
 
-	public World getWorld() {
-		return currentWorld;
+	public static GameScreen getGameScreen() {
+		return gs;
 	}
 
 }

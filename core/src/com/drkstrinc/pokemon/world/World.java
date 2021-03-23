@@ -8,16 +8,16 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.actor.Actor;
-import com.drkstrinc.pokemon.actor.Player;
 import com.drkstrinc.pokemon.datatype.BrainType;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.event.Event;
+import com.drkstrinc.pokemon.sound.MidiPlayer;
 
 public class World {
 
-	private static Pokemon game;
-
 	private static TiledMap currentMap;
+
+	private static MidiPlayer bgm;
 
 	public static boolean retroMap = true;
 	public static int[] groundLayer = { 0, 1 };
@@ -30,6 +30,7 @@ public class World {
 		retroMap = isRetro;
 		loadMap(mapName);
 		loadActors(mapName);
+		loadBGM(mapName);
 	}
 
 	public void loadMap(String mapName) {
@@ -45,6 +46,8 @@ public class World {
 		// TODO: Load actors using mapName parameter from somewhere
 		actors = new ArrayList<Actor>();
 
+		actors.add(Pokemon.getPlayer());
+
 		if (retroMap) {
 			actors.add(new Actor("Silver", "Silver.png", BrainType.STATIONARY, 160, 45, Direction.RIGHT));
 			actors.add(new Actor("Lass", "Lass.png", BrainType.RANDOMMOVEMENT, 162, 40, Direction.LEFT));
@@ -54,6 +57,11 @@ public class World {
 			actors.add(new Actor("Lass", "Lass.png", BrainType.RANDOMMOVEMENT, 20, 65, Direction.LEFT));
 			actors.add(new Actor("Man", "Man_1.png", BrainType.RANDOMMOVEMENT, 25, 63, Direction.UP));
 		}
+	}
+
+	private void loadBGM(String mapName) {
+		// TODO: Load Midi based off of mapName
+		bgm = new MidiPlayer("audio/bgm/" + "newbarktown" + ".mid");
 	}
 
 	public static void addActor(Actor actor) {
@@ -80,8 +88,8 @@ public class World {
 		return currentMap;
 	}
 
-	public static Player getPlayer() {
-		return game.getPlayer();
+	public static MidiPlayer getMidiPlayer() {
+		return bgm;
 	}
 
 }
