@@ -39,15 +39,19 @@ public class Brain {
 					if (rnd == 0) {
 						actor.turnUp();
 						actor.moveUp();
+						actor.spriteIndex = 1;
 					} else if (rnd == 1) {
 						actor.turnDown();
 						actor.moveDown();
+						actor.spriteIndex = 1;
 					} else if (rnd == 2) {
 						actor.turnLeft();
 						actor.moveLeft();
+						actor.spriteIndex = 1;
 					} else if (rnd == 3) {
 						actor.turnRight();
 						actor.moveRight();
+						actor.spriteIndex = 1;
 					}
 				}
 			}

@@ -9,7 +9,7 @@ public enum MovementState {
 		this.speed = speed;
 	}
 
-	public int getValue() {
+	public int getSpeed() {
 		return speed;
 	}
 }

@@ -61,6 +61,10 @@ public class ActorSpriteSheet {
 		return spriteSheet;
 	}
 
+	public int getFrameCount() {
+		return downFrames.length - 1;
+	}
+
 	public TextureRegion getDownTexture(int pos) {
 		return downFrames[pos];
 	}

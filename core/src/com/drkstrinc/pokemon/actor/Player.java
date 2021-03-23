@@ -23,8 +23,12 @@ public class Player extends Actor {
 	@Override
 	public void update() {
 		if (!isMovementLocked()) {
-			if (Gdx.input.isKeyPressed(Input.Keys.X)) {
-				setMovementState(MovementState.RUNNING);
+			if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+				setMovementSpeed(MovementState.BIKING.getSpeed());
+			} else if (Gdx.input.isKeyPressed(Input.Keys.X)) {
+				setMovementSpeed(MovementState.RUNNING.getSpeed());
+			} else {
+				setMovementSpeed(MovementState.WALKING.getSpeed());
 			}
 
 			handleMovement();

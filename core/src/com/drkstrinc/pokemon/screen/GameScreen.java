@@ -105,8 +105,9 @@ public class GameScreen extends ScreenAdapter {
 
 	private void renderDebugInfo() {
 		batch.begin();
-		font.draw(batch, game.getPlayer().getCoordX() + "," + game.getPlayer().getCoordY(), 10,
-				Gdx.graphics.getHeight() - 10);
+		font.draw(batch, "X: " + game.getPlayer().getCoordX() + " Y: " + game.getPlayer().getCoordY(),
+				game.getPlayer().getX() - (game.getPlayer().getCurrentSprite().getRegionWidth() / 2),
+				game.getPlayer().getY() - 5);
 		batch.end();
 	}
 

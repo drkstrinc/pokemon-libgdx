@@ -1,13 +1,9 @@
 package com.drkstrinc.pokemon.actor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -27,17 +23,18 @@ public class Actor {
 	private boolean lockMovement = false;
 	private float movementTimeout = 0.2f;
 
+	private int movementSpeed;
+
 	protected int currentX;
 	protected int currentY;
 
 	private int targetX;
 	private int targetY;
 
-	private int movementSpeed;
+	private MovementState previousMovementState;
 	private MovementState movementState;
 	private Direction direction;
 
-	protected ShapeRenderer actorBox;
 	protected ActorSpriteSheet actorSpriteSheet;
 	protected TextureRegion currentSprite;
 	protected int spriteIndex;
@@ -61,7 +58,6 @@ public class Actor {
 		Gdx.app.log("CHR", "Creating " + this.getClass().getSimpleName() + " " + name + " at " + startX + "," + startY
 				+ " facing " + initialDirection.toString());
 		this.name = name;
-		actorBox = new ShapeRenderer();
 
 		spriteIndex = 0;
 		currentX = startX * Constants.TILE_WIDTH;
@@ -70,23 +66,14 @@ public class Actor {
 		targetY = currentY;
 
 		direction = initialDirection;
-		movementSpeed = MovementState.WALKING.getValue();
+		movementSpeed = MovementState.WALKING.getSpeed();
 		movementState = MovementState.IDLE;
 	}
 
 	public void render(SpriteBatch batch, OrthographicCamera camera) {
-		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
-
-		// Invisible Box around Actor Sprite for Collision
-		actorBox.setProjectionMatrix(camera.combined);
-		actorBox.begin(ShapeType.Line);
-		actorBox.rect(currentX, currentY, Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
-		actorBox.setColor(Color.CLEAR);
-		actorBox.end();
-
-		// Update Actor Sprite
 		updateActorSprite();
 
+		// Sprite Sheet Offsets
 		int offsetX = (currentSprite.getRegionWidth() / 2) - (Constants.TILE_WIDTH / 2);
 		int offsetY = 6;
 
@@ -106,34 +93,31 @@ public class Actor {
 
 	protected void handleMovement() {
 		if (!movementState.equals(MovementState.IDLE)) {
-			if (movementState.equals(MovementState.WALKING)) {
-				movementSpeed = MovementState.WALKING.getValue();
-			} else if (movementState.equals(MovementState.RUNNING)) {
-				movementSpeed = MovementState.RUNNING.getValue();
-			}
-
-			if (getX() < targetX) {
+			if (getX() < getTargetX()) {
 				currentX += movementSpeed;
 			}
 
-			if (getX() > targetX) {
+			if (getX() > getTargetX()) {
 				currentX -= movementSpeed;
 			}
 
-			if (getY() < targetY) {
+			if (getY() < getTargetY()) {
 				currentY += movementSpeed;
 			}
 
-			if (getY() > targetY) {
+			if (getY() > getTargetY()) {
 				currentY -= movementSpeed;
 			}
 
-			if (Math.abs(getX() - targetX) <= 1 && Math.abs(getY() - targetY) <= 1) {
+			setPreviousMovementState(movementState);
+
+			if (Math.abs(getX() - getTargetX()) <= (movementSpeed - 1)
+					&& Math.abs(getY() - getTargetY()) <= (movementSpeed - 1)) {
 				currentX = targetX;
 				currentY = targetY;
 				spriteIndex++;
-				if (spriteIndex > 3) {
-					spriteIndex = 0;
+				if (spriteIndex > actorSpriteSheet.getFrameCount()) {
+					resetSpriteIndex();
 				}
 				setMovementState(MovementState.IDLE);
 				Gdx.app.log("CHR",
@@ -141,76 +125,115 @@ public class Actor {
 			}
 		} else {
 			setMovementState(MovementState.IDLE);
+			setPreviousMovementState(MovementState.IDLE);
 		}
 
 		movementTimeout -= Gdx.graphics.getDeltaTime();
 	}
 
+	public void turnDown() {
+		setDirection(Direction.DOWN);
+		setMovementState(MovementState.IDLE);
+		resetSpriteIndex();
+		updateActorSprite();
+	}
+
+	public void turnLeft() {
+		setDirection(Direction.LEFT);
+		setMovementState(MovementState.IDLE);
+		resetSpriteIndex();
+		updateActorSprite();
+	}
+
+	public void turnRight() {
+		setDirection(Direction.RIGHT);
+		setMovementState(MovementState.IDLE);
+		resetSpriteIndex();
+		updateActorSprite();
+	}
+
+	public void turnUp() {
+		setDirection(Direction.UP);
+		setMovementState(MovementState.IDLE);
+		resetSpriteIndex();
+		updateActorSprite();
+	}
+
 	public void moveDown() {
 		if (getDirection().equals(Direction.DOWN)) {
-			if (movementTimeout < 0 && canMove(Direction.DOWN)) {
-				if (movementState.equals(MovementState.IDLE)) {
-					setMovementState(MovementState.WALKING);
-					targetY = getY() - Constants.TILE_HEIGHT;
-					targetX = getX();
-				}
+			if (movementTimeout < 0 && canMove(Direction.DOWN) && movementState.equals(MovementState.IDLE)) {
+				setMovementState(MovementState.WALKING);
+				targetY = getY() - Constants.TILE_HEIGHT;
+				targetX = getX();
 			}
-		} else {
-			setDirection(Direction.DOWN);
-			if (currentX == targetX && currentY == targetY)
-				turnDown();
-			movementTimeout = 0.2f;
+		} else if (movementState.equals(MovementState.IDLE)) {
+			turnDown();
+			checkForTimeout();
 		}
 	}
 
 	public void moveLeft() {
 		if (getDirection().equals(Direction.LEFT)) {
-			if (movementTimeout < 0 && canMove(Direction.LEFT)) {
-				if (movementState.equals(MovementState.IDLE)) {
-					setMovementState(MovementState.WALKING);
-					targetY = getY();
-					targetX = getX() - Constants.TILE_WIDTH;
-				}
+			if (movementTimeout < 0 && canMove(Direction.LEFT) && movementState.equals(MovementState.IDLE)) {
+				setMovementState(MovementState.WALKING);
+				targetY = getY();
+				targetX = getX() - Constants.TILE_WIDTH;
 			}
-		} else {
-			setDirection(Direction.LEFT);
-			if (currentX == targetX && currentY == targetY)
-				turnLeft();
-			movementTimeout = 0.2f;
+		} else if (movementState.equals(MovementState.IDLE)) {
+			turnLeft();
+			checkForTimeout();
 		}
 	}
 
 	public void moveRight() {
 		if (getDirection().equals(Direction.RIGHT)) {
-			if (movementTimeout < 0 && canMove(Direction.RIGHT)) {
-				if (movementState.equals(MovementState.IDLE)) {
-					setMovementState(MovementState.WALKING);
-					targetY = getY();
-					targetX = getX() + Constants.TILE_WIDTH;
-				}
+			if (movementTimeout < 0 && canMove(Direction.RIGHT) && movementState.equals(MovementState.IDLE)) {
+				setMovementState(MovementState.WALKING);
+				targetY = getY();
+				targetX = getX() + Constants.TILE_WIDTH;
 			}
-		} else {
-			setDirection(Direction.RIGHT);
-			if (currentX == targetX && currentY == targetY)
-				turnRight();
-			movementTimeout = 0.2f;
+		} else if (movementState.equals(MovementState.IDLE)) {
+			turnRight();
+			checkForTimeout();
 		}
 	}
 
 	public void moveUp() {
 		if (getDirection().equals(Direction.UP)) {
-			if (movementTimeout < 0 && canMove(Direction.UP)) {
-				if (movementState.equals(MovementState.IDLE)) {
-					setMovementState(MovementState.WALKING);
-					targetY = getY() + Constants.TILE_HEIGHT;
-					targetX = getX();
-				}
+			if (movementTimeout < 0 && canMove(Direction.UP) && movementState.equals(MovementState.IDLE)) {
+				setMovementState(MovementState.WALKING);
+				targetY = getY() + Constants.TILE_HEIGHT;
+				targetX = getX();
 			}
-		} else {
-			setDirection(Direction.UP);
-			if (currentX == targetX && currentY == targetY)
-				turnUp();
+		} else if (movementState.equals(MovementState.IDLE)) {
+			turnUp();
+			checkForTimeout();
+		}
+	}
+
+	public void moveTo(int x, int y, Direction direction) {
+		Gdx.app.log("CHR", "Moving " + this.getClass().getSimpleName() + " " + name + " to " + x + "," + y + " facing "
+				+ direction.toString());
+		currentX = x * Constants.TILE_WIDTH;
+		currentY = y * Constants.TILE_HEIGHT;
+		targetX = currentX;
+		targetY = currentY;
+		if (direction.equals(Direction.UP))
+			turnUp();
+		else if (direction.equals(Direction.DOWN))
+			turnDown();
+		else if (direction.equals(Direction.LEFT))
+			turnLeft();
+		else if (direction.equals(Direction.RIGHT))
+			turnRight();
+	}
+
+	private void checkForTimeout() {
+		if (previousMovementState.equals(MovementState.IDLE)) {
 			movementTimeout = 0.2f;
+			spriteIndex = 1;
+		} else {
+			spriteIndex = 1;
 		}
 	}
 
@@ -398,51 +421,6 @@ public class Actor {
 		}
 	}
 
-	public void turnDown() {
-		setDirection(Direction.DOWN);
-		setMovementState(MovementState.IDLE);
-		spriteIndex = 0;
-		updateActorSprite();
-	}
-
-	public void turnLeft() {
-		setDirection(Direction.LEFT);
-		setMovementState(MovementState.IDLE);
-		spriteIndex = 0;
-		updateActorSprite();
-	}
-
-	public void turnRight() {
-		setDirection(Direction.RIGHT);
-		setMovementState(MovementState.IDLE);
-		spriteIndex = 0;
-		updateActorSprite();
-	}
-
-	public void turnUp() {
-		setDirection(Direction.UP);
-		setMovementState(MovementState.IDLE);
-		spriteIndex = 0;
-		updateActorSprite();
-	}
-
-	public void moveTo(int x, int y, Direction direction) {
-		Gdx.app.log("CHR", "Moving " + this.getClass().getSimpleName() + " " + name + " to " + x + "," + y + " facing "
-				+ direction.toString());
-		currentX = x * Constants.TILE_WIDTH;
-		currentY = y * Constants.TILE_HEIGHT;
-		targetX = currentX;
-		targetY = currentY;
-		if (direction.equals(Direction.UP))
-			turnUp();
-		else if (direction.equals(Direction.DOWN))
-			turnDown();
-		else if (direction.equals(Direction.LEFT))
-			turnLeft();
-		else if (direction.equals(Direction.RIGHT))
-			turnRight();
-	}
-
 	public int getCoordX() {
 		return currentX / Constants.TILE_WIDTH;
 	}
@@ -499,12 +477,16 @@ public class Actor {
 		this.direction = direction;
 	}
 
-	public MovementState getMovementState() {
-		return movementState;
+	public void setPreviousMovementState(MovementState movementState) {
+		previousMovementState = movementState;
 	}
 
 	public void setMovementState(MovementState movementState) {
 		this.movementState = movementState;
+	}
+
+	public void setMovementSpeed(int movementSpeed) {
+		this.movementSpeed = movementSpeed;
 	}
 
 	public ActorSpriteSheet getCharacterSpriteSheet() {
@@ -513,6 +495,14 @@ public class Actor {
 
 	public void setCharacterSpriteSheet(ActorSpriteSheet characterSpriteSheet) {
 		this.actorSpriteSheet = characterSpriteSheet;
+	}
+
+	public TextureRegion getCurrentSprite() {
+		return currentSprite;
+	}
+
+	private void resetSpriteIndex() {
+		spriteIndex = 0;
 	}
 
 	public String getName() {
