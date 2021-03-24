@@ -1,5 +1,7 @@
 package com.drkstrinc.pokemon.actor;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,11 +16,13 @@ import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.datatype.BrainType;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.MovementState;
+import com.drkstrinc.pokemon.event.Event;
 import com.drkstrinc.pokemon.world.World;
 
 public class Actor {
 
 	private String name;
+	private int id;
 
 	private boolean lockMovement = false;
 	private float movementTimeout = 0.2f;
@@ -33,7 +37,7 @@ public class Actor {
 
 	private MovementState previousMovementState;
 	private MovementState movementState;
-	private Direction direction;
+	protected Direction direction;
 
 	protected ActorSpriteSheet actorSpriteSheet;
 	protected TextureRegion currentSprite;
@@ -42,9 +46,11 @@ public class Actor {
 	private Brain brain;
 	private BrainType brainType;
 
-	public Actor(String name, String spriteFileName, BrainType brainType, int startX, int startY,
+	private ArrayList<Event> events;
+
+	public Actor(int id, String name, String spriteFileName, BrainType brainType, int startX, int startY,
 			Direction initialDirection) {
-		this(name, startX, startY, initialDirection);
+		this(id, name, startX, startY, initialDirection);
 		this.brainType = brainType;
 		actorSpriteSheet = new ActorSpriteSheet(spriteFileName);
 
@@ -54,9 +60,10 @@ public class Actor {
 		}
 	}
 
-	public Actor(String name, int startX, int startY, Direction initialDirection) {
+	public Actor(int id, String name, int startX, int startY, Direction initialDirection) {
 		Gdx.app.log("CHR", "Creating " + this.getClass().getSimpleName() + " " + name + " at " + startX + "," + startY
 				+ " facing " + initialDirection.toString());
+		this.id = id;
 		this.name = name;
 
 		spriteIndex = 0;
@@ -68,6 +75,8 @@ public class Actor {
 		direction = initialDirection;
 		movementSpeed = MovementState.WALKING.getSpeed();
 		movementState = MovementState.IDLE;
+
+		events = new ArrayList<>();
 	}
 
 	public void render(SpriteBatch batch, OrthographicCamera camera) {
@@ -120,8 +129,8 @@ public class Actor {
 					resetSpriteIndex();
 				}
 				setMovementState(MovementState.IDLE);
-				Gdx.app.log("CHR",
-						this.getClass().getSimpleName() + " " + name + " - X: " + getCoordX() + " Y: " + getCoordY());
+				Gdx.app.log("CHR", this.getClass().getSimpleName() + " " + id + " Name: " + name + " - X: "
+						+ getCoordX() + " Y: " + getCoordY());
 			}
 		} else {
 			setMovementState(MovementState.IDLE);
@@ -535,6 +544,18 @@ public class Actor {
 
 	public void unlockMovement() {
 		lockMovement = false;
+	}
+
+	public void addEvent(Event event) {
+		events.add(event);
+	}
+
+	public Event getEvent(int id) {
+		return events.get(id);
+	}
+
+	public ArrayList<Event> getEvents() {
+		return events;
 	}
 
 }

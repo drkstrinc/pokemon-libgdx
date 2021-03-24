@@ -70,13 +70,13 @@ public class GameScreen extends ScreenAdapter {
 		World.getMidiPlayer().play();
 	}
 
-	private void unlockActors() {
+	public static void unlockActors() {
 		for (Actor actor : World.getActors()) {
 			actor.unlockMovement();
 		}
 	}
 
-	private void lockActors() {
+	public static void lockActors() {
 		for (Actor actor : World.getActors()) {
 			actor.lockMovement();
 		}

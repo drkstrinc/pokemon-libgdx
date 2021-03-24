@@ -12,6 +12,8 @@ import com.drkstrinc.pokemon.datatype.BrainType;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.event.Event;
 import com.drkstrinc.pokemon.sound.MidiPlayer;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -49,43 +51,45 @@ public class World {
 		JsonElement element = JsonParser.parseString(json);
 		JsonObject rootObject = element.getAsJsonObject();
 
+		// Map Metadata
 		name = rootObject.get("name").getAsString();
 		mapFilePath = rootObject.get("map").getAsString();
 		bgmFilePath = rootObject.get("bgm").getAsString();
 		isOutdoors = rootObject.get("outdoors").getAsBoolean();
 		hasEncounters = rootObject.get("encounters").getAsBoolean();
 
+		// Actors and Actor Events
 		for (JsonElement actorElement : rootObject.getAsJsonArray("actors")) {
 			JsonObject actorObject = actorElement.getAsJsonObject();
+			int actorID = actorObject.get("id").getAsInt();
 			String actorName = actorObject.get("name").getAsString();
 			String actorSprite = actorObject.get("sprite").getAsString();
-			String actorBrainTypeString = actorObject.get("brain").getAsString();
-			BrainType actorBrainType;
-			if (actorBrainTypeString.equals("RANDOMMOVEMENT")) {
-				actorBrainType = BrainType.RANDOMMOVEMENT;
-			} else if (actorBrainTypeString.equals("STATIONARY")) {
-				actorBrainType = BrainType.STATIONARY;
-			} else {
-				actorBrainType = BrainType.STATIONARY;
-			}
+			BrainType actorBrainType = BrainType.valueOf(actorObject.get("brain").getAsString());
+
 			JsonObject actorPosition = actorObject.getAsJsonObject("position");
 			int actorX = actorPosition.get("x").getAsInt();
 			int actorY = actorPosition.get("y").getAsInt();
-			String actorDirectionString = actorPosition.get("direction").getAsString();
-			Direction actorDirection;
-			if (actorDirectionString.equals("UP")) {
-				actorDirection = Direction.UP;
-			} else if (actorDirectionString.equals("DOWN")) {
-				actorDirection = Direction.DOWN;
-			} else if (actorDirectionString.equals("LEFT")) {
-				actorDirection = Direction.LEFT;
-			} else if (actorDirectionString.equals("RIGHT")) {
-				actorDirection = Direction.RIGHT;
-			} else {
-				actorDirection = Direction.DOWN;
+			Direction actorDirection = Direction.valueOf(actorPosition.get("direction").getAsString());
+
+			Actor tmpActor = new Actor(actorID, actorName, actorSprite, actorBrainType, actorX, actorY, actorDirection);
+
+			for (JsonElement eventElement : actorObject.getAsJsonArray("events")) {
+				JsonObject eventObject = eventElement.getAsJsonObject();
+				int eventID = eventObject.get("id").getAsInt();
+				Event actorEvent = new Event(eventID);
+
+				JsonArray eventMessages = eventObject.getAsJsonArray("messages");
+				eventMessages.forEach(messageText -> actorEvent.addText(messageText.getAsString()));
+
+				tmpActor.addEvent(actorEvent);
 			}
-			Actor tmpActor = new Actor(actorName, actorSprite, actorBrainType, actorX, actorY, actorDirection);
+
 			actors.add(tmpActor);
+		}
+
+		// Map Events
+		for (JsonElement eventElement : rootObject.getAsJsonArray("events")) {
+			JsonObject eventObject = eventElement.getAsJsonObject();
 		}
 	}
 

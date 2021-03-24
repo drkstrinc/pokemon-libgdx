@@ -17,7 +17,40 @@
 				"x": 160,
 				"y": 45,
 				"direction": "RIGHT"
-			}
+			},
+			"events": [
+				{
+					"id": 1,
+					"requirements": [
+					],
+					"messages": [
+						"...",
+						"...",
+						"So this is the famous ELM POKEMON LAB...",
+						"...What are you staring at?"
+					],
+					"actions": [
+						{
+							"move": {
+								"target": "player",
+								"sequence": [
+									"MOVELEFT",
+									"MOVEDOWN"
+								]
+							}
+						},
+						{
+							"move": {
+								"target": 1,
+								"sequence": [
+									"MOVELEFT",
+									"MOVERIGHT"
+								]
+							}
+						}
+					]
+				}
+			]
 		},
 		{
 			"id": 2,
@@ -30,7 +63,20 @@
 				"x": 162,
 				"y": 40,
 				"direction": "LEFT"
-			}
+			},
+			"events": [
+				{
+					"id": 1,
+					"requirements": [
+					],
+					"messages": [
+						"Wow, your POKEGEAR is impressive!",
+						"Did your mom get it for you?"
+					],
+					"actions": [
+					]
+				}
+			]
 		},
 		{
 			"id": 3,
@@ -43,65 +89,22 @@
 				"x": 168,
 				"y": 38,
 				"direction": "UP"
-			}
+			},
+			"events": [
+				{
+					"id": 1,
+					"requirements": [
+					],
+					"messages": [
+						"Yo, {PN}!",
+						"I hear PROF.ELM discovered some new POKEMON."
+					],
+					"actions": [
+					]
+				}
+			]
 		}
 	],
 	"events": [
-		{
-			"id": 1,
-			"actor": 1,
-			"requirements": {
-			},
-			"messages": [
-				"...",
-				"...",
-				"So this is the famous ELM POKEMON LAB...",
-				"...What are you staring at?"
-			],
-			"actions": [
-				{
-					"move": {
-						"target": "player",
-						"sequence": [
-							"MOVELEFT",
-							"MOVEDOWN"
-						]
-					}
-				},
-				{
-					"move": {
-						"target": 1,
-						"sequence": [
-							"MOVELEFT",
-							"MOVERIGHT"
-						]
-					}
-				}
-			]
-		},
-		{
-			"id": 2,
-			"actor": 2,
-			"requirements": {
-			},
-			"messages": [
-				"Wow, your POKEGEAR is impressive!",
-				"Did your mom get it for you?"
-			],
-			"actions": [
-			]
-		},
-		{
-			"id": 3,
-			"actor": 3,
-			"requirements": [
-			],
-			"messages": [
-				"Yo, {PN}!",
-				"I hear PROF.ELM discovered some new POKEMON."
-			],
-			"actions": [
-			]
-		}
 	]
 }
