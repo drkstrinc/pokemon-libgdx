@@ -12,8 +12,17 @@ import com.drkstrinc.pokemon.datatype.BrainType;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.event.Event;
 import com.drkstrinc.pokemon.sound.MidiPlayer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class World {
+
+	private String name;
+	private String mapFilePath;
+	private String bgmFilePath;
+	private boolean isOutdoors;
+	private boolean hasEncounters;
 
 	private static TiledMap currentMap;
 
@@ -26,42 +35,72 @@ public class World {
 	private static ArrayList<Actor> actors;
 	private static ArrayList<Event> events;
 
-	public World(Pokemon game, String mapName, boolean isRetro) {
-		retroMap = isRetro;
-		loadMap(mapName);
-		loadActors(mapName);
-		loadBGM(mapName);
+	public World(Pokemon game, String mapName) {
+		initActors();
+		readFromJSON(mapName);
+		loadMap();
+		loadBGM();
 	}
 
-	public void loadMap(String mapName) {
-		if (currentMap != null) {
-			Gdx.app.log("TMX", "Unloading Current Map");
-			currentMap.dispose();
+	private void readFromJSON(String mapName) {
+		String json = Gdx.files.local("data/" + mapName + ".json").readString();
+		Gdx.app.log("TMX", "\"" + mapName + "\": " + json);
+
+		JsonElement element = JsonParser.parseString(json);
+		JsonObject rootObject = element.getAsJsonObject();
+
+		name = rootObject.get("name").getAsString();
+		mapFilePath = rootObject.get("map").getAsString();
+		bgmFilePath = rootObject.get("bgm").getAsString();
+		isOutdoors = rootObject.get("outdoors").getAsBoolean();
+		hasEncounters = rootObject.get("encounters").getAsBoolean();
+
+		for (JsonElement actorElement : rootObject.getAsJsonArray("actors")) {
+			JsonObject actorObject = actorElement.getAsJsonObject();
+			String actorName = actorObject.get("name").getAsString();
+			String actorSprite = actorObject.get("sprite").getAsString();
+			String actorBrainTypeString = actorObject.get("brain").getAsString();
+			BrainType actorBrainType;
+			if (actorBrainTypeString.equals("RANDOMMOVEMENT")) {
+				actorBrainType = BrainType.RANDOMMOVEMENT;
+			} else if (actorBrainTypeString.equals("STATIONARY")) {
+				actorBrainType = BrainType.STATIONARY;
+			} else {
+				actorBrainType = BrainType.STATIONARY;
+			}
+			JsonObject actorPosition = actorObject.getAsJsonObject("position");
+			int actorX = actorPosition.get("x").getAsInt();
+			int actorY = actorPosition.get("y").getAsInt();
+			String actorDirectionString = actorPosition.get("direction").getAsString();
+			Direction actorDirection;
+			if (actorDirectionString.equals("UP")) {
+				actorDirection = Direction.UP;
+			} else if (actorDirectionString.equals("DOWN")) {
+				actorDirection = Direction.DOWN;
+			} else if (actorDirectionString.equals("LEFT")) {
+				actorDirection = Direction.LEFT;
+			} else if (actorDirectionString.equals("RIGHT")) {
+				actorDirection = Direction.RIGHT;
+			} else {
+				actorDirection = Direction.DOWN;
+			}
+			Actor tmpActor = new Actor(actorName, actorSprite, actorBrainType, actorX, actorY, actorDirection);
+			actors.add(tmpActor);
 		}
-		Gdx.app.log("TMX", "Loading Map: " + mapName);
-		currentMap = new TmxMapLoader().load("map/" + mapName + ".tmx");
 	}
 
-	public void loadActors(String mapName) {
-		// TODO: Load actors using mapName parameter from somewhere
+	public void loadMap() {
+		Gdx.app.log("TMX", "Loading Map: " + mapFilePath);
+		currentMap = new TmxMapLoader().load(mapFilePath);
+	}
+
+	public void initActors() {
 		actors = new ArrayList<Actor>();
-
 		actors.add(Pokemon.getPlayer());
-
-		if (retroMap) {
-			actors.add(new Actor("Silver", "Silver.png", BrainType.STATIONARY, 160, 45, Direction.RIGHT));
-			actors.add(new Actor("Lass", "Lass.png", BrainType.RANDOMMOVEMENT, 162, 40, Direction.LEFT));
-			actors.add(new Actor("Man", "Man_1.png", BrainType.RANDOMMOVEMENT, 168, 38, Direction.UP));
-		} else {
-			actors.add(new Actor("Silver", "Silver.png", BrainType.STATIONARY, 15, 72, Direction.RIGHT));
-			actors.add(new Actor("Lass", "Lass.png", BrainType.RANDOMMOVEMENT, 20, 65, Direction.LEFT));
-			actors.add(new Actor("Man", "Man_1.png", BrainType.RANDOMMOVEMENT, 25, 63, Direction.UP));
-		}
 	}
 
-	private void loadBGM(String mapName) {
-		// TODO: Load Midi based off of mapName
-		bgm = new MidiPlayer("audio/bgm/" + "newbarktown" + ".mid");
+	private void loadBGM() {
+		bgm = new MidiPlayer(bgmFilePath);
 	}
 
 	public static void addActor(Actor actor) {
