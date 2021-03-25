@@ -14,7 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.actor.Actor;
-import com.drkstrinc.pokemon.world.World;
+import com.drkstrinc.pokemon.world.WorldManager;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -42,7 +42,7 @@ public class GameScreen extends ScreenAdapter {
 	private void setupCamera() {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(World.getCurrentMap());
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(WorldManager.getCurrentMap());
 	}
 
 	private void setupInput() {
@@ -67,17 +67,17 @@ public class GameScreen extends ScreenAdapter {
 	}
 
 	private void setupSound() {
-		World.getMidiPlayer().play();
+		WorldManager.getMidiPlayer().play();
 	}
 
 	public static void unlockActors() {
-		for (Actor actor : World.getActors()) {
+		for (Actor actor : WorldManager.getActors()) {
 			actor.unlockMovement();
 		}
 	}
 
 	public static void lockActors() {
-		for (Actor actor : World.getActors()) {
+		for (Actor actor : WorldManager.getActors()) {
 			actor.lockMovement();
 		}
 	}
@@ -91,9 +91,9 @@ public class GameScreen extends ScreenAdapter {
 
 		tiledMapRenderer.setView(camera);
 
-		if (!World.retroMap) {
+		if (!WorldManager.retroMap) {
 			// Render Map Layers below Actors' Z-Axis
-			tiledMapRenderer.render(World.groundLayer);
+			tiledMapRenderer.render(WorldManager.belowLayers);
 		} else {
 			// Retro Worlds don't utilize Z axis, render all Layers below Actors
 			tiledMapRenderer.render();
@@ -101,14 +101,14 @@ public class GameScreen extends ScreenAdapter {
 		}
 
 		// Render Actors (including Player)
-		for (Actor actor : World.getActors()) {
+		for (Actor actor : WorldManager.getActors()) {
 			actor.update();
 			actor.render(batch, camera);
 		}
 
-		if (!World.retroMap) {
+		if (!WorldManager.retroMap) {
 			// Render Map Layers above Actors' Z-Axis
-			tiledMapRenderer.render(World.aboveLayers);
+			tiledMapRenderer.render(WorldManager.aboveLayers);
 		}
 
 		// Render Debug Info
