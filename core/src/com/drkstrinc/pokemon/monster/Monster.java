@@ -1,6 +1,7 @@
 package com.drkstrinc.pokemon.monster;
 
 import com.drkstrinc.pokemon.bag.Item;
+import com.drkstrinc.pokemon.datatype.ElementalType;
 import com.drkstrinc.pokemon.datatype.Gender;
 import com.drkstrinc.pokemon.datatype.GrowthRate;
 

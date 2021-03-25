@@ -1,6 +1,7 @@
 package com.drkstrinc.pokemon.monster;
 
 import com.drkstrinc.pokemon.datatype.DamageType;
+import com.drkstrinc.pokemon.datatype.ElementalType;
 
 public class Move {
 
@@ -8,7 +9,7 @@ public class Move {
 	private String internalName;
 	private String displayName;
 
-	private int functionCode; //Additional effect. Needs to be converted from hex
+	private int functionCode; // Additional effect. Needs to be converted from hex
 	private int basePower;
 
 	private ElementalType type;
@@ -17,9 +18,9 @@ public class Move {
 
 	private int maxPP;
 	private int currentPP;
-	
-	//target???
+
+	// target???
 	private int priority;
-	
+
 	private String description;
 }
