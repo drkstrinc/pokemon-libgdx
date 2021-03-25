@@ -6,17 +6,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
 
 import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.datatype.BrainType;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.MovementState;
 import com.drkstrinc.pokemon.event.Event;
+import com.drkstrinc.pokemon.sound.SoundEffect;
 import com.drkstrinc.pokemon.world.World;
 
 public class Actor {
@@ -249,15 +245,23 @@ public class Actor {
 	public boolean canMove(Direction direction) {
 		// Check Map Tiles
 		if (direction.equals(Direction.UP) && World.checkForCollisionAt(getCoordX(), getCoordY() + 1)) {
+			if (id == 0)
+				SoundEffect.bump();
 			return false;
 		}
 		if (direction.equals(Direction.DOWN) && World.checkForCollisionAt(getCoordX(), getCoordY() - 1)) {
+			if (id == 0)
+				SoundEffect.bump();
 			return false;
 		}
 		if (direction.equals(Direction.LEFT) && World.checkForCollisionAt(getCoordX() - 1, getCoordY())) {
+			if (id == 0)
+				SoundEffect.bump();
 			return false;
 		}
 		if (direction.equals(Direction.RIGHT) && World.checkForCollisionAt(getCoordX() + 1, getCoordY())) {
+			if (id == 0)
+				SoundEffect.bump();
 			return false;
 		}
 
@@ -267,24 +271,32 @@ public class Actor {
 				if (getX() == actor.getX()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.DOWN) && (getY() - Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.LEFT) && (getX() - Constants.TILE_WIDTH == actor.getX())) {
 				if (getY() == actor.getY()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.RIGHT) && (getX() + Constants.TILE_WIDTH == actor.getX())) {
 				if (getY() == actor.getY()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			}
@@ -293,24 +305,32 @@ public class Actor {
 				if (getX() == actor.getX()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.DOWN) && (getTargetY() - Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.LEFT) && (getTargetX() - Constants.TILE_WIDTH == actor.getX())) {
 				if (getY() == actor.getY()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.RIGHT) && (getTargetX() + Constants.TILE_WIDTH == actor.getX())) {
 				if (getY() == actor.getY()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			}
@@ -319,6 +339,8 @@ public class Actor {
 				if (getX() == actor.getX()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.DOWN)
@@ -326,6 +348,8 @@ public class Actor {
 				if (getX() == actor.getX()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.LEFT)
@@ -333,6 +357,8 @@ public class Actor {
 				if (getY() == actor.getY()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			} else if (direction.equals(Direction.RIGHT)
@@ -340,6 +366,8 @@ public class Actor {
 				if (getY() == actor.getY()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
 							+ this.getClass().getSimpleName() + " " + name + " and " + actor.getName());
+					if (id == 0)
+						SoundEffect.bump();
 					return false;
 				}
 			}
@@ -494,6 +522,14 @@ public class Actor {
 
 	private void resetSpriteIndex() {
 		spriteIndex = 0;
+	}
+
+	public int getActorId() {
+		return id;
+	}
+
+	public void setActorId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
