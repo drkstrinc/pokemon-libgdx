@@ -7,7 +7,7 @@ import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
 import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.screen.TitleScreen;
-import com.drkstrinc.pokemon.world.World;
+import com.drkstrinc.pokemon.world.WorldManager;
 
 public class Pokemon extends Game {
 
@@ -22,7 +22,7 @@ public class Pokemon extends Game {
 	@Override
 	public void create() {
 		newPlayer();
-		new World(this, "NewBarkTown");
+		new WorldManager(this, "NewBarkTown");
 		gs = new GameScreen(this);
 
 		setScreen(new TitleScreen(this));

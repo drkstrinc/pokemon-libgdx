@@ -7,7 +7,7 @@ import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
 import com.drkstrinc.pokemon.datatype.MovementState;
 import com.drkstrinc.pokemon.screen.GameScreen;
-import com.drkstrinc.pokemon.world.World;
+import com.drkstrinc.pokemon.world.WorldManager;
 
 public class Player extends Actor {
 
@@ -55,7 +55,7 @@ public class Player extends Actor {
 
 	private void doInteract() {
 		// TODO: Work on Message window and having text render there
-		for (Actor actor : World.getActors()) {
+		for (Actor actor : WorldManager.getActors()) {
 			if (direction.equals(Direction.UP) && (getY() + Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
 					GameScreen.lockActors();

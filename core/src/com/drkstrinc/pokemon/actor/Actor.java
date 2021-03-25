@@ -13,7 +13,7 @@ import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.MovementState;
 import com.drkstrinc.pokemon.event.Event;
 import com.drkstrinc.pokemon.sound.SoundEffect;
-import com.drkstrinc.pokemon.world.World;
+import com.drkstrinc.pokemon.world.WorldManager;
 
 public class Actor {
 
@@ -244,29 +244,29 @@ public class Actor {
 
 	public boolean canMove(Direction direction) {
 		// Check Map Tiles
-		if (direction.equals(Direction.UP) && World.checkForCollisionAt(getCoordX(), getCoordY() + 1)) {
+		if (direction.equals(Direction.UP) && WorldManager.checkForCollisionAt(getCoordX(), getCoordY() + 1)) {
 			if (id == 0)
 				SoundEffect.bump();
 			return false;
 		}
-		if (direction.equals(Direction.DOWN) && World.checkForCollisionAt(getCoordX(), getCoordY() - 1)) {
+		if (direction.equals(Direction.DOWN) && WorldManager.checkForCollisionAt(getCoordX(), getCoordY() - 1)) {
 			if (id == 0)
 				SoundEffect.bump();
 			return false;
 		}
-		if (direction.equals(Direction.LEFT) && World.checkForCollisionAt(getCoordX() - 1, getCoordY())) {
+		if (direction.equals(Direction.LEFT) && WorldManager.checkForCollisionAt(getCoordX() - 1, getCoordY())) {
 			if (id == 0)
 				SoundEffect.bump();
 			return false;
 		}
-		if (direction.equals(Direction.RIGHT) && World.checkForCollisionAt(getCoordX() + 1, getCoordY())) {
+		if (direction.equals(Direction.RIGHT) && WorldManager.checkForCollisionAt(getCoordX() + 1, getCoordY())) {
 			if (id == 0)
 				SoundEffect.bump();
 			return false;
 		}
 
 		// Check Actors (Current, Actor Target, Other Actor Target)
-		for (Actor actor : World.getActors()) {
+		for (Actor actor : WorldManager.getActors()) {
 			if (direction.equals(Direction.UP) && (getY() + Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
 					Gdx.app.debug("TMX", "Actor Collision " + direction.toString() + " for "
