@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="2021.02.15" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="1">
+ <tileset firstgid="1" source="tilesets/Johto_Day.tsx"/>
+ <tileset firstgid="1425" name="Sea_Day" tilewidth="32" tileheight="32" tilecount="8" columns="8">
+  <image source="autotiles/Sea_Day.png" width="256" height="32"/>
+  <tile id="0">
+   <animation>
+    <frame tileid="6" duration="100"/>
+    <frame tileid="0" duration="100"/>
+    <frame tileid="1" duration="100"/>
+    <frame tileid="2" duration="100"/>
+    <frame tileid="3" duration="100"/>
+    <frame tileid="4" duration="100"/>
+    <frame tileid="5" duration="100"/>
+    <frame tileid="7" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="1433" name="Flower_Day" tilewidth="32" tileheight="32" tilecount="4" columns="4">
+  <image source="autotiles/Flower_Day.png" trans="000000" width="128" height="32"/>
+  <tile id="0">
+   <animation>
+    <frame tileid="2" duration="200"/>
+    <frame tileid="0" duration="200"/>
+    <frame tileid="2" duration="200"/>
+    <frame tileid="1" duration="200"/>
+    <frame tileid="3" duration="200"/>
+   </animation>
+  </tile>
+ </tileset>
+ <layer id="1" name="Layer1" width="40" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt1MEKgkAQxvGVSOh9wlvaxfL1ejTrZJ2qF2mCFWRgch2ZnYHm8Mej3/5wLUIIheF2xtP2cT/3s5y2j6TfAN1RD0N+T+iFehvw28QOUA1VsQY6Er5cV86Zxn0tdIZO8fmtI3y5rmv8SiLsi11z+c3taye2HfNdnDNRu1K7bNPjnCnnPkknaT8L+zjfXw9dY7cFu8Z7I31/8b1cuk/q/qb+Vyhfab+UffsfvtJ+2HFur9b3t3aftF/OOH450/ZxP/eznLaP+7mf5bR93O+//T6Hv1bE
+  </data>
+ </layer>
+ <layer id="2" name="Layer2" width="40" height="40">
+  <data encoding="base64" compression="zlib">
+   eJzt0TEKwCAQRFGbXMN0dnZe1tuaRrAJWVlkEvMfTKk77IYAAAC6oi6wuS/vN145jVFIornWm6r6Wb25X1YXeLCyXz38f6zen7fjn+87zhgz+xYAAAC40wD5wwVh
+  </data>
+ </layer>
+</map>

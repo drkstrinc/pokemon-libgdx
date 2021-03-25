@@ -22,7 +22,7 @@ public class Pokemon extends Game {
 	@Override
 	public void create() {
 		newPlayer();
-		new World(this, "newbarktown");
+		new World(this, "NewBarkTown");
 		gs = new GameScreen(this);
 
 		setScreen(new TitleScreen(this));
