@@ -1,9 +1,13 @@
 package com.drkstrinc.pokemon.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 import com.drkstrinc.pokemon.Pokemon;
@@ -22,6 +26,7 @@ public class World {
 
 	private String name;
 	private String mapFilePath;
+	private String metadataFilePath;
 	private String bgmFilePath;
 	private boolean isOutdoors;
 	private boolean hasEncounters;
@@ -33,6 +38,8 @@ public class World {
 	public static boolean retroMap = true;
 	public static int[] groundLayer = { 0, 1 };
 	public static int[] aboveLayers = { 2 };
+
+	private static List<Integer> impassibleTileList;
 
 	private static ArrayList<Actor> actors;
 	private static ArrayList<Event> events;
@@ -46,7 +53,7 @@ public class World {
 
 	private void readFromJSON(String mapName) {
 		String json = Gdx.files.local("data/" + mapName + ".json").readString();
-		Gdx.app.log("TMX", "\"" + mapName + "\": " + json);
+		Gdx.app.debug("TMX", "\"" + mapName + "\": " + json);
 
 		JsonElement element = JsonParser.parseString(json);
 		JsonObject rootObject = element.getAsJsonObject();
@@ -54,9 +61,14 @@ public class World {
 		// Map Metadata
 		name = rootObject.get("name").getAsString();
 		mapFilePath = rootObject.get("map").getAsString();
+		metadataFilePath = rootObject.get("meta").getAsString();
 		bgmFilePath = rootObject.get("bgm").getAsString();
 		isOutdoors = rootObject.get("outdoors").getAsBoolean();
 		hasEncounters = rootObject.get("encounters").getAsBoolean();
+
+		impassibleTileList = new ArrayList<>();
+		Arrays.asList(Gdx.files.local(metadataFilePath).readString().split(","))
+				.forEach(tileId -> impassibleTileList.add(Integer.valueOf(tileId)));
 
 		// Actors and Actor Events
 		for (JsonElement actorElement : rootObject.getAsJsonArray("actors")) {
@@ -90,11 +102,12 @@ public class World {
 		// Map Events
 		for (JsonElement eventElement : rootObject.getAsJsonArray("events")) {
 			JsonObject eventObject = eventElement.getAsJsonObject();
+			// TODO: Create Map level Events and interact with them
 		}
 	}
 
 	public void loadMap() {
-		Gdx.app.log("TMX", "Loading Map: " + mapFilePath);
+		Gdx.app.log("TMX", "Loading Map: " + name + " - " + mapFilePath);
 		currentMap = new TmxMapLoader().load(mapFilePath);
 	}
 
@@ -129,6 +142,21 @@ public class World {
 
 	public static TiledMap getCurrentMap() {
 		return currentMap;
+	}
+
+	public static boolean checkForCollisionAt(int x, int y) {
+		for (int i = 0; i < currentMap.getLayers().size(); i++) {
+			TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.getLayers().get(i);
+			Cell cell = layer.getCell(x, y);
+			if (cell != null && cell.getTile() != null) {
+				int tileId = cell.getTile().getId() - 1;
+				// Gdx.app.debug("TMX", "Tile ID - Layer " + i + ": " + tileId);
+				if (impassibleTileList.contains(tileId)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public static MidiPlayer getMidiPlayer() {

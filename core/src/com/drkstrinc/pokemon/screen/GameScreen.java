@@ -112,9 +112,7 @@ public class GameScreen extends ScreenAdapter {
 		}
 
 		// Render Debug Info
-		if (Constants.DEBUG) {
-			renderDebugInfo();
-		}
+		renderDebugInfo();
 	}
 
 	private void renderDebugInfo() {

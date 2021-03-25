@@ -1,6 +1,7 @@
 {
 	"name": "New Bark Town",
-	"map": "map/retro/newbarktown.tmx",
+	"map": "map/NewBarkTown.tmx",
+	"meta": "map/tilesets/Johto_Metadata.csv",
 	"bgm": "audio/bgm/newbarktown.mid",
 	"retro": true,
 	"outdoors": true,
@@ -14,8 +15,8 @@
 			"sprite": "Silver.png",
 			"brain": "STATIONARY",
 			"position": {
-				"x": 160,
-				"y": 45,
+				"x": 14,
+				"y": 29,
 				"direction": "RIGHT"
 			},
 			"events": [
@@ -32,7 +33,7 @@
 					"actions": [
 						{
 							"move": {
-								"target": "player",
+								"target": 0,
 								"sequence": [
 									"MOVELEFT",
 									"MOVEDOWN"
@@ -60,8 +61,8 @@
 			"sprite": "Lass.png",
 			"brain": "RANDOMMOVEMENT",
 			"position": {
-				"x": 162,
-				"y": 40,
+				"x": 16,
+				"y": 23,
 				"direction": "LEFT"
 			},
 			"events": [
@@ -86,8 +87,8 @@
 			"sprite": "Man_1.png",
 			"brain": "RANDOMMOVEMENT",
 			"position": {
-				"x": 168,
-				"y": 38,
+				"x": 22,
+				"y": 22,
 				"direction": "UP"
 			},
 			"events": [

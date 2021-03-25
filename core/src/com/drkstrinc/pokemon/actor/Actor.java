@@ -129,8 +129,8 @@ public class Actor {
 					resetSpriteIndex();
 				}
 				setMovementState(MovementState.IDLE);
-				Gdx.app.log("CHR", this.getClass().getSimpleName() + " " + id + " Name: " + name + " - X: "
-						+ getCoordX() + " Y: " + getCoordY());
+				// Gdx.app.log("CHR", this.getClass().getSimpleName() + " " + id + " Name: " +
+				// name + " - X: " + getCoordX() + " Y: " + getCoordY());
 			}
 		} else {
 			setMovementState(MovementState.IDLE);
@@ -247,36 +247,18 @@ public class Actor {
 	}
 
 	public boolean canMove(Direction direction) {
-		MapLayer collisionLayer = World.getCurrentMap().getLayers().get("Collision");
-		MapObjects objects = collisionLayer.getObjects();
-
-		// Check Map Objects
-		// TODO: Check individual Tile Properties instead ofCollision Layer
-		for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
-			Rectangle rectangle = rectangleObject.getRectangle();
-			if (direction.equals(Direction.UP) && Intersector.overlaps(rectangle, new Rectangle(getX(),
-					getY() + Constants.TILE_HEIGHT, Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
-				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
-						+ this.getClass().getSimpleName() + " " + name);
-				return false;
-			} else if (direction.equals(Direction.DOWN) && Intersector.overlaps(rectangle, new Rectangle(getX(),
-					getY() - Constants.TILE_HEIGHT, Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
-				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
-						+ this.getClass().getSimpleName() + " " + name);
-				return false;
-			} else if (direction.equals(Direction.LEFT)
-					&& Intersector.overlaps(rectangle, new Rectangle(getX() - Constants.TILE_WIDTH, getY(),
-							Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
-				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
-						+ this.getClass().getSimpleName() + " " + name);
-				return false;
-			} else if (direction.equals(Direction.RIGHT)
-					&& Intersector.overlaps(rectangle, new Rectangle(getX() + Constants.TILE_WIDTH, getY(),
-							Constants.TILE_WIDTH, Constants.TILE_HEIGHT))) {
-				Gdx.app.debug("TMX", "Object Collision " + direction.toString() + " for "
-						+ this.getClass().getSimpleName() + " " + name);
-				return false;
-			}
+		// Check Map Tiles
+		if (direction.equals(Direction.UP) && World.checkForCollisionAt(getCoordX(), getCoordY() + 1)) {
+			return false;
+		}
+		if (direction.equals(Direction.DOWN) && World.checkForCollisionAt(getCoordX(), getCoordY() - 1)) {
+			return false;
+		}
+		if (direction.equals(Direction.LEFT) && World.checkForCollisionAt(getCoordX() - 1, getCoordY())) {
+			return false;
+		}
+		if (direction.equals(Direction.RIGHT) && World.checkForCollisionAt(getCoordX() + 1, getCoordY())) {
+			return false;
 		}
 
 		// Check Actors (Current, Actor Target, Other Actor Target)

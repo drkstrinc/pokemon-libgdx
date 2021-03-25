@@ -3,7 +3,6 @@ package com.drkstrinc.pokemon.event;
 import java.util.ArrayList;
 
 import com.drkstrinc.pokemon.Pokemon;
-import com.drkstrinc.pokemon.world.World;
 
 public class Event {
 

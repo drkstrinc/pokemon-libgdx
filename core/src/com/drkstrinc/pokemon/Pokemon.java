@@ -16,10 +16,8 @@ public class Pokemon extends Game {
 	private static Player player;
 
 	// Outside Player's House
-	// private int startingCoordX = 28;
-	// private int startingCoordY = 68;
-	private int startingCoordX = 170;
-	private int startingCoordY = 41;
+	private int startingCoordX = 24;
+	private int startingCoordY = 25;
 
 	@Override
 	public void create() {
