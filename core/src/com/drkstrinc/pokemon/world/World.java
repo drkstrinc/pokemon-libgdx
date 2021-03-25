@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
@@ -32,6 +33,11 @@ public class World {
 	private boolean hasEncounters;
 
 	private static TiledMap currentMap;
+	private static String dayTimeTileset;
+	private static String nightTimeTileset;
+
+	private static boolean isNightTime;
+	private static final int nightTimeTileOffset = 9999;
 
 	private static MidiPlayer bgm;
 
@@ -61,10 +67,13 @@ public class World {
 		// Map Metadata
 		name = rootObject.get("name").getAsString();
 		mapFilePath = rootObject.get("map").getAsString();
+		dayTimeTileset = rootObject.get("dayTileset").getAsString();
+		nightTimeTileset = rootObject.get("nightTileset").getAsString();
 		metadataFilePath = rootObject.get("meta").getAsString();
 		bgmFilePath = rootObject.get("bgm").getAsString();
 		isOutdoors = rootObject.get("outdoors").getAsBoolean();
 		hasEncounters = rootObject.get("encounters").getAsBoolean();
+		isNightTime = false;
 
 		impassibleTileList = new ArrayList<>();
 		Arrays.asList(Gdx.files.local(metadataFilePath).readString().split(","))
@@ -109,6 +118,7 @@ public class World {
 	public void loadMap() {
 		Gdx.app.log("TMX", "Loading Map: " + name + " - " + mapFilePath);
 		currentMap = new TmxMapLoader().load(mapFilePath);
+		// loadNightTiles();
 	}
 
 	public void initActors() {
@@ -150,13 +160,52 @@ public class World {
 			Cell cell = layer.getCell(x, y);
 			if (cell != null && cell.getTile() != null) {
 				int tileId = cell.getTile().getId() - 1;
-				// Gdx.app.debug("TMX", "Tile ID - Layer " + i + ": " + tileId);
+				if (isNightTime)
+					tileId -= nightTimeTileOffset;
 				if (impassibleTileList.contains(tileId)) {
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	public static void loadDayTiles() {
+		if (isNightTime) {
+			for (MapLayer layer : currentMap.getLayers()) {
+				TiledMapTileLayer tiledLayer = (TiledMapTileLayer) layer;
+				for (int x = 0; x < tiledLayer.getWidth(); x++) {
+					for (int y = 0; y < tiledLayer.getHeight(); y++) {
+						Cell cell = tiledLayer.getCell(x, y);
+						if (cell != null && cell.getTile() != null) {
+							int tileId = cell.getTile().getId() - 1;
+							cell.setTile(currentMap.getTileSets().getTileSet(dayTimeTileset)
+									.getTile(tileId - nightTimeTileOffset));
+						}
+					}
+				}
+			}
+			isNightTime = false;
+		}
+	}
+
+	public static void loadNightTiles() {
+		if (!isNightTime) {
+			for (MapLayer layer : currentMap.getLayers()) {
+				TiledMapTileLayer tiledLayer = (TiledMapTileLayer) layer;
+				for (int x = 0; x < tiledLayer.getWidth(); x++) {
+					for (int y = 0; y < tiledLayer.getHeight(); y++) {
+						Cell cell = tiledLayer.getCell(x, y);
+						if (cell != null && cell.getTile() != null) {
+							int tileId = cell.getTile().getId() - 1;
+							cell.setTile(currentMap.getTileSets().getTileSet(nightTimeTileset)
+									.getTile(tileId + nightTimeTileOffset));
+						}
+					}
+				}
+			}
+			isNightTime = true;
+		}
 	}
 
 	public static MidiPlayer getMidiPlayer() {

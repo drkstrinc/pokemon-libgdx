@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="2021.02.15" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="1">
  <tileset firstgid="1" source="tilesets/Johto_Day.tsx"/>
+ <tileset firstgid="9999" source="tilesets/Johto_Night.tsx"/>
  <tileset firstgid="1425" name="Sea_Day" tilewidth="32" tileheight="32" tilecount="8" columns="8">
   <image source="autotiles/Sea_Day.png" width="256" height="32"/>
   <tile id="0">

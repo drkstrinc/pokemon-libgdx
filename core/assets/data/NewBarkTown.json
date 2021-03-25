@@ -1,6 +1,8 @@
 {
 	"name": "New Bark Town",
 	"map": "map/NewBarkTown.tmx",
+	"dayTileset": "Johto_Day",
+	"nightTileset": "Johto_Night",
 	"meta": "map/tilesets/Johto_Metadata.csv",
 	"bgm": "audio/bgm/NewBarkTown.mid",
 	"retro": true,
