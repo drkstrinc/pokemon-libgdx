@@ -29,6 +29,11 @@ public class Player extends Actor {
 				doInteract();
 			}
 
+			// TODO: Remove this Map Change/Teleport Test
+			if (Gdx.input.isKeyPressed(Input.Keys.T)) {
+				WorldManager.setWorld("NewBarkTown", 15, 25, Direction.LEFT);
+			}
+
 			if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 				setMovementSpeed(MovementState.BIKING.getSpeed());
 			} else if (Gdx.input.isKeyPressed(Input.Keys.X)) {

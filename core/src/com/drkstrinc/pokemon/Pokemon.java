@@ -22,9 +22,10 @@ public class Pokemon extends Game {
 	@Override
 	public void create() {
 		newPlayer();
-		new WorldManager(this, "NewBarkTown");
+		
+		WorldManager.setWorld("NewBarkTown", player.getCoordX(), player.getCoordY(), player.getDirection());
+		
 		gs = new GameScreen(this);
-
 		setScreen(new TitleScreen(this));
 	}
 
