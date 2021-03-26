@@ -116,11 +116,13 @@ public class GameScreen extends ScreenAdapter {
 	}
 
 	private void renderDebugInfo() {
-		batch.begin();
-		font.draw(batch, "X: " + Pokemon.getPlayer().getCoordX() + " Y: " + Pokemon.getPlayer().getCoordY(),
-				Pokemon.getPlayer().getX() - (Pokemon.getPlayer().getCurrentSprite().getRegionWidth() / 2),
-				Pokemon.getPlayer().getY() - 5);
-		batch.end();
+		if (Constants.DEBUG) {
+			batch.begin();
+			font.draw(batch, "X: " + Pokemon.getPlayer().getCoordX() + " Y: " + Pokemon.getPlayer().getCoordY(),
+					Pokemon.getPlayer().getX() - (Pokemon.getPlayer().getCurrentSprite().getRegionWidth() / 2),
+					Pokemon.getPlayer().getY() - 5);
+			batch.end();
+		}
 	}
 
 	@Override

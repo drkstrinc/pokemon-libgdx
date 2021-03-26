@@ -3,6 +3,7 @@
 	"map": "map/NewBarkTown.tmx",
 	"dayTileset": "Johto_Day",
 	"nightTileset": "Johto_Night",
+	"nightTimeTileOffset": 1425,
 	"meta": "map/tilesets/Johto_Metadata.csv",
 	"bgm": "audio/bgm/NewBarkTown.mid",
 	"retro": true,

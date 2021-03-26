@@ -35,7 +35,7 @@ public class WorldManager {
 	public static final int[] belowLayers = { 0, 1 };
 	public static final int[] aboveLayers = { 2 };
 
-	private static final int nightTimeTileOffset = 9999;
+	private static int nightTimeTileOffset;
 	private static List<Integer> impassibleTileList;
 	private static List<Integer> autoTileList;
 
@@ -60,6 +60,7 @@ public class WorldManager {
 		currentWorld = gson.fromJson(worldJSON, World.class);
 
 		// World Flags
+		nightTimeTileOffset = currentWorld.getNightTimeTileOffset();
 		retroMap = currentWorld.getRetroFlag();
 		hasEncounters = currentWorld.hasEncounters();
 
@@ -110,7 +111,8 @@ public class WorldManager {
 				.forEach(tileId -> impassibleTileList.add(Integer.valueOf(tileId)));
 
 		autoTileList = new ArrayList<>();
-		autoTileList.add(1424);
+		autoTileList.add(2848);
+		autoTileList.add(2856);
 	}
 
 	private static void initActors() {
@@ -156,8 +158,10 @@ public class WorldManager {
 			Cell cell = layer.getCell(x, y);
 			if (cell != null && cell.getTile() != null) {
 				int tileId = cell.getTile().getId() - 1;
-				if (timeOfDay == Time.NIGHT)
+				if (timeOfDay == Time.NIGHT) {
 					tileId -= nightTimeTileOffset;
+					tileId += 1;
+				}
 				if (impassibleTileList.contains(tileId)) {
 					return true;
 				}

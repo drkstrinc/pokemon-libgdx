@@ -1,7 +1,8 @@
 package com.drkstrinc.pokemon;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
-
+import com.badlogic.gdx.Gdx;
 import com.drkstrinc.pokemon.actor.Player;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
@@ -21,10 +22,12 @@ public class Pokemon extends Game {
 
 	@Override
 	public void create() {
+		Gdx.app.setLogLevel(Application.LOG_INFO);
+
 		newPlayer();
-		
+
 		WorldManager.setWorld("NewBarkTown", player.getCoordX(), player.getCoordY(), player.getDirection());
-		
+
 		gs = new GameScreen(this);
 		setScreen(new TitleScreen(this));
 	}

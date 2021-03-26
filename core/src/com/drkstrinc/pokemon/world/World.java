@@ -9,6 +9,7 @@ public class World {
 	private String map;
 	private String dayTileset;
 	private String nightTileset;
+	private int nightTimeTileOffset;
 
 	private String meta;
 
@@ -39,6 +40,10 @@ public class World {
 
 	public String getNightTileset() {
 		return nightTileset;
+	}
+
+	public int getNightTimeTileOffset() {
+		return nightTimeTileOffset;
 	}
 
 	public String getMapTileMetadata() {

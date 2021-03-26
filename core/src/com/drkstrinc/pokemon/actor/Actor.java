@@ -125,8 +125,8 @@ public class Actor {
 					resetSpriteIndex();
 				}
 				setMovementState(MovementState.IDLE);
-				// Gdx.app.log("CHR", this.getClass().getSimpleName() + " " + id + " Name: " +
-				// name + " - X: " + getCoordX() + " Y: " + getCoordY());
+				Gdx.app.debug("CHR", this.getClass().getSimpleName() + " " + id + " Name: " + name + " - X: "
+						+ getCoordX() + " Y: " + getCoordY());
 			}
 		} else {
 			setMovementState(MovementState.IDLE);

@@ -33,8 +33,8 @@ public class Brain {
 			@Override
 			public void run() {
 				if (!actor.isMovementLocked()) {
-					Gdx.app.debug("CHR",
-							actor.getClass().getSimpleName() + " " + actor.getName() + " - Execute Movement");
+					Gdx.app.debug("CHR", actor.getClass().getSimpleName() + " " + actor.getActorId() + " Name: "
+							+ actor.getName() + " - Execute Movement");
 					int rnd = r.nextInt(4);
 					if (rnd == 0) {
 						actor.turnUp();
