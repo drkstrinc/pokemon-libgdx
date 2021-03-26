@@ -121,7 +121,12 @@ public class WorldManager {
 	}
 
 	private static void loadBGM() {
+		if (bgm != null) {
+			bgm.stop();
+			bgm.dispose();
+		}
 		bgm = new MidiPlayer(currentWorld.getBGMFileName());
+		bgm.play();
 	}
 
 	public static MidiPlayer getMidiPlayer() {

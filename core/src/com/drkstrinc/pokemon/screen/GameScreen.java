@@ -33,7 +33,6 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void show() {
 		setupCamera();
-		setupSound();
 		setupInput();
 		setupOther();
 		unlockActors();
@@ -64,10 +63,6 @@ public class GameScreen extends ScreenAdapter {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		font.setColor(Color.RED);
-	}
-
-	private void setupSound() {
-		WorldManager.getMidiPlayer().play();
 	}
 
 	public static void unlockActors() {

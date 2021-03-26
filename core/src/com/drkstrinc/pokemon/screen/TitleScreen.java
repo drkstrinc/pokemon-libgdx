@@ -9,10 +9,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.drkstrinc.pokemon.Pokemon;
+import com.drkstrinc.pokemon.sound.MidiPlayer;
+import com.drkstrinc.pokemon.world.WorldManager;
 
 public class TitleScreen extends ScreenAdapter {
 
 	private Pokemon game;
+
+	private MidiPlayer bgm;
 
 	private SpriteBatch batch;
 	private BitmapFont font;
@@ -25,15 +29,25 @@ public class TitleScreen extends ScreenAdapter {
 
 	@Override
 	public void show() {
+		loadBGM();
 		Gdx.input.setInputProcessor(new InputAdapter() {
 			@Override
 			public boolean keyDown(int keyCode) {
 				if (keyCode == Input.Keys.SPACE) {
+					bgm.stop();
+					bgm.dispose();
+					WorldManager.setWorld("NewBarkTown", Pokemon.getPlayer().getCoordX(),
+							Pokemon.getPlayer().getCoordY(), Pokemon.getPlayer().getDirection());
 					game.setScreen(Pokemon.getGameScreen());
 				}
 				return true;
 			}
 		});
+	}
+
+	private void loadBGM() {
+		bgm = new MidiPlayer("audio/bgm/Titlescreen.mid");
+		bgm.play();
 	}
 
 	@Override

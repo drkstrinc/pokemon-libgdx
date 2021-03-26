@@ -8,7 +8,6 @@ import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
 import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.screen.TitleScreen;
-import com.drkstrinc.pokemon.world.WorldManager;
 
 public class Pokemon extends Game {
 
@@ -25,8 +24,6 @@ public class Pokemon extends Game {
 		Gdx.app.setLogLevel(Application.LOG_INFO);
 
 		newPlayer();
-
-		WorldManager.setWorld("NewBarkTown", player.getCoordX(), player.getCoordY(), player.getDirection());
 
 		gs = new GameScreen(this);
 		setScreen(new TitleScreen(this));
