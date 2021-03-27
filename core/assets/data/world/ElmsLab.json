@@ -1,0 +1,38 @@
+{
+	"name": "Prof. Elm's Lab",
+	"map": "map/ElmsLab.tmx",
+	"dayTileset": "Indoors",
+	"nightTileset": "Indoors",
+	"nightTimeTileOffset": 1425,
+	"meta": "map/tilesets/Johto_Metadata.csv",
+	"bgm": "audio/bgm/Lab.mid",
+	"retro": true,
+	"outdoors": false,
+	"encounters": false,
+	"connections": [
+		{
+			"id": 1,
+			"target": "NewBarkTown",
+			"enterX": 20,
+			"enterY": 15,
+			"enterDir": "DOWN",
+			"exitX": 17,
+			"exitY": 27,
+			"exitDir": "DOWN"
+		},
+		{
+			"id": 1,
+			"target": "NewBarkTown",
+			"enterX": 19,
+			"enterY": 15,
+			"enterDir": "DOWN",
+			"exitX": 17,
+			"exitY": 27,
+			"exitDir": "DOWN"
+		}
+	],
+	"actors": [
+	],
+	"events": [
+	]
+}

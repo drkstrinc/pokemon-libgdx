@@ -127,6 +127,7 @@ public class Actor {
 				setMovementState(MovementState.IDLE);
 				Gdx.app.debug("CHR", this.getClass().getSimpleName() + " " + id + " Name: " + name + " - X: "
 						+ getCoordX() + " Y: " + getCoordY());
+				WorldManager.checkForMapConnection(getCoordX(), getCoordY(), getDirection());
 			}
 		} else {
 			setMovementState(MovementState.IDLE);
@@ -164,11 +165,11 @@ public class Actor {
 		updateActorSprite();
 	}
 
-	public void moveDown() {
+	public void moveDown(int tiles) {
 		if (getDirection().equals(Direction.DOWN)) {
 			if (movementTimeout < 0 && canMove(Direction.DOWN) && movementState.equals(MovementState.IDLE)) {
 				setMovementState(MovementState.WALKING);
-				targetY = getY() - Constants.TILE_HEIGHT;
+				targetY = getY() - Constants.TILE_HEIGHT * tiles;
 				targetX = getX();
 			}
 		} else if (movementState.equals(MovementState.IDLE)) {
@@ -177,12 +178,12 @@ public class Actor {
 		}
 	}
 
-	public void moveLeft() {
+	public void moveLeft(int tiles) {
 		if (getDirection().equals(Direction.LEFT)) {
 			if (movementTimeout < 0 && canMove(Direction.LEFT) && movementState.equals(MovementState.IDLE)) {
 				setMovementState(MovementState.WALKING);
 				targetY = getY();
-				targetX = getX() - Constants.TILE_WIDTH;
+				targetX = getX() - Constants.TILE_WIDTH * tiles;
 			}
 		} else if (movementState.equals(MovementState.IDLE)) {
 			turnLeft();
@@ -190,12 +191,12 @@ public class Actor {
 		}
 	}
 
-	public void moveRight() {
+	public void moveRight(int tiles) {
 		if (getDirection().equals(Direction.RIGHT)) {
 			if (movementTimeout < 0 && canMove(Direction.RIGHT) && movementState.equals(MovementState.IDLE)) {
 				setMovementState(MovementState.WALKING);
 				targetY = getY();
-				targetX = getX() + Constants.TILE_WIDTH;
+				targetX = getX() + Constants.TILE_WIDTH * tiles;
 			}
 		} else if (movementState.equals(MovementState.IDLE)) {
 			turnRight();
@@ -203,11 +204,11 @@ public class Actor {
 		}
 	}
 
-	public void moveUp() {
+	public void moveUp(int tiles) {
 		if (getDirection().equals(Direction.UP)) {
 			if (movementTimeout < 0 && canMove(Direction.UP) && movementState.equals(MovementState.IDLE)) {
 				setMovementState(MovementState.WALKING);
-				targetY = getY() + Constants.TILE_HEIGHT;
+				targetY = getY() + Constants.TILE_HEIGHT * tiles;
 				targetX = getX();
 			}
 		} else if (movementState.equals(MovementState.IDLE)) {

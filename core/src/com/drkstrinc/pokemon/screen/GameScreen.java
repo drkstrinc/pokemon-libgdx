@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
@@ -33,6 +34,7 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void show() {
 		setupCamera();
+		setupMapRenderer(WorldManager.getCurrentMap());
 		setupInput();
 		setupOther();
 		unlockActors();
@@ -41,7 +43,10 @@ public class GameScreen extends ScreenAdapter {
 	private void setupCamera() {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(WorldManager.getCurrentMap());
+	}
+
+	public void setupMapRenderer(TiledMap map) {
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
 	}
 
 	private void setupInput() {
@@ -86,7 +91,7 @@ public class GameScreen extends ScreenAdapter {
 
 		tiledMapRenderer.setView(camera);
 
-		if (!WorldManager.retroMap) {
+		if (!WorldManager.isRetroMap()) {
 			// Render Map Layers below Actors' Z-Axis
 			tiledMapRenderer.render(WorldManager.belowLayers);
 		} else {
@@ -101,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
 			actor.render(batch, camera);
 		}
 
-		if (!WorldManager.retroMap) {
+		if (!WorldManager.isRetroMap()) {
 			// Render Map Layers above Actors' Z-Axis
 			tiledMapRenderer.render(WorldManager.aboveLayers);
 		}
@@ -111,13 +116,13 @@ public class GameScreen extends ScreenAdapter {
 	}
 
 	private void renderDebugInfo() {
-		if (Constants.DEBUG) {
+		// if (Constants.DEBUG) {
 			batch.begin();
 			font.draw(batch, "X: " + Pokemon.getPlayer().getCoordX() + " Y: " + Pokemon.getPlayer().getCoordY(),
 					Pokemon.getPlayer().getX() - (Pokemon.getPlayer().getCurrentSprite().getRegionWidth() / 2),
 					Pokemon.getPlayer().getY() - 5);
 			batch.end();
-		}
+		// }
 	}
 
 	@Override

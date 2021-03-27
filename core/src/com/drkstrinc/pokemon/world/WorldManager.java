@@ -18,6 +18,7 @@ import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Time;
 import com.drkstrinc.pokemon.event.Event;
 import com.drkstrinc.pokemon.sound.MidiPlayer;
+import com.drkstrinc.pokemon.sound.SoundEffect;
 
 import com.google.gson.Gson;
 
@@ -27,10 +28,10 @@ public class WorldManager {
 	private static TiledMap currentMap;
 	private static MidiPlayer bgm;
 
-	public static boolean retroMap;
-	public static boolean hasEncounters;
+	private static boolean retroMap;
+	private static boolean hasEncounters;
 
-	public static Time timeOfDay;
+	private static Time timeOfDay;
 
 	public static final int[] belowLayers = { 0, 1 };
 	public static final int[] aboveLayers = { 2 };
@@ -42,13 +43,17 @@ public class WorldManager {
 	private static ArrayList<Actor> actors;
 	private static ArrayList<Event> events;
 
+	private static ArrayList<JConnection> connections;
+
 	public static void setWorld(String worldName, int playerX, int playerY, Direction playerDirection) {
 		initActors();
+		initEvents();
 		loadWorld(worldName);
 		initLists();
 		loadMap();
-		movePlayer(playerX, playerY, playerDirection);
 		loadBGM();
+		movePlayer(playerX, playerY, playerDirection);
+		updateRenderer();
 	}
 
 	private static void loadWorld(String worldName) {
@@ -68,6 +73,12 @@ public class WorldManager {
 			timeOfDay = Time.DAY;
 		} else {
 			timeOfDay = Time.NIGHT;
+		}
+
+		// Map Connections
+		connections = new ArrayList<>();
+		for (JConnection jConnection : currentWorld.getMapConnections()) {
+			connections.add(jConnection);
 		}
 
 		// Actors and Actor Events
@@ -100,9 +111,13 @@ public class WorldManager {
 		Gdx.app.log("TMX", "Loading Map: " + currentWorld.getName() + " - " + currentWorld.getMapFileName());
 		currentMap = new TmxMapLoader().load(currentWorld.getMapFileName());
 
-		if (timeOfDay == Time.NIGHT) {
+		if (currentWorld.isOutdoors() && timeOfDay == Time.NIGHT) {
 			loadNightTiles();
 		}
+	}
+
+	private static void updateRenderer() {
+		Pokemon.getGameScreen().setupMapRenderer(currentMap);
 	}
 
 	private static void initLists() {
@@ -118,6 +133,10 @@ public class WorldManager {
 	private static void initActors() {
 		actors = new ArrayList<Actor>();
 		actors.add(Pokemon.getPlayer());
+	}
+
+	private static void initEvents() {
+		events = new ArrayList<Event>();
 	}
 
 	private static void loadBGM() {
@@ -141,6 +160,18 @@ public class WorldManager {
 		actors.remove(actor);
 	}
 
+	public static boolean isRetroMap() {
+		return retroMap;
+	}
+
+	public static boolean hasEncounters() {
+		return hasEncounters;
+	}
+
+	public static ArrayList<JConnection> getMapConnections() {
+		return connections;
+	}
+
 	public static ArrayList<Actor> getActors() {
 		return actors;
 	}
@@ -157,36 +188,39 @@ public class WorldManager {
 		return currentMap;
 	}
 
-	public static boolean checkForCollisionAt(int x, int y) {
+	public static ArrayList<Integer> getTilesAt(int x, int y) {
+		ArrayList<Integer> tileList = new ArrayList<>();
 		for (int i = 0; i < currentMap.getLayers().size(); i++) {
 			TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.getLayers().get(i);
 			Cell cell = layer.getCell(x, y);
 			if (cell != null && cell.getTile() != null) {
 				int tileId = cell.getTile().getId() - 1;
-				if (timeOfDay == Time.NIGHT) {
+				if (currentWorld.isOutdoors() && timeOfDay == Time.NIGHT) {
 					tileId -= nightTimeTileOffset;
 					tileId += 1;
 				}
-				if (impassibleTileList.contains(tileId)) {
-					return true;
-				}
+				tileList.add(tileId);
+			}
+		}
+		return tileList;
+	}
+
+	public static boolean checkForCollisionAt(int x, int y) {
+		for (int tileId : getTilesAt(x, y)) {
+			SoundEffect.checkForTileNoises(tileId);
+			if (impassibleTileList.contains(tileId)) {
+				return true;
 			}
 		}
 		return false;
 	}
 
-	public static void loadDayTiles() {
-		for (MapLayer layer : currentMap.getLayers()) {
-			TiledMapTileLayer tiledLayer = (TiledMapTileLayer) layer;
-			for (int x = 0; x < tiledLayer.getWidth(); x++) {
-				for (int y = 0; y < tiledLayer.getHeight(); y++) {
-					Cell cell = tiledLayer.getCell(x, y);
-					if (cell != null && cell.getTile() != null) {
-						int tileId = cell.getTile().getId() - 1;
-						cell.setTile(currentMap.getTileSets().getTileSet(currentWorld.getDayTileset())
-								.getTile(tileId - nightTimeTileOffset));
-					}
-				}
+	public static void checkForMapConnection(int x, int y, Direction direction) {
+		for (JConnection connection : connections) {
+			if (x == connection.getEnterCoordX() && y == connection.getEnterCoordY()
+					&& direction == connection.getEnterDirection()) {
+				WorldManager.setWorld(connection.getTargetMap(), connection.getExitCoordX(), connection.getExitCoordY(),
+						connection.getExitDirection());
 			}
 		}
 	}

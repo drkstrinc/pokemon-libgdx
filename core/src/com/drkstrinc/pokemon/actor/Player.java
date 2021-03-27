@@ -2,6 +2,7 @@ package com.drkstrinc.pokemon.actor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+
 import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
@@ -29,11 +30,6 @@ public class Player extends Actor {
 				doInteract();
 			}
 
-			// TODO: Remove this Map Change/Teleport Test
-			if (Gdx.input.isKeyPressed(Input.Keys.T)) {
-				WorldManager.setWorld("NewBarkTown", 15, 25, Direction.LEFT);
-			}
-
 			if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 				setMovementSpeed(MovementState.BIKING.getSpeed());
 			} else if (Gdx.input.isKeyPressed(Input.Keys.X)) {
@@ -45,13 +41,25 @@ public class Player extends Actor {
 			handleMovement();
 
 			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-				moveUp();
+				moveUp(1);
 			} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-				moveDown();
+				if (WorldManager.getTilesAt(getCoordX(), getCoordY() - 1).contains(10)) {
+					moveDown(2);
+				} else {
+					moveDown(1);
+				}
 			} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-				moveLeft();
+				if (WorldManager.getTilesAt(getCoordX() - 1, getCoordY()).contains(1)) {
+					moveLeft(2);
+				} else {
+					moveLeft(1);
+				}
 			} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-				moveRight();
+				if (WorldManager.getTilesAt(getCoordX() + 1, getCoordY()).contains(3)) {
+					moveRight(2);
+				} else {
+					moveRight(1);
+				}
 			} else {
 				spriteIndex = 1;
 			}

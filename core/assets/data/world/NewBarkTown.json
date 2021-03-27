@@ -9,6 +9,18 @@
 	"retro": true,
 	"outdoors": true,
 	"encounters": false,
+	"connections": [
+		{
+			"id": 1,
+			"target": "ElmsLab",
+			"enterX": 17,
+			"enterY": 28,
+			"enterDir": "UP",
+			"exitX": 20,
+			"exitY": 15,
+			"exitDir": "UP"
+		}
+	],
 	"actors": [
 		{
 			"id": 1,

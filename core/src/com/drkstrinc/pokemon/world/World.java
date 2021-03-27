@@ -4,6 +4,7 @@ import com.drkstrinc.pokemon.datatype.BrainType;
 import com.drkstrinc.pokemon.datatype.Direction;
 
 public class World {
+
 	private String name;
 
 	private String map;
@@ -18,6 +19,8 @@ public class World {
 	private boolean retro;
 	private boolean outdoors;
 	private boolean encounters;
+
+	private JConnection[] connections;
 
 	private JActor[] actors;
 	private JEvent[] events;
@@ -62,6 +65,10 @@ public class World {
 		return encounters;
 	}
 
+	public JConnection[] getMapConnections() {
+		return connections;
+	}
+
 	public JActor[] getActors() {
 		return actors;
 	}
@@ -72,7 +79,55 @@ public class World {
 
 }
 
+class JConnection {
+
+	private int id;
+
+	private String target;
+
+	private int enterX;
+	private int enterY;
+	private String enterDir;
+
+	private int exitX;
+	private int exitY;
+	private String exitDir;
+
+	public int getId() {
+		return id;
+	}
+
+	public String getTargetMap() {
+		return target;
+	}
+
+	public int getEnterCoordX() {
+		return enterX;
+	}
+
+	public int getEnterCoordY() {
+		return enterY;
+	}
+
+	public Direction getEnterDirection() {
+		return Direction.valueOf(enterDir);
+	}
+
+	public int getExitCoordX() {
+		return exitX;
+	}
+
+	public int getExitCoordY() {
+		return exitY;
+	}
+
+	public Direction getExitDirection() {
+		return Direction.valueOf(exitDir);
+	}
+}
+
 class JActor {
+
 	private int id;
 	private String type;
 
@@ -128,6 +183,7 @@ class JActor {
 }
 
 class JPosition {
+
 	private int x;
 	private int y;
 	private String direction;
@@ -146,6 +202,7 @@ class JPosition {
 }
 
 class JEvent {
+
 	private int id;
 	private JRequirement[] requirements;
 	private String[] messages;
@@ -173,6 +230,7 @@ class JRequirement {
 }
 
 class JAction {
+
 	private JMove move;
 
 	public JMove getMove() {
@@ -181,6 +239,7 @@ class JAction {
 }
 
 class JMove {
+
 	private String target;
 	private String[] sequence;
 
