@@ -2,7 +2,7 @@ package com.drkstrinc.pokemon;
 
 public class Constants {
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static final String GAME_TITLE = "Pokemon libGDX";
 

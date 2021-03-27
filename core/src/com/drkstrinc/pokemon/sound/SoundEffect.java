@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 
 import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.datatype.Direction;
+import com.drkstrinc.pokemon.world.WorldManager;
 
 public class SoundEffect {
 
@@ -22,6 +23,10 @@ public class SoundEffect {
 				&& Pokemon.getPlayer().getY() == Pokemon.getPlayer().getTargetY()) {
 			if (id == 69) {
 				doorEnter();
+			} else if (id == 39) {
+				if (!WorldManager.getCurrentWorld().isOutdoors()) {
+					doorExit();
+				}
 			} else if (id == 1 || id == 3 || id == 10 || id == 4 || id == 6 || id == 14) {
 				jump();
 			}

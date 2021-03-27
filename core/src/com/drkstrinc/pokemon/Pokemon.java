@@ -21,7 +21,11 @@ public class Pokemon extends Game {
 
 	@Override
 	public void create() {
-		Gdx.app.setLogLevel(Application.LOG_INFO);
+		if (Constants.DEBUG) {
+			Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		} else {
+			Gdx.app.setLogLevel(Application.LOG_INFO);
+		}
 
 		newPlayer();
 

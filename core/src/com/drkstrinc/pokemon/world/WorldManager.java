@@ -37,8 +37,11 @@ public class WorldManager {
 	public static final int[] aboveLayers = { 2 };
 
 	private static int nightTimeTileOffset;
+	private static int indoorTileOffset;
 	private static List<Integer> impassibleTileList;
+	private static List<Integer> impassibleIndoorTileList;
 	private static List<Integer> autoTileList;
+	private static int currentTileId = 0;
 
 	private static ArrayList<Actor> actors;
 	private static ArrayList<Event> events;
@@ -66,6 +69,7 @@ public class WorldManager {
 
 		// World Flags
 		nightTimeTileOffset = currentWorld.getNightTimeTileOffset();
+		indoorTileOffset = currentWorld.getIndoorTileOffset();
 		retroMap = currentWorld.getRetroFlag();
 		hasEncounters = currentWorld.hasEncounters();
 
@@ -125,6 +129,10 @@ public class WorldManager {
 		Arrays.asList(Gdx.files.local(currentWorld.getMapTileMetadata()).readString().split(","))
 				.forEach(tileId -> impassibleTileList.add(Integer.valueOf(tileId)));
 
+		impassibleIndoorTileList = new ArrayList<>();
+		Arrays.asList(Gdx.files.local(currentWorld.getMapTileMetadata()).readString().split(","))
+				.forEach(tileId -> impassibleIndoorTileList.add(Integer.valueOf(tileId)));
+
 		autoTileList = new ArrayList<>();
 		autoTileList.add(2848);
 		autoTileList.add(2856);
@@ -180,12 +188,24 @@ public class WorldManager {
 		return events;
 	}
 
+	public static World getCurrentWorld() {
+		return currentWorld;
+	}
+
 	public static void setCurrentMap(TiledMap map) {
 		currentMap = map;
 	}
 
 	public static TiledMap getCurrentMap() {
 		return currentMap;
+	}
+
+	public static int getCurrentTileId() {
+		return currentTileId;
+	}
+
+	private static void setCurrentTileId(int tileId) {
+		currentTileId = tileId;
 	}
 
 	public static ArrayList<Integer> getTilesAt(int x, int y) {
@@ -199,6 +219,11 @@ public class WorldManager {
 					tileId -= nightTimeTileOffset;
 					tileId += 1;
 				}
+				if (!currentWorld.isOutdoors()) {
+					tileId -= indoorTileOffset;
+					tileId += 1;
+				}
+				setCurrentTileId(tileId);
 				tileList.add(tileId);
 			}
 		}
@@ -208,7 +233,9 @@ public class WorldManager {
 	public static boolean checkForCollisionAt(int x, int y) {
 		for (int tileId : getTilesAt(x, y)) {
 			SoundEffect.checkForTileNoises(tileId);
-			if (impassibleTileList.contains(tileId)) {
+			if (currentWorld.isOutdoors() && impassibleTileList.contains(tileId)) {
+				return true;
+			} else if (!currentWorld.isOutdoors() && impassibleIndoorTileList.contains(tileId)) {
 				return true;
 			}
 		}

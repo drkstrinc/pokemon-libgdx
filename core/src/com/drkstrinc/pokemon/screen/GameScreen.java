@@ -116,13 +116,13 @@ public class GameScreen extends ScreenAdapter {
 	}
 
 	private void renderDebugInfo() {
-		// if (Constants.DEBUG) {
+		if (Constants.DEBUG) {
 			batch.begin();
-			font.draw(batch, "X: " + Pokemon.getPlayer().getCoordX() + " Y: " + Pokemon.getPlayer().getCoordY(),
-					Pokemon.getPlayer().getX() - (Pokemon.getPlayer().getCurrentSprite().getRegionWidth() / 2),
-					Pokemon.getPlayer().getY() - 5);
+			String debugString = Pokemon.getPlayer().getCoordX() + " Y: " + Pokemon.getPlayer().getCoordY() + " Tile: "
+					+ WorldManager.getCurrentTileId();
+			font.draw(batch, "X: " + debugString, Pokemon.getPlayer().getX() - 130, Pokemon.getPlayer().getY() + 130);
 			batch.end();
-		// }
+		}
 	}
 
 	@Override
