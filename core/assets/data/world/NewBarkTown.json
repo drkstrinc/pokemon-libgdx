@@ -13,6 +13,7 @@
 	"connections": [
 		{
 			"id": 1,
+			"desc": "Elms Lab",
 			"target": "ElmsLab",
 			"enterX": 17,
 			"enterY": 28,
@@ -20,6 +21,61 @@
 			"exitX": 20,
 			"exitY": 15,
 			"exitDir": "UP"
+		},
+		{
+			"id": 2,
+			"desc": "Player's House",
+			"target": "NewBarkTownHouses",
+			"enterX": 24,
+			"enterY": 26,
+			"enterDir": "UP",
+			"exitX": 31,
+			"exitY": 25,
+			"exitDir": "UP"
+		},
+		{
+			"id": 3,
+			"desc": "House",
+			"target": "NewBarkTownHouses",
+			"enterX": 22,
+			"enterY": 18,
+			"enterDir": "UP",
+			"exitX": 28,
+			"exitY": 8,
+			"exitDir": "UP"
+		},
+		{
+			"id": 4,
+			"desc": "Elm's House",
+			"target": "NewBarkTownHouses",
+			"enterX": 14,
+			"enterY": 20,
+			"enterDir": "UP",
+			"exitX": 9,
+			"exitY": 25,
+			"exitDir": "UP"
+		},
+		{
+			"id": 5,
+			"desc": "Route 29 Tile 1",
+			"target": "Route29",
+			"enterX": 7,
+			"enterY": 23,
+			"enterDir": "LEFT",
+			"exitX": 74,
+			"exitY": 23,
+			"exitDir": "LEFT"
+		},
+		{
+			"id": 6,
+			"desc": "Route 29 Tile 1",
+			"target": "Route29",
+			"enterX": 7,
+			"enterY": 22,
+			"enterDir": "LEFT",
+			"exitX": 74,
+			"exitY": 22,
+			"exitDir": "LEFT"
 		}
 	],
 	"actors": [

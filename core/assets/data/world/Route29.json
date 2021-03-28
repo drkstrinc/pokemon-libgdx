@@ -1,0 +1,41 @@
+{
+	"name": "Route 29",
+	"map": "map/Route29.tmx",
+	"dayTileset": "Johto_Day",
+	"nightTileset": "Johto_Night",
+	"nightTimeTileOffset": 1425,
+	"indoorTileOffset": 2861,
+	"meta": "map/tilesets/Johto_Metadata.csv",
+	"bgm": "audio/bgm/Route29.mid",
+	"retro": true,
+	"outdoors": true,
+	"encounters": true,
+	"connections": [
+		{
+			"id": 1,
+			"desc": "New Bark Town Tile 1",
+			"target": "NewBarkTown",
+			"enterX": 74,
+			"enterY": 23,
+			"enterDir": "RIGHT",
+			"exitX": 7,
+			"exitY": 23,
+			"exitDir": "RIGHT"
+		},
+		{
+			"id": 2,
+			"desc": "New Bark Town Tile 1",
+			"target": "NewBarkTown",
+			"enterX": 74,
+			"enterY": 22,
+			"enterDir": "RIGHT",
+			"exitX": 7,
+			"exitY": 22,
+			"exitDir": "RIGHT"
+		}
+	],
+	"actors": [
+	],
+	"events": [
+	]
+}

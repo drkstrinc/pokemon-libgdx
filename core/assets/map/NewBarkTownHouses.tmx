@@ -29,14 +29,15 @@
    </animation>
   </tile>
  </tileset>
+ <tileset firstgid="2861" source="tilesets/Indoors.tsx"/>
  <layer id="1" name="Layer1" width="40" height="40">
   <data encoding="base64" compression="zlib">
-   eJzt1U0KwjAQhuEUQRA3XsE7FHf+bFp7/epKXakXcYQUQkiaZKZNBjqLF3f69SGNlVKqYtyGeaV9xE/8OFfaZ06/B/S0ejHye0Mfqy8Dv5XuCJ2gg+4MXTy+WFfMMw37GugKtfrzX+fxxbpS/NaebF/bNZdfaF9j2HbE3zILPZNvV2z7bXzDptrYF3qm3Puov7f0fannr4duunvCrtjvd90VZqHzZ7+XqftS3t+dI+q95/PF+Ln2Ue69esQX40f5/wjtneL8TXGnz3n+MH45w/jlrLSP+Ikf50r7iJ/4ca60j/gt2+8Hwm5FCw==
+   eJztlztuwkAQhrcjyL6K6ZM+6VECXRSRLuLR5dkFRDoOwAE4AAfIAfIQHVATH4BwgEj5Lc9K1sjhsTsOUTSf9Mku8OpDu5LHxiiKovw+n4ExpdCYIa5j+EI+w7dg8/P3QeojvIF3sMKsbbHOT5TR9oXnR3DJfN1i3T5+8wQH1HcNe7DOdIU3cTeRbbjN6ZLqm8ApnNG9S18XPsAGvKR7yb4F/PDoq1NTG3aE+yT219qELaH9na9pmzv2SZ6/mFreyWxf7Nl3Rvr0KYqiKP+fiGYY6xVdD8J9l6UcsvebnVVXf+T9VsR8kGC/EyK6Jt8QVXgMT3ZYOzsD8hnVB7tusj9HtC/nDv993Ywq0Zc3V7r05a0l0ed7doo6f6dsLXt2XPuyc6lE30VQ3N4oiqLsk29tX4Ok
   </data>
  </layer>
  <layer id="2" name="Layer2" width="40" height="40">
   <data encoding="base64" compression="zlib">
-   eJzt0TEKwCAQRFH73MF0goWd9z+baQSbkJVFJjH/wZS6w24IAACgq+oCm/vyfuOV0xiFJJprvamqn9Wb+xV1gQcr++XD/8fq/Xk7/vm+44wxs28BAACAOw0HiASN
+   eJzt1bsJADAIQEH7bOP+w2WEBBIknxOuVF5ntogEKDaa1f3ZO/r06dNX3QfA+07/H7/27frt+vTpA7hHBzxAQjg=
   </data>
  </layer>
 </map>

@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 import com.drkstrinc.pokemon.Constants;
+import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
 import com.drkstrinc.pokemon.datatype.MovementState;
-import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.world.WorldManager;
 
 public class Player extends Actor {
@@ -26,10 +26,6 @@ public class Player extends Actor {
 	@Override
 	public void update() {
 		if (!isMovementLocked()) {
-			if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-				doInteract();
-			}
-
 			if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 				setMovementSpeed(MovementState.BIKING.getSpeed());
 			} else if (Gdx.input.isKeyPressed(Input.Keys.X)) {
@@ -39,64 +35,64 @@ public class Player extends Actor {
 			}
 
 			handleMovement();
-
-			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-				moveUp(1);
-			} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-				if (WorldManager.getTilesAt(getCoordX(), getCoordY() - 1).contains(10)) {
-					moveDown(2);
-				} else {
-					moveDown(1);
-				}
-			} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-				if (WorldManager.getTilesAt(getCoordX() - 1, getCoordY()).contains(1)) {
-					moveLeft(2);
-				} else {
-					moveLeft(1);
-				}
-			} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-				if (WorldManager.getTilesAt(getCoordX() + 1, getCoordY()).contains(3)) {
-					moveRight(2);
-				} else {
-					moveRight(1);
-				}
-			} else {
-				spriteIndex = 1;
-			}
+			checkInputs();
 		}
 	}
 
-	private void doInteract() {
-		// TODO: Work on Message window and having text render there
+	private void checkInputs() {
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			moveUp(1);
+		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			if (WorldManager.getTilesAt(getCoordX(), getCoordY() - 1).contains(10)) {
+				moveDown(2);
+			} else {
+				moveDown(1);
+			}
+		} else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			if (WorldManager.getTilesAt(getCoordX() - 1, getCoordY()).contains(1)) {
+				moveLeft(2);
+			} else {
+				moveLeft(1);
+			}
+		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			if (WorldManager.getTilesAt(getCoordX() + 1, getCoordY()).contains(3)) {
+				moveRight(2);
+			} else {
+				moveRight(1);
+			}
+		} else {
+			spriteIndex = 1;
+		}
+	}
+
+	public void doInteract() {
 		for (Actor actor : WorldManager.getActors()) {
 			if (direction.equals(Direction.UP) && (getY() + Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
-					GameScreen.lockActors();
 					actor.turnDown();
-					Gdx.app.log("CHR", actor.getEvent(0).getMessages().get(0));
+					Pokemon.getGameScreen().getDialogueController().startDialogue(actor);
+					return;
 				}
 			} else if (direction.equals(Direction.DOWN) && (getY() - Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
-					GameScreen.lockActors();
 					actor.turnUp();
-					Gdx.app.log("CHR", actor.getEvent(0).getMessages().get(0));
+					Pokemon.getGameScreen().getDialogueController().startDialogue(actor);
+					return;
 				}
 			} else if (direction.equals(Direction.LEFT) && (getX() - Constants.TILE_WIDTH == actor.getX())) {
 				if (getY() == actor.getY()) {
-					GameScreen.lockActors();
 					actor.turnRight();
-					Gdx.app.log("CHR", actor.getEvent(0).getMessages().get(0));
+					Pokemon.getGameScreen().getDialogueController().startDialogue(actor);
+					return;
 				}
 			} else if (direction.equals(Direction.RIGHT) && (getX() + Constants.TILE_WIDTH == actor.getX())) {
 				if (getY() == actor.getY()) {
-					GameScreen.lockActors();
 					actor.turnLeft();
-					Gdx.app.log("CHR", actor.getEvent(0).getMessages().get(0));
+					Pokemon.getGameScreen().getDialogueController().startDialogue(actor);
+					return;
 				}
 			}
 		}
-
-		GameScreen.unlockActors();
 	}
 
 }

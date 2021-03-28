@@ -3,13 +3,19 @@ package com.drkstrinc.pokemon;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.drkstrinc.pokemon.actor.Player;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
 import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.screen.TitleScreen;
+import com.drkstrinc.pokemon.util.SkinGenerator;
 
 public class Pokemon extends Game {
+
+	private static Skin skin;
 
 	private static GameScreen gs;
 
@@ -27,6 +33,7 @@ public class Pokemon extends Game {
 			Gdx.app.setLogLevel(Application.LOG_INFO);
 		}
 
+		initAssetManager();
 		newPlayer();
 
 		gs = new GameScreen(this);
@@ -35,6 +42,18 @@ public class Pokemon extends Game {
 
 	private void newPlayer() {
 		player = new Player("Kris", Gender.FEMALE, startingCoordX, startingCoordY, Direction.DOWN);
+	}
+
+	private void initAssetManager() {
+		AssetManager assetManager = new AssetManager();
+		assetManager.load("image/ui/gs_ui.atlas", TextureAtlas.class);
+		assetManager.finishLoading();
+
+		skin = SkinGenerator.generateSkin(assetManager);
+	}
+
+	public static Skin getSkin() {
+		return skin;
 	}
 
 	public static Player getPlayer() {

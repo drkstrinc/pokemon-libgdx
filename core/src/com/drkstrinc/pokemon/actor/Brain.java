@@ -5,7 +5,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.badlogic.gdx.Gdx;
+
 import com.drkstrinc.pokemon.datatype.BrainType;
+import com.drkstrinc.pokemon.world.WorldManager;
 
 public class Brain {
 
@@ -29,30 +31,35 @@ public class Brain {
 		// initial starting position (in terms of x and y offsets)
 		int interval = r.nextInt(5000) + 3000;
 		Timer t = new Timer();
+		String originMapName = WorldManager.getCurrentWorld().getName();
 		t.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (!actor.isMovementLocked()) {
-					Gdx.app.debug("CHR", actor.getClass().getSimpleName() + " " + actor.getActorId() + " Name: "
-							+ actor.getName() + " - Execute Movement");
-					int rnd = r.nextInt(4);
-					if (rnd == 0) {
-						actor.turnUp();
-						actor.moveUp(1);
-						actor.spriteIndex = 1;
-					} else if (rnd == 1) {
-						actor.turnDown();
-						actor.moveDown(1);
-						actor.spriteIndex = 1;
-					} else if (rnd == 2) {
-						actor.turnLeft();
-						actor.moveLeft(1);
-						actor.spriteIndex = 1;
-					} else if (rnd == 3) {
-						actor.turnRight();
-						actor.moveRight(1);
-						actor.spriteIndex = 1;
+				if (originMapName.equals(WorldManager.getCurrentWorld().getName())) {
+					if (!actor.isMovementLocked()) {
+						Gdx.app.debug("CHR", actor.getClass().getSimpleName() + " " + actor.getActorId() + " Name: "
+								+ actor.getName() + " - Execute Movement");
+						int rnd = r.nextInt(4);
+						if (rnd == 0) {
+							actor.turnUp();
+							actor.moveUp(1);
+							actor.spriteIndex = 1;
+						} else if (rnd == 1) {
+							actor.turnDown();
+							actor.moveDown(1);
+							actor.spriteIndex = 1;
+						} else if (rnd == 2) {
+							actor.turnLeft();
+							actor.moveLeft(1);
+							actor.spriteIndex = 1;
+						} else if (rnd == 3) {
+							actor.turnRight();
+							actor.moveRight(1);
+							actor.spriteIndex = 1;
+						}
 					}
+				} else {
+					t.cancel();
 				}
 			}
 		}, interval, interval);

@@ -3,6 +3,7 @@ package com.drkstrinc.pokemon.world;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -48,6 +49,10 @@ public class WorldManager {
 
 	private static ArrayList<JConnection> connections;
 
+	private WorldManager() {
+
+	}
+
 	public static void setWorld(String worldName, int playerX, int playerY, Direction playerDirection) {
 		initActors();
 		initEvents();
@@ -81,9 +86,7 @@ public class WorldManager {
 
 		// Map Connections
 		connections = new ArrayList<>();
-		for (JConnection jConnection : currentWorld.getMapConnections()) {
-			connections.add(jConnection);
-		}
+		Collections.addAll(connections, currentWorld.getMapConnections());
 
 		// Actors and Actor Events
 		for (JActor jActor : currentWorld.getActors()) {
@@ -139,12 +142,12 @@ public class WorldManager {
 	}
 
 	private static void initActors() {
-		actors = new ArrayList<Actor>();
+		actors = new ArrayList<>();
 		actors.add(Pokemon.getPlayer());
 	}
 
 	private static void initEvents() {
-		events = new ArrayList<Event>();
+		events = new ArrayList<>();
 	}
 
 	private static void loadBGM() {
@@ -235,7 +238,8 @@ public class WorldManager {
 			SoundEffect.checkForTileNoises(tileId);
 			if (currentWorld.isOutdoors() && impassibleTileList.contains(tileId)) {
 				return true;
-			} else if (!currentWorld.isOutdoors() && impassibleIndoorTileList.contains(tileId)) {
+			}
+			if (!currentWorld.isOutdoors() && impassibleIndoorTileList.contains(tileId)) {
 				return true;
 			}
 		}

@@ -1,8 +1,7 @@
 package com.drkstrinc.pokemon.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,24 +10,45 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.actor.Actor;
+import com.drkstrinc.pokemon.controller.InteractionController;
+import com.drkstrinc.pokemon.controller.OverworldController;
+import com.drkstrinc.pokemon.menu.MessageBox;
+import com.drkstrinc.pokemon.menu.ChoiceBox;
 import com.drkstrinc.pokemon.world.WorldManager;
 
 public class GameScreen extends ScreenAdapter {
 
-	private Pokemon game;
+	private InputMultiplexer inputMultiplexer;
+	private OverworldController overworldController;
+	private InteractionController interactionController;
 
 	private OrthographicCamera camera;
 	private TiledMapRenderer tiledMapRenderer;
+
+	private Stage uiStage;
+
+	private MessageBox speechBox;
+	private ChoiceBox choiceBox;
 
 	private SpriteBatch batch;
 	private BitmapFont font;
 
 	public GameScreen(Pokemon game) {
-		this.game = game;
+		initUI();
+
+		inputMultiplexer = new InputMultiplexer();
+		interactionController = new InteractionController(speechBox, choiceBox);
+		overworldController = new OverworldController(game);
+		inputMultiplexer.addProcessor(interactionController);
+		inputMultiplexer.addProcessor(overworldController);
 	}
 
 	@Override
@@ -50,18 +70,7 @@ public class GameScreen extends ScreenAdapter {
 	}
 
 	private void setupInput() {
-		Gdx.input.setInputProcessor(new InputAdapter() {
-			@Override
-			public boolean keyDown(int keyCode) {
-				if (keyCode == Input.Keys.ENTER) {
-					game.setScreen(new MenuScreen(game));
-				} else if (keyCode == Input.Keys.B) {
-					// TODO: Remove this later. This is just for testing Screens
-					game.setScreen(new BattleScreen(game));
-				}
-				return true;
-			}
-		});
+		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
 	private void setupOther() {
@@ -89,6 +98,10 @@ public class GameScreen extends ScreenAdapter {
 		camera.position.y = Pokemon.getPlayer().getY();
 		camera.update();
 
+		// Update UI
+		uiStage.act(delta);
+		interactionController.update(delta);
+
 		tiledMapRenderer.setView(camera);
 
 		if (!WorldManager.isRetroMap()) {
@@ -111,6 +124,9 @@ public class GameScreen extends ScreenAdapter {
 			tiledMapRenderer.render(WorldManager.aboveLayers);
 		}
 
+		// Render UI
+		uiStage.draw();
+
 		// Render Debug Info
 		renderDebugInfo();
 	}
@@ -123,6 +139,32 @@ public class GameScreen extends ScreenAdapter {
 			font.draw(batch, "X: " + debugString, Pokemon.getPlayer().getX() - 130, Pokemon.getPlayer().getY() + 130);
 			batch.end();
 		}
+	}
+
+	private void initUI() {
+		uiStage = new Stage(new ScreenViewport());
+		uiStage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+		Table speechRoot = new Table();
+		speechRoot.setFillParent(true);
+
+		speechBox = new MessageBox(Pokemon.getSkin());
+		speechBox.setVisible(false);
+
+		choiceBox = new ChoiceBox(Pokemon.getSkin());
+		choiceBox.setVisible(false);
+
+		Table messageTable = new Table();
+		messageTable.add(choiceBox).expand().align(Align.right).space(8f).row();
+		messageTable.add(speechBox).expand().align(Align.bottom).space(8f).row();
+
+		speechRoot.add(messageTable).expand().align(Align.bottom);
+
+		uiStage.addActor(speechRoot);
+	}
+
+	public InteractionController getDialogueController() {
+		return interactionController;
 	}
 
 	@Override

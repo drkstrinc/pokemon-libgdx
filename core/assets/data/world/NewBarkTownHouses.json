@@ -1,0 +1,107 @@
+{
+	"name": "New Bark Town",
+	"map": "map/NewBarkTownHouses.tmx",
+	"dayTileset": "Indoors",
+	"nightTileset": "Indoors",
+	"nightTimeTileOffset": 1425,
+	"indoorTileOffset": 2861,
+	"meta": "map/tilesets/Indoor_Metadata.csv",
+	"bgm": "audio/bgm/NewBarkTown.mid",
+	"retro": true,
+	"outdoors": false,
+	"encounters": false,
+	"connections": [
+		{
+			"id": 1,
+			"desc": "Player House Tile 1",
+			"target": "NewBarkTown",
+			"enterX": 30,
+			"enterY": 25,
+			"enterDir": "DOWN",
+			"exitX": 24,
+			"exitY": 25,
+			"exitDir": "DOWN"
+		},
+		{
+			"id": 2,
+			"desc": "Player House Tile 2",
+			"target": "NewBarkTown",
+			"enterX": 31,
+			"enterY": 25,
+			"enterDir": "DOWN",
+			"exitX": 24,
+			"exitY": 25,
+			"exitDir": "DOWN"
+		},
+		{
+			"id": 3,
+			"desc": "Player House Upstairs",
+			"target": "NewBarkTownHouses",
+			"enterX": 32,
+			"enterY": 32,
+			"enterDir": "UP",
+			"exitX": 15,
+			"exitY": 11,
+			"exitDir": "DOWN"
+		},
+		{
+			"id": 4,
+			"desc": "Player House Downstairs",
+			"target": "NewBarkTownHouses",
+			"enterX": 15,
+			"enterY": 12,
+			"enterDir": "UP",
+			"exitX": 32,
+			"exitY": 31,
+			"exitDir": "DOWN"
+		},
+		{
+			"id": 5,
+			"desc": "House Tile 1",
+			"target": "NewBarkTown",
+			"enterX": 28,
+			"enterY": 8,
+			"enterDir": "DOWN",
+			"exitX": 22,
+			"exitY": 17,
+			"exitDir": "DOWN"
+		},
+		{
+			"id": 6,
+			"desc": "House Tile 2",
+			"target": "NewBarkTown",
+			"enterX": 29,
+			"enterY": 8,
+			"enterDir": "DOWN",
+			"exitX": 22,
+			"exitY": 17,
+			"exitDir": "DOWN"
+		},
+		{
+			"id": 7,
+			"desc": "Elms House Tile 1",
+			"target": "NewBarkTown",
+			"enterX": 9,
+			"enterY": 25,
+			"enterDir": "DOWN",
+			"exitX": 14,
+			"exitY": 19,
+			"exitDir": "DOWN"
+		},
+		{
+			"id": 8,
+			"desc": "Elms House Tile 2",
+			"target": "NewBarkTown",
+			"enterX": 10,
+			"enterY": 25,
+			"enterDir": "DOWN",
+			"exitX": 14,
+			"exitY": 19,
+			"exitDir": "DOWN"
+		}
+	],
+	"actors": [
+	],
+	"events": [
+	]
+}

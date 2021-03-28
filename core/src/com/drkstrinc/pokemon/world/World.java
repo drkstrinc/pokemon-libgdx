@@ -88,6 +88,8 @@ class JConnection {
 
 	private int id;
 
+	private String desc;
+
 	private String target;
 
 	private int enterX;
@@ -100,6 +102,10 @@ class JConnection {
 
 	public int getId() {
 		return id;
+	}
+
+	public String getDescription() {
+		return desc;
 	}
 
 	public String getTargetMap() {

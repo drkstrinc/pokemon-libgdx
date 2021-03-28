@@ -13,6 +13,7 @@
 	"connections": [
 		{
 			"id": 1,
+			"desc": "Elm's Lab Tile 1",
 			"target": "NewBarkTown",
 			"enterX": 20,
 			"enterY": 15,
@@ -22,7 +23,8 @@
 			"exitDir": "DOWN"
 		},
 		{
-			"id": 1,
+			"id": 2,
+			"desc": "Elm's Lab Tile 2",
 			"target": "NewBarkTown",
 			"enterX": 19,
 			"enterY": 15,
