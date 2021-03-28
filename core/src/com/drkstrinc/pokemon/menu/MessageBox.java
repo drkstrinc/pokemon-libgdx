@@ -16,6 +16,7 @@ import com.drkstrinc.pokemon.datatype.MessageState;
 public class MessageBox extends Table {
 
 	private String targetText = "";
+	private int textviewWidth = 30;
 
 	private float animTimer = 0f;
 	private float animationTotalTime = 0f;
@@ -34,7 +35,7 @@ public class MessageBox extends Table {
 	}
 
 	public void animateText(String text) {
-		targetText = text;
+		targetText = wrapText(text);
 		animationTotalTime = text.length() * timePerCharacter;
 		state = MessageState.ANIMATING;
 		animTimer = 0f;
@@ -68,6 +69,21 @@ public class MessageBox extends Table {
 				setText(displayedText);
 			}
 		}
+	}
+
+	private String wrapText(String text) {
+		String temp = "";
+		String sentence = "";
+		String[] array = text.split(" ");
+		for (String word : array) {
+			if ((temp.length() + word.length()) < textviewWidth) {
+				temp += " " + word;
+			} else {
+				sentence += temp + "\n";
+				temp = word;
+			}
+		}
+		return (sentence.replaceFirst(" ", "") + temp);
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public class SkinGenerator {
 
 		skin.add("arrow", uiAtlas.findRegion("arrow"), TextureRegion.class);
 
-		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pkmnfl.ttf"));
+		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/rbygsc.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
 		fontParameter.size = 12;
 		fontParameter.color = new Color(96f / 255f, 96f / 255f, 96f / 255f, 1f);

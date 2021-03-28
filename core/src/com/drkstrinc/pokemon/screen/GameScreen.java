@@ -128,7 +128,7 @@ public class GameScreen extends ScreenAdapter {
 		uiStage.draw();
 
 		// Render Debug Info
-		renderDebugInfo();
+		// renderDebugInfo();
 	}
 
 	private void renderDebugInfo() {
