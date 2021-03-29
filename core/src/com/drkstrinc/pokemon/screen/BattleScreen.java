@@ -9,10 +9,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.drkstrinc.pokemon.Pokemon;
+import com.drkstrinc.pokemon.battle.Battle;
 
 public class BattleScreen extends ScreenAdapter {
 
 	private Pokemon game;
+
+	private Battle battle;
 
 	private SpriteBatch batch;
 	private BitmapFont font;

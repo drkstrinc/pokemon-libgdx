@@ -21,9 +21,9 @@ import com.drkstrinc.pokemon.actor.Actor;
 import com.drkstrinc.pokemon.controller.MenuController;
 import com.drkstrinc.pokemon.controller.MessageController;
 import com.drkstrinc.pokemon.controller.OverworldController;
-import com.drkstrinc.pokemon.menu.MessageBox;
-import com.drkstrinc.pokemon.menu.ChoiceBox;
-import com.drkstrinc.pokemon.menu.MenuBox;
+import com.drkstrinc.pokemon.ui.ChoiceBox;
+import com.drkstrinc.pokemon.ui.MenuBox;
+import com.drkstrinc.pokemon.ui.MessageBox;
 import com.drkstrinc.pokemon.world.WorldManager;
 
 public class GameScreen extends ScreenAdapter {

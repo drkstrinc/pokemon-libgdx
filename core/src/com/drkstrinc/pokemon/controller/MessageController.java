@@ -12,10 +12,10 @@ import com.drkstrinc.pokemon.event.message.LinearMessageNode;
 import com.drkstrinc.pokemon.event.message.Message;
 import com.drkstrinc.pokemon.event.message.MessageNode;
 import com.drkstrinc.pokemon.event.message.MessageTraverser;
-import com.drkstrinc.pokemon.menu.MessageBox;
-import com.drkstrinc.pokemon.menu.ChoiceBox;
 import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.sound.SoundEffect;
+import com.drkstrinc.pokemon.ui.ChoiceBox;
+import com.drkstrinc.pokemon.ui.MessageBox;
 
 /**
  * 

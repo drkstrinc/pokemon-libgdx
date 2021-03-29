@@ -6,12 +6,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 import com.drkstrinc.pokemon.actor.Player;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
+import com.drkstrinc.pokemon.graphics.SkinGenerator;
 import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.screen.TitleScreen;
-import com.drkstrinc.pokemon.util.SkinGenerator;
 
 public class Pokemon extends Game {
 
@@ -47,6 +48,7 @@ public class Pokemon extends Game {
 	private void initAssetManager() {
 		AssetManager assetManager = new AssetManager();
 		assetManager.load("image/ui/gs_ui.atlas", TextureAtlas.class);
+		assetManager.load("image/battlers/battlers.atlas", TextureAtlas.class);
 		assetManager.finishLoading();
 
 		skin = SkinGenerator.generateSkin(assetManager);

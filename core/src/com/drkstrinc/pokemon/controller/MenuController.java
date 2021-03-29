@@ -2,10 +2,9 @@ package com.drkstrinc.pokemon.controller;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-
-import com.drkstrinc.pokemon.menu.MenuBox;
 import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.sound.SoundEffect;
+import com.drkstrinc.pokemon.ui.MenuBox;
 
 /**
  * 

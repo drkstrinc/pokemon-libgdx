@@ -8,6 +8,7 @@ import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Gender;
 import com.drkstrinc.pokemon.datatype.MovementState;
+import com.drkstrinc.pokemon.graphics.ActorSpriteSheet;
 import com.drkstrinc.pokemon.world.WorldManager;
 
 public class Player extends Actor {

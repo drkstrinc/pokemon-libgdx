@@ -12,6 +12,7 @@ import com.drkstrinc.pokemon.datatype.BrainType;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.MovementState;
 import com.drkstrinc.pokemon.event.Event;
+import com.drkstrinc.pokemon.graphics.ActorSpriteSheet;
 import com.drkstrinc.pokemon.sound.SoundEffect;
 import com.drkstrinc.pokemon.world.WorldManager;
 
