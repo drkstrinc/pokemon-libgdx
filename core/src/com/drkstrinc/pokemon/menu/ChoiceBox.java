@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Scaling;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
@@ -18,12 +19,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  */
 public class ChoiceBox extends Table {
 
-	private int selectorIndex = 0;
+	protected int selectorIndex = 0;
 
-	private List<Image> arrows = new ArrayList<>();
-	private List<Label> options = new ArrayList<>();
+	protected List<Image> arrows = new ArrayList<>();
+	protected List<Label> options = new ArrayList<>();
 
-	private Table uiContainer;
+	protected Table uiContainer;
 
 	public ChoiceBox(Skin skin) {
 		super(skin);
@@ -57,6 +58,7 @@ public class ChoiceBox extends Table {
 		for (int i = 0; i < arrows.size(); i++) {
 			arrows.get(i).setVisible(i == selectorIndex);
 		}
+		Gdx.app.debug("MNU", "Current Selection: " + getCurrentSelection());
 	}
 
 	public void moveDown() {
@@ -67,6 +69,7 @@ public class ChoiceBox extends Table {
 		for (int i = 0; i < arrows.size(); i++) {
 			arrows.get(i).setVisible(i == selectorIndex);
 		}
+		Gdx.app.debug("MNU", "Current Selection: " + getCurrentSelection());
 	}
 
 	public void clearChoices() {
@@ -76,8 +79,16 @@ public class ChoiceBox extends Table {
 		selectorIndex = 0;
 	}
 
+	public String getCurrentSelection() {
+		return options.get(selectorIndex).getText().toString();
+	}
+
 	public int getIndex() {
 		return selectorIndex;
+	}
+
+	public void resetIndex() {
+		selectorIndex = 0;
 	}
 
 	public int getAmount() {

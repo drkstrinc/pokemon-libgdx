@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputAdapter;
 
 import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.screen.BattleScreen;
-import com.drkstrinc.pokemon.screen.MenuScreen;
 
 public class OverworldController extends InputAdapter {
 
@@ -20,7 +19,8 @@ public class OverworldController extends InputAdapter {
 		if (keyCode == Input.Keys.Z) {
 			Pokemon.getPlayer().doInteract();
 		} else if (keyCode == Input.Keys.ENTER) {
-			game.setScreen(new MenuScreen(game));
+			Pokemon.getGameScreen().getMenuController().openMenu();
+			// game.setScreen(new MenuScreen(game));
 		} else if (keyCode == Input.Keys.B) {
 			// TODO: Remove this later. This is just for testing Screens
 			game.setScreen(new BattleScreen(game));

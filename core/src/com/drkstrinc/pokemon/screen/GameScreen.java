@@ -18,23 +18,27 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.actor.Actor;
-import com.drkstrinc.pokemon.controller.InteractionController;
+import com.drkstrinc.pokemon.controller.MenuController;
+import com.drkstrinc.pokemon.controller.MessageController;
 import com.drkstrinc.pokemon.controller.OverworldController;
 import com.drkstrinc.pokemon.menu.MessageBox;
 import com.drkstrinc.pokemon.menu.ChoiceBox;
+import com.drkstrinc.pokemon.menu.MenuBox;
 import com.drkstrinc.pokemon.world.WorldManager;
 
 public class GameScreen extends ScreenAdapter {
 
 	private InputMultiplexer inputMultiplexer;
 	private OverworldController overworldController;
-	private InteractionController interactionController;
+	private MenuController menuController;
+	private MessageController messageController;
 
 	private OrthographicCamera camera;
 	private TiledMapRenderer tiledMapRenderer;
 
 	private Stage uiStage;
 
+	private MenuBox menuBox;
 	private MessageBox speechBox;
 	private ChoiceBox choiceBox;
 
@@ -45,9 +49,13 @@ public class GameScreen extends ScreenAdapter {
 		initUI();
 
 		inputMultiplexer = new InputMultiplexer();
-		interactionController = new InteractionController(speechBox, choiceBox);
+
+		menuController = new MenuController(menuBox);
+		messageController = new MessageController(speechBox, choiceBox);
 		overworldController = new OverworldController(game);
-		inputMultiplexer.addProcessor(interactionController);
+
+		inputMultiplexer.addProcessor(menuController);
+		inputMultiplexer.addProcessor(messageController);
 		inputMultiplexer.addProcessor(overworldController);
 	}
 
@@ -100,7 +108,8 @@ public class GameScreen extends ScreenAdapter {
 
 		// Update UI
 		uiStage.act(delta);
-		interactionController.update(delta);
+		messageController.update(delta);
+		menuController.update(delta);
 
 		tiledMapRenderer.setView(camera);
 
@@ -161,10 +170,24 @@ public class GameScreen extends ScreenAdapter {
 		speechRoot.add(messageTable).expand().align(Align.bottom);
 
 		uiStage.addActor(speechRoot);
+
+		Table menuRoot = new Table();
+		menuRoot.setFillParent(true);
+
+		menuBox = new MenuBox(Pokemon.getSkin());
+		menuBox.setVisible(false);
+
+		menuRoot.add(menuBox).expand().align(Align.topRight);
+
+		uiStage.addActor(menuRoot);
 	}
 
-	public InteractionController getDialogueController() {
-		return interactionController;
+	public MenuController getMenuController() {
+		return menuController;
+	}
+
+	public MessageController getMessageController() {
+		return messageController;
 	}
 
 	@Override

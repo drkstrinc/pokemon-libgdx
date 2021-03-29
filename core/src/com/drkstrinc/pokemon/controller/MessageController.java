@@ -22,14 +22,14 @@ import com.drkstrinc.pokemon.sound.SoundEffect;
  * @author hydrozoa
  *
  */
-public class InteractionController extends InputAdapter {
+public class MessageController extends InputAdapter {
 
 	private MessageTraverser traverser;
 
 	private MessageBox speechBox;
 	private ChoiceBox choiceBox;
 
-	public InteractionController(MessageBox speechBox, ChoiceBox choiceBox) {
+	public MessageController(MessageBox speechBox, ChoiceBox choiceBox) {
 		this.speechBox = speechBox;
 		this.choiceBox = choiceBox;
 	}

@@ -70,25 +70,25 @@ public class Player extends Actor {
 			if (direction.equals(Direction.UP) && (getY() + Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
 					actor.turnDown();
-					Pokemon.getGameScreen().getDialogueController().startDialogue(actor);
+					Pokemon.getGameScreen().getMessageController().startDialogue(actor);
 					return;
 				}
 			} else if (direction.equals(Direction.DOWN) && (getY() - Constants.TILE_WIDTH == actor.getY())) {
 				if (getX() == actor.getX()) {
 					actor.turnUp();
-					Pokemon.getGameScreen().getDialogueController().startDialogue(actor);
+					Pokemon.getGameScreen().getMessageController().startDialogue(actor);
 					return;
 				}
 			} else if (direction.equals(Direction.LEFT) && (getX() - Constants.TILE_WIDTH == actor.getX())) {
 				if (getY() == actor.getY()) {
 					actor.turnRight();
-					Pokemon.getGameScreen().getDialogueController().startDialogue(actor);
+					Pokemon.getGameScreen().getMessageController().startDialogue(actor);
 					return;
 				}
 			} else if (direction.equals(Direction.RIGHT) && (getX() + Constants.TILE_WIDTH == actor.getX())) {
 				if (getY() == actor.getY()) {
 					actor.turnLeft();
-					Pokemon.getGameScreen().getDialogueController().startDialogue(actor);
+					Pokemon.getGameScreen().getMessageController().startDialogue(actor);
 					return;
 				}
 			}

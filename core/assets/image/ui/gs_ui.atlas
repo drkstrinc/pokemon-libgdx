@@ -2,7 +2,7 @@ gs_ui.png
 size:96,800
 repeat:none
 arrow
-bounds:0,304,64,64
+bounds:0,304,32,32
 choice1
 bounds:0,208,48,48
 choice2
