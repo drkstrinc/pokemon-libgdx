@@ -2,6 +2,7 @@ package com.drkstrinc.pokemon.controller;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+
 import com.drkstrinc.pokemon.screen.GameScreen;
 import com.drkstrinc.pokemon.sound.SoundEffect;
 import com.drkstrinc.pokemon.ui.MenuBox;
@@ -53,7 +54,7 @@ public class MenuController extends InputAdapter {
 	}
 
 	public void openMenu() {
-		SoundEffect.select();
+		SoundEffect.menu();
 		GameScreen.lockActors();
 		menuBox.setVisible(true);
 	}

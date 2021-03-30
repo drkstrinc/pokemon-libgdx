@@ -6,6 +6,7 @@ import com.drkstrinc.pokemon.datatype.ElementalType;
 public class Move {
 
 	private int id;
+
 	private String internalName;
 	private String displayName;
 
@@ -23,4 +24,8 @@ public class Move {
 	private int priority;
 
 	private String description;
+
+	public Move() {
+
+	}
 }

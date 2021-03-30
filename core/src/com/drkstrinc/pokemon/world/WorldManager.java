@@ -40,7 +40,6 @@ public class WorldManager {
 	private static int nightTimeTileOffset;
 	private static int indoorTileOffset;
 	private static List<Integer> impassibleTileList;
-	private static List<Integer> impassibleIndoorTileList;
 	private static List<Integer> autoTileList;
 	private static int currentTileId = 0;
 
@@ -132,10 +131,7 @@ public class WorldManager {
 		Arrays.asList(Gdx.files.local(currentWorld.getMapTileMetadata()).readString().split(","))
 				.forEach(tileId -> impassibleTileList.add(Integer.valueOf(tileId)));
 
-		impassibleIndoorTileList = new ArrayList<>();
-		Arrays.asList(Gdx.files.local(currentWorld.getMapTileMetadata()).readString().split(","))
-				.forEach(tileId -> impassibleIndoorTileList.add(Integer.valueOf(tileId)));
-
+		// TODO: Load AutoTile info dynamically
 		autoTileList = new ArrayList<>();
 		autoTileList.add(2848);
 		autoTileList.add(2856);
@@ -152,6 +148,9 @@ public class WorldManager {
 
 	private static void loadBGM() {
 		if (bgm != null) {
+			if (bgm.getFileName().equals(currentWorld.getBGMFileName())) {
+				return;
+			}
 			bgm.stop();
 			bgm.dispose();
 		}
@@ -236,10 +235,7 @@ public class WorldManager {
 	public static boolean checkForCollisionAt(int x, int y) {
 		for (int tileId : getTilesAt(x, y)) {
 			SoundEffect.checkForTileNoises(tileId);
-			if (currentWorld.isOutdoors() && impassibleTileList.contains(tileId)) {
-				return true;
-			}
-			if (!currentWorld.isOutdoors() && impassibleIndoorTileList.contains(tileId)) {
+			if (impassibleTileList.contains(tileId)) {
 				return true;
 			}
 		}

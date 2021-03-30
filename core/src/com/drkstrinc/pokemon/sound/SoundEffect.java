@@ -10,6 +10,7 @@ import com.drkstrinc.pokemon.world.WorldManager;
 public class SoundEffect {
 
 	private static Music select = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Select.wav"));
+	private static Music menu = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Menu.wav"));
 	private static Music save = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Save.wav"));
 
 	private static Music bump = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Bump.mp3"));
@@ -39,6 +40,12 @@ public class SoundEffect {
 	public static void select() {
 		if (!select.isPlaying()) {
 			select.play();
+		}
+	}
+
+	public static void menu() {
+		if (!menu.isPlaying()) {
+			menu.play();
 		}
 	}
 

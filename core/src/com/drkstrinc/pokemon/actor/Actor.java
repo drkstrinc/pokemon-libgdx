@@ -498,8 +498,16 @@ public class Actor {
 		this.direction = direction;
 	}
 
+	public MovementState getPreviousMovementState() {
+		return previousMovementState;
+	}
+
 	public void setPreviousMovementState(MovementState movementState) {
 		previousMovementState = movementState;
+	}
+
+	public MovementState getMovementState() {
+		return movementState;
 	}
 
 	public void setMovementState(MovementState movementState) {

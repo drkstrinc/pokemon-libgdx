@@ -7,8 +7,8 @@ import com.drkstrinc.pokemon.datatype.GrowthRate;
 
 public class Monster {
 
-	// Required attributes
 	private int id;
+
 	private String displayName;
 	private String internalName;
 
@@ -22,7 +22,7 @@ public class Monster {
 	private int baseExp;
 	private Stats effortPoints;
 
-	private int catchRate; // Rareness
+	private int catchRate;
 	private int happiness;
 	private Move[] moves;
 
@@ -52,10 +52,15 @@ public class Monster {
 	private int battlerPlayerY;
 	private int battlerEnemyX;
 	private int battlerEnemyY;
-	private int battlerAltitude; // typically unused
+	private int battlerAltitude;
 	private int battlerShadowSize;
 
 	private String evolutions;
-	private String FormName;
+	private String formName;
+
 	private Item incense;
+
+	public Monster() {
+
+	}
 }

@@ -9,7 +9,10 @@ public class MidiPlayer {
 
 	private Sequencer sequencer;
 
+	private String fileName;
+
 	public MidiPlayer(String fileName) {
+		this.fileName = fileName;
 		try {
 			sequencer = MidiSystem.getSequencer();
 			sequencer.open();
@@ -18,6 +21,10 @@ public class MidiPlayer {
 		} catch (Exception e) {
 			Gdx.app.error("MIDI", e.getMessage(), e);
 		}
+	}
+
+	public String getFileName() {
+		return fileName;
 	}
 
 	public void play() {

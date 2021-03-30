@@ -114,7 +114,7 @@ public class GameScreen extends ScreenAdapter {
 		tiledMapRenderer.setView(camera);
 
 		if (!WorldManager.isRetroMap()) {
-			// Render Map Layers below Actors' Z-Axis
+			// Render Map Layers below Actors' Z-Axis (Gen 3+)
 			tiledMapRenderer.render(WorldManager.belowLayers);
 		} else {
 			// Retro Worlds don't utilize Z axis, render all Layers below Actors
@@ -129,7 +129,7 @@ public class GameScreen extends ScreenAdapter {
 		}
 
 		if (!WorldManager.isRetroMap()) {
-			// Render Map Layers above Actors' Z-Axis
+			// Render Map Layers above Actors' Z-Axis (Gen 3+)
 			tiledMapRenderer.render(WorldManager.aboveLayers);
 		}
 
