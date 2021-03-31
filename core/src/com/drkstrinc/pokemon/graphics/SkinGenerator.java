@@ -39,6 +39,10 @@ public class SkinGenerator {
 		NinePatch choiceBoxOne = new NinePatch(uiAtlas.findRegion("choice1"), 12, 14, 16, 12);
 		skin.add("choicebox", choiceBoxOne);
 
+		NinePatch battleinfobox = new NinePatch(uiAtlas.findRegion("speech1"), 12, 14, 16, 12);
+		battleinfobox.setPadLeft((int) battleinfobox.getTopHeight());
+		skin.add("battleinfobox", battleinfobox);
+
 		skin.add("arrow", uiAtlas.findRegion("arrow"), TextureRegion.class);
 
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/rbygsc.ttf"));

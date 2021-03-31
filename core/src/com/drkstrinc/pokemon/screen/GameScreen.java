@@ -200,6 +200,7 @@ public class GameScreen extends ScreenAdapter {
 	public void hide() {
 		Gdx.input.setInputProcessor(null);
 		lockActors();
+		WorldManager.getMidiPlayer().stop();
 	}
 
 }
