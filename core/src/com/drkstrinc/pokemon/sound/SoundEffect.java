@@ -10,6 +10,7 @@ import com.drkstrinc.pokemon.world.WorldManager;
 public class SoundEffect {
 
 	private static Music select = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Select.wav"));
+
 	private static Music menu = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Menu.wav"));
 	private static Music save = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Save.wav"));
 
@@ -17,6 +18,8 @@ public class SoundEffect {
 	private static Music doorEnter = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Door_Enter.wav"));
 	private static Music doorExit = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Door_Exit.wav"));
 	private static Music jump = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Jump.wav"));
+
+	private static Music run = Gdx.audio.newMusic(Gdx.files.internal("audio/se/Run.wav"));
 
 	private SoundEffect() {
 
@@ -81,6 +84,12 @@ public class SoundEffect {
 			if (Pokemon.getPlayer().getDirection() != Direction.UP) {
 				jump.play();
 			}
+		}
+	}
+
+	public static void run() {
+		if (!run.isPlaying()) {
+			run.play();
 		}
 	}
 

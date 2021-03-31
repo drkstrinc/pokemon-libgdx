@@ -6,66 +6,110 @@ import com.badlogic.gdx.InputAdapter;
 
 import com.drkstrinc.pokemon.battle.Battle;
 import com.drkstrinc.pokemon.datatype.BattleState;
-import com.drkstrinc.pokemon.ui.ChoiceBox;
-import com.drkstrinc.pokemon.ui.MessageBox;
+import com.drkstrinc.pokemon.sound.SoundEffect;
+import com.drkstrinc.pokemon.ui.BattleActionBox;
 import com.drkstrinc.pokemon.ui.MoveSelectBox;
 
 public class BattleController extends InputAdapter {
 
 	private Battle battle;
 
-	private MessageBox messageBox;
-	private MoveSelectBox moveSelectBox;
-	private ChoiceBox choiceBox;
+	private BattleActionBox actionBox;
+	private MoveSelectBox moveBox;
 
-	public BattleController(Battle battle, MessageBox messageBox, MoveSelectBox moveSelectBoxBox, ChoiceBox choiceBox) {
+	public BattleController(Battle battle, BattleActionBox actionBox, MoveSelectBox moveBox) {
 		this.battle = battle;
-		this.messageBox = messageBox;
-		this.moveSelectBox = moveSelectBoxBox;
-		this.choiceBox = choiceBox;
+		this.actionBox = actionBox;
+		this.moveBox = moveBox;
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
 		if (battle.getState() == BattleState.SELECT_ACTION) {
 			if (keycode == Keys.Z) {
+				SoundEffect.select();
+				handleAction();
 				return true;
 			} else if (keycode == Keys.X) {
-				battle.setState(BattleState.RUN);
+				SoundEffect.select();
+				battle.setState(BattleState.SELECT_ACTION);
 				return true;
 			} else if (keycode == Keys.UP) {
-				choiceBox.moveUp();
+				SoundEffect.select();
+				actionBox.moveUp();
 				return true;
 			} else if (keycode == Keys.DOWN) {
-				choiceBox.moveDown();
+				SoundEffect.select();
+				actionBox.moveDown();
 				return true;
 			} else if (keycode == Keys.LEFT) {
+				SoundEffect.select();
+				actionBox.moveLeft();
 				return true;
 			} else if (keycode == Keys.RIGHT) {
+				SoundEffect.select();
+				actionBox.moveRight();
 				return true;
 			}
 		} else if (battle.getState() == BattleState.SELECT_MOVE) {
 			if (keycode == Keys.Z) {
-				Gdx.app.debug("BTL", "Selected Move: " + moveSelectBox.getSelection());
+				Gdx.app.debug("BTL", "Selected Move: " + moveBox.getSelection());
+				SoundEffect.select();
+				handleMove();
+				return true;
+			} else if (keycode == Keys.X) {
+				SoundEffect.select();
+				battle.setState(BattleState.SELECT_ACTION);
 				return true;
 			} else if (keycode == Keys.UP) {
-				moveSelectBox.moveUp();
+				SoundEffect.select();
+				moveBox.moveUp();
 				return true;
 			} else if (keycode == Keys.DOWN) {
-				moveSelectBox.moveDown();
+				SoundEffect.select();
+				moveBox.moveDown();
 				return true;
 			} else if (keycode == Keys.LEFT) {
-				moveSelectBox.moveLeft();
+				SoundEffect.select();
+				moveBox.moveLeft();
 				return true;
 			} else if (keycode == Keys.RIGHT) {
-				moveSelectBox.moveRight();
+				SoundEffect.select();
+				moveBox.moveRight();
 				return true;
 			}
-		} else if (battle.getState() == BattleState.CHOOSE_NEXT) {
+		} else if (battle.getState() == BattleState.SELECT_PKMN) {
 
 		}
 
 		return false;
+	}
+
+	private void handleAction() {
+		int sel = actionBox.getSelection();
+		if (sel == 0) {
+			battle.setState(BattleState.SELECT_MOVE);
+		} else if (sel == 1) {
+			battle.setState(BattleState.SELECT_PKMN);
+		} else if (sel == 2) {
+			battle.setState(BattleState.SELECT_ITEM);
+		} else if (sel == 3) {
+			battle.setState(BattleState.RUN);
+		}
+	}
+
+	private void handleMove() {
+		int sel = moveBox.getSelection();
+		if (sel == 0) {
+			// Move 1
+		} else if (sel == 1) {
+			// Move 2
+		} else if (sel == 2) {
+			// Move 3
+		} else if (sel == 3) {
+			// Move 4
+		}
+		battle.setState(BattleState.SELECT_ACTION);
 	}
 
 }

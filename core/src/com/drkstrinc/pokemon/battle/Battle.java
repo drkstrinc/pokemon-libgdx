@@ -25,8 +25,8 @@ public class Battle {
 	public Battle() {
 		type = BattleType.WILD;
 		turn = BattleTurn.PLAYER;
-		state = BattleState.SELECT_ACTION;
-		previousState = BattleState.SELECT_ACTION;
+		state = BattleState.INIT;
+		previousState = BattleState.INIT;
 	}
 
 	public void calculateDamage() {

@@ -6,17 +6,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.battle.Battle;
 import com.drkstrinc.pokemon.controller.BattleController;
 import com.drkstrinc.pokemon.datatype.BattleState;
 import com.drkstrinc.pokemon.sound.MidiPlayer;
-import com.drkstrinc.pokemon.ui.ChoiceBox;
-import com.drkstrinc.pokemon.ui.MessageBox;
+import com.drkstrinc.pokemon.sound.SoundEffect;
+import com.drkstrinc.pokemon.ui.BattleActionBox;
+import com.drkstrinc.pokemon.ui.BattleMessageBox;
 import com.drkstrinc.pokemon.ui.MoveSelectBox;
 
 public class BattleScreen extends ScreenAdapter {
@@ -32,30 +35,32 @@ public class BattleScreen extends ScreenAdapter {
 	private Texture background;
 
 	private Stage uiStage;
-	private Table messageRoot;
-	private MessageBox messageBox;
-	private ChoiceBox choiceBox;
-	private Table moveSelectRoot;
-	private MoveSelectBox moveSelectBox;
+
+	private Stack stack;
+	private Table battleRoot;
+
+	private BattleMessageBox messageBox;
+	private BattleActionBox actionBox;
+	private MoveSelectBox moveBox;
 
 	private SpriteBatch batch;
 	private BitmapFont font;
 
 	public BattleScreen(Pokemon game) {
 		this.game = game;
-
 		initUI();
 	}
 
 	@Override
 	public void show() {
 		Gdx.app.log("BTL", "Battle Started");
-		setupInput();
 		loadBGM();
 		initBattle();
+		setupInput();
 	}
 
 	private void setupInput() {
+		battleController = new BattleController(battle, actionBox, moveBox);
 		Gdx.input.setInputProcessor(battleController);
 	}
 
@@ -68,37 +73,48 @@ public class BattleScreen extends ScreenAdapter {
 
 		background = new Texture("image/ui/battle/BattleBG.png");
 
-		// Move Box
-		moveSelectRoot = new Table();
-		moveSelectRoot.setFillParent(true);
-		uiStage.addActor(moveSelectRoot);
+		stack = new Stack();
 
-		moveSelectBox = new MoveSelectBox(Pokemon.getSkin());
-		moveSelectBox.setVisible(false);
-
-		moveSelectRoot.add(moveSelectBox).expand().align(Align.bottomLeft);
-
-		// Choice Box
-		messageRoot = new Table();
-		messageRoot.setFillParent(true);
-		uiStage.addActor(messageRoot);
-
-		choiceBox = new ChoiceBox(Pokemon.getSkin());
-		choiceBox.addOption("Fight");
-		choiceBox.addOption("Pokemon");
-		choiceBox.addOption("Item");
-		choiceBox.addOption("Run");
-		choiceBox.setVisible(false);
+		battleRoot = new Table();
+		battleRoot.align(Align.bottom);
+		battleRoot.setWidth(Constants.GAME_WIDTH);
+		battleRoot.add(stack);
 
 		// Message Box
-		messageBox = new MessageBox(Pokemon.getSkin());
+		messageBox = new BattleMessageBox(Pokemon.getSkin());
+		messageBox.align(Align.left);
 		messageBox.setVisible(false);
 
-		Table dialogTable = new Table();
-		dialogTable.add(choiceBox).expand().align(Align.bottomRight).space(1f).row();
-		dialogTable.add(messageBox).expand().align(Align.bottom).space(1f);
+		Table messageTable = new Table();
+		messageTable.add(messageBox).align(Align.left);
+		messageTable.align(Align.left);
+		stack.add(messageTable);
 
-		messageRoot.add(dialogTable).expand().align(Align.bottom);
+		// Action Box
+		actionBox = new BattleActionBox(Pokemon.getSkin());
+		actionBox.align(Align.right);
+		actionBox.setLabel(0, "Fight");
+		actionBox.setLabel(1, "Pkmn");
+		actionBox.setLabel(2, "Pack");
+		actionBox.setLabel(3, "Run");
+		actionBox.setVisible(false);
+
+		Table actionTable = new Table();
+		actionTable.add(actionBox).align(Align.right);
+		actionTable.align(Align.right);
+		stack.add(actionTable);
+
+		uiStage.addActor(battleRoot);
+
+		// Move Box
+		moveBox = new MoveSelectBox(Pokemon.getSkin());
+		moveBox.align(Align.right);
+		moveBox.setVisible(false);
+
+		Table moveTable = new Table();
+		moveTable.add(moveBox).align(Align.right);
+		moveTable.align(Align.right);
+		stack.add(moveTable);
 	}
 
 	private void loadBGM() {
@@ -108,17 +124,20 @@ public class BattleScreen extends ScreenAdapter {
 
 	private void initBattle() {
 		battle = new Battle();
-		messageBox.animateText("Choose an action");
+		// TODO: hange to INIT after Battle Event Queue is implemented
+		battle.setState(BattleState.SELECT_ACTION);
 	}
 
 	public void updateBattleUI() {
-		if (battle.getState() == BattleState.SELECT_ACTION) {
+		if (battle.getState() == BattleState.INIT) {
+			startBattle();
+		} else if (battle.getState() == BattleState.SELECT_ACTION) {
 			startTurn();
 		} else if (battle.getState() == BattleState.SELECT_MOVE) {
 			chooseMove();
-		} else if (battle.getState() == BattleState.CHOOSE_NEXT) {
+		} else if (battle.getState() == BattleState.SELECT_PKMN) {
 			chooseNextPokemon();
-		} else if (battle.getState() == BattleState.CHOOSE_ITEM) {
+		} else if (battle.getState() == BattleState.SELECT_ITEM) {
 			chooseItem();
 		} else if (battle.getState() == BattleState.WIN) {
 			win();
@@ -141,31 +160,49 @@ public class BattleScreen extends ScreenAdapter {
 		uiStage.draw();
 	}
 
+	private void resetUI() {
+		moveBox.setVisible(false);
+		actionBox.setVisible(false);
+		messageBox.setVisible(false);
+		battleRoot.setVisible(true);
+	}
+
+	private void startBattle() {
+		battle.setState(BattleState.INIT);
+		resetUI();
+		messageBox.setVisible(true);
+		messageBox.animateText("A wild Pokemon has appeared!");
+		battle.setState(BattleState.SELECT_ACTION);
+	}
+
+	public void startTurn() {
+		battle.setState(BattleState.SELECT_ACTION);
+		resetUI();
+		messageBox.setVisible(true);
+		actionBox.setVisible(true);
+	}
+
+	public void chooseMove() {
+		battle.setState(BattleState.SELECT_MOVE);
+		resetUI();
+		messageBox.setVisible(true);
+		for (int i = 0; i <= 3; i++) {
+			String label = "------";
+			// TODO: Load current Player Pokemon moves here
+			moveBox.setLabel(i, label.toUpperCase());
+		}
+		moveBox.setVisible(true);
+	}
+
 	public void chooseNextPokemon() {
-		battle.setState(BattleState.CHOOSE_NEXT);
+		battle.setState(BattleState.SELECT_PKMN);
+		resetUI();
 		messageBox.setVisible(true);
 		messageBox.animateText("Send out next Pokemon?");
 	}
 
 	public void chooseItem() {
-
-	}
-
-	public void chooseMove() {
-		battle.setState(BattleState.SELECT_MOVE);
-		messageBox.setVisible(true);
-		for (int i = 0; i <= 3; i++) {
-			String label = "------";
-			// TODO: Load current Player Pokemon moves here
-			moveSelectBox.setLabel(i, label.toUpperCase());
-		}
-		moveSelectBox.setVisible(true);
-	}
-
-	public void startTurn() {
-		battle.setState(BattleState.SELECT_ACTION);
-		messageBox.setVisible(true);
-		choiceBox.setVisible(true);
+		resetUI();
 	}
 
 	private void win() {
@@ -179,6 +216,7 @@ public class BattleScreen extends ScreenAdapter {
 	}
 
 	private void run() {
+		SoundEffect.run();
 		battle.run();
 		game.setScreen(Pokemon.getGameScreen());
 	}

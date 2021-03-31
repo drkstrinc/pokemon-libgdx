@@ -66,6 +66,7 @@ public class GameScreen extends ScreenAdapter {
 		setupInput();
 		setupOther();
 		unlockActors();
+		WorldManager.getMidiPlayer().play();
 	}
 
 	private void setupCamera() {
