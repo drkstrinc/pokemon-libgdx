@@ -20,7 +20,7 @@ import com.drkstrinc.pokemon.sound.MidiPlayer;
 import com.drkstrinc.pokemon.sound.SoundEffect;
 import com.drkstrinc.pokemon.ui.BattleActionBox;
 import com.drkstrinc.pokemon.ui.BattleMessageBox;
-import com.drkstrinc.pokemon.ui.MoveSelectBox;
+import com.drkstrinc.pokemon.ui.MoveBox;
 
 public class BattleScreen extends ScreenAdapter {
 
@@ -41,7 +41,7 @@ public class BattleScreen extends ScreenAdapter {
 
 	private BattleMessageBox messageBox;
 	private BattleActionBox actionBox;
-	private MoveSelectBox moveBox;
+	private MoveBox moveBox;
 
 	private SpriteBatch batch;
 	private BitmapFont font;
@@ -107,7 +107,7 @@ public class BattleScreen extends ScreenAdapter {
 		uiStage.addActor(battleRoot);
 
 		// Move Box
-		moveBox = new MoveSelectBox(Pokemon.getSkin());
+		moveBox = new MoveBox(Pokemon.getSkin());
 		moveBox.align(Align.right);
 		moveBox.setVisible(false);
 
@@ -152,6 +152,10 @@ public class BattleScreen extends ScreenAdapter {
 	public void render(float delta) {
 		batch.begin();
 		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(battle.getPlayerActivePokemon().getBackSprite(), 0, 64);
+		batch.draw(battle.getEnemyActivePokemon().getFrontSprite(),
+				Gdx.graphics.getWidth() - battle.getEnemyActivePokemon().getFrontSprite().getRegionWidth(),
+				Gdx.graphics.getHeight() - battle.getEnemyActivePokemon().getFrontSprite().getRegionHeight());
 		batch.end();
 
 		updateBattleUI();
@@ -187,9 +191,7 @@ public class BattleScreen extends ScreenAdapter {
 		resetUI();
 		messageBox.setVisible(true);
 		for (int i = 0; i <= 3; i++) {
-			String label = "------";
-			// TODO: Load current Player Pokemon moves here
-			moveBox.setLabel(i, label.toUpperCase());
+			moveBox.setLabel(i, battle.getPlayerActivePokemon().getMoves()[i].getDisplayName());
 		}
 		moveBox.setVisible(true);
 	}

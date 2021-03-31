@@ -20,6 +20,8 @@ public class Pokemon extends Game {
 
 	private static GameScreen gs;
 
+	private static AssetManager assetManager;
+
 	private static Player player;
 
 	// Outside Player's House
@@ -46,12 +48,16 @@ public class Pokemon extends Game {
 	}
 
 	private void initAssetManager() {
-		AssetManager assetManager = new AssetManager();
+		assetManager = new AssetManager();
 		assetManager.load("image/ui/gs_ui.atlas", TextureAtlas.class);
 		assetManager.load("image/battlers/battlers.atlas", TextureAtlas.class);
 		assetManager.finishLoading();
 
 		skin = SkinGenerator.generateSkin(assetManager);
+	}
+
+	public static AssetManager getAssetManager() {
+		return assetManager;
 	}
 
 	public static Skin getSkin() {

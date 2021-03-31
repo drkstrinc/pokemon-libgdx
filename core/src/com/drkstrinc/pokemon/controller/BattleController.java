@@ -6,18 +6,19 @@ import com.badlogic.gdx.InputAdapter;
 
 import com.drkstrinc.pokemon.battle.Battle;
 import com.drkstrinc.pokemon.datatype.BattleState;
+import com.drkstrinc.pokemon.monster.Move;
 import com.drkstrinc.pokemon.sound.SoundEffect;
 import com.drkstrinc.pokemon.ui.BattleActionBox;
-import com.drkstrinc.pokemon.ui.MoveSelectBox;
+import com.drkstrinc.pokemon.ui.MoveBox;
 
 public class BattleController extends InputAdapter {
 
 	private Battle battle;
 
 	private BattleActionBox actionBox;
-	private MoveSelectBox moveBox;
+	private MoveBox moveBox;
 
-	public BattleController(Battle battle, BattleActionBox actionBox, MoveSelectBox moveBox) {
+	public BattleController(Battle battle, BattleActionBox actionBox, MoveBox moveBox) {
 		this.battle = battle;
 		this.actionBox = actionBox;
 		this.moveBox = moveBox;
@@ -53,7 +54,8 @@ public class BattleController extends InputAdapter {
 			}
 		} else if (battle.getState() == BattleState.SELECT_MOVE) {
 			if (keycode == Keys.Z) {
-				Gdx.app.debug("BTL", "Selected Move: " + moveBox.getSelection());
+				Gdx.app.debug("BTL", "Selected Move: "
+						+ battle.getPlayerActivePokemon().getMoves()[moveBox.getSelection()].getDisplayName());
 				SoundEffect.select();
 				handleMove();
 				return true;
@@ -100,16 +102,15 @@ public class BattleController extends InputAdapter {
 
 	private void handleMove() {
 		int sel = moveBox.getSelection();
-		if (sel == 0) {
-			// Move 1
-		} else if (sel == 1) {
-			// Move 2
-		} else if (sel == 2) {
-			// Move 3
-		} else if (sel == 3) {
-			// Move 4
+		if (battle.getPlayerActivePokemon().getMoves()[sel].getDisplayName() != Move.EMPTY) {
+			if (battle.getPlayerActivePokemon().getMoves()[sel].canUseMove()) {
+				battle.getPlayerActivePokemon().getMoves()[sel].useMove();
+				battle.setState(BattleState.SELECT_ACTION);
+				// TODO: Handle Move logic
+			} else {
+				// Not enough PP or some other reason
+			}
 		}
-		battle.setState(BattleState.SELECT_ACTION);
 	}
 
 }

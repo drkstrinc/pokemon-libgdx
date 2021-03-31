@@ -27,6 +27,18 @@ public class Battle {
 		turn = BattleTurn.PLAYER;
 		state = BattleState.INIT;
 		previousState = BattleState.INIT;
+
+		// TODO: Change this
+		playerActiveMonster = new Monster(25, 5);
+		enemyActiveMonster = new Monster(133, 5);
+	}
+
+	public Monster getPlayerActivePokemon() {
+		return playerActiveMonster;
+	}
+
+	public Monster getEnemyActivePokemon() {
+		return enemyActiveMonster;
 	}
 
 	public void calculateDamage() {

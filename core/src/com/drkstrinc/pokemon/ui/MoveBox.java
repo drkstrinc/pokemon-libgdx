@@ -7,12 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
+import com.drkstrinc.pokemon.monster.Move;
+
 /**
  * This selection box has four labels, enumerated like so: 0 1 2 3
  * 
  * @author hydrozoa
  */
-public class MoveSelectBox extends Table {
+public class MoveBox extends Table {
 
 	private int selectorIndex = 0;
 
@@ -21,17 +23,17 @@ public class MoveSelectBox extends Table {
 
 	private Table uiContainer;
 
-	public MoveSelectBox(Skin skin) {
+	public MoveBox(Skin skin) {
 		super(skin);
 		this.setBackground("choicebox");
 		this.uiContainer = new Table();
 
 		this.add(uiContainer).pad(1f);
 
-		labels[0] = new Label("-", skin);
-		labels[1] = new Label("-", skin);
-		labels[2] = new Label("-", skin);
-		labels[3] = new Label("-", skin);
+		labels[0] = new Label(Move.EMPTY, skin);
+		labels[1] = new Label(Move.EMPTY, skin);
+		labels[2] = new Label(Move.EMPTY, skin);
+		labels[3] = new Label(Move.EMPTY, skin);
 
 		arrows[0] = new Image(skin, "arrow");
 		arrows[0].setScaling(Scaling.none);
