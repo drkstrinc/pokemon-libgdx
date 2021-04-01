@@ -44,14 +44,14 @@ public class BattleMoveBox extends Table {
 		arrows[3] = new Image(skin, "arrow");
 		arrows[3].setScaling(Scaling.none);
 
-		uiContainer.add(arrows[0]).space(1f);
-		uiContainer.add(labels[0]).space(1f).align(Align.left);
-		uiContainer.add(arrows[1]).space(1f);
-		uiContainer.add(labels[1]).space(1f).align(Align.left).row();
-		uiContainer.add(arrows[2]).space(1f);
-		uiContainer.add(labels[2]).space(1f).align(Align.left);
-		uiContainer.add(arrows[3]).space(1f);
-		uiContainer.add(labels[3]).space(1f).align(Align.left);
+		uiContainer.add(arrows[0]);
+		uiContainer.add(labels[0]).align(Align.left);
+		uiContainer.add(arrows[1]);
+		uiContainer.add(labels[1]).align(Align.left).row();
+		uiContainer.add(arrows[2]);
+		uiContainer.add(labels[2]).align(Align.left);
+		uiContainer.add(arrows[3]);
+		uiContainer.add(labels[3]).align(Align.left);
 
 		setSelection(0);
 	}

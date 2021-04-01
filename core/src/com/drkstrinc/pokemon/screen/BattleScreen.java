@@ -84,7 +84,7 @@ public class BattleScreen extends ScreenAdapter {
 		uiStage = new Stage(new ScreenViewport());
 		uiStage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
-		background = new Texture("image/ui/battle/BattleBG.png");
+		background = new Texture("image/ui/battle/unpacked/BattleBG.png");
 
 		stack = new Stack();
 
@@ -105,10 +105,6 @@ public class BattleScreen extends ScreenAdapter {
 		// Action Box
 		actionBox = new BattleActionBox(Pokemon.getSkin());
 		actionBox.align(Align.right);
-		actionBox.setLabel(0, "Fight");
-		actionBox.setLabel(1, "Pkmn");
-		actionBox.setLabel(2, "Pack");
-		actionBox.setLabel(3, "Run");
 		actionBox.setVisible(false);
 
 		Table actionTable = new Table();

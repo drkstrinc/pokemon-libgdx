@@ -7,14 +7,17 @@ import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-
+import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.Pokemon;
 import com.drkstrinc.pokemon.actor.Actor;
+import com.drkstrinc.pokemon.datatype.Coordinate;
 import com.drkstrinc.pokemon.datatype.Direction;
 import com.drkstrinc.pokemon.datatype.Time;
 import com.drkstrinc.pokemon.event.Event;
@@ -42,6 +45,7 @@ public class WorldManager {
 	private static List<Integer> impassibleTileList;
 	private static List<Integer> autoTileList;
 	private static int currentTileId = 0;
+	private static Texture grass;
 
 	private static ArrayList<Actor> actors;
 	private static ArrayList<Event> events;
@@ -82,6 +86,8 @@ public class WorldManager {
 		} else {
 			timeOfDay = Time.NIGHT;
 		}
+
+		grass = new Texture(Gdx.files.local("image/pictures/Grass.png"));
 
 		// Map Connections
 		connections = new ArrayList<>();
@@ -268,6 +274,35 @@ public class WorldManager {
 				}
 			}
 		}
+	}
+
+	public static void renderGrass(SpriteBatch batch) {
+		if (timeOfDay == Time.DAY) {
+			batch.begin();
+			for (Coordinate coord : WorldManager.getGrassTiles()) {
+				batch.draw(grass, coord.getX() * Constants.TILE_WIDTH, coord.getY() * Constants.TILE_HEIGHT);
+			}
+			batch.end();
+		}
+	}
+
+	public static ArrayList<Coordinate> getGrassTiles() {
+		ArrayList<Coordinate> grassTiles = new ArrayList<>();
+		for (int z = 0; z < currentMap.getLayers().size(); z++) {
+			TiledMapTileLayer tiledLayer = (TiledMapTileLayer) currentMap.getLayers().get(z);
+			for (int x = 0; x < tiledLayer.getWidth(); x++) {
+				for (int y = 0; y < tiledLayer.getHeight(); y++) {
+					Cell cell = tiledLayer.getCell(x, y);
+					if (cell != null && cell.getTile() != null) {
+						int tileId = cell.getTile().getId() - 1;
+						if (tileId == 15) {
+							grassTiles.add(new Coordinate(x, y, z));
+						}
+					}
+				}
+			}
+		}
+		return grassTiles;
 	}
 
 }

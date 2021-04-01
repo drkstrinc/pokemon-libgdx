@@ -21,6 +21,7 @@ import com.drkstrinc.pokemon.actor.Actor;
 import com.drkstrinc.pokemon.controller.MenuController;
 import com.drkstrinc.pokemon.controller.MessageController;
 import com.drkstrinc.pokemon.controller.OverworldController;
+import com.drkstrinc.pokemon.datatype.Coordinate;
 import com.drkstrinc.pokemon.ui.ChoiceBox;
 import com.drkstrinc.pokemon.ui.MenuBox;
 import com.drkstrinc.pokemon.ui.MessageBox;
@@ -133,6 +134,9 @@ public class GameScreen extends ScreenAdapter {
 			// Render Map Layers above Actors' Z-Axis (Gen 3+)
 			tiledMapRenderer.render(WorldManager.aboveLayers);
 		}
+
+		// Grass Tile
+		WorldManager.renderGrass(batch);
 
 		// Render UI
 		uiStage.draw();

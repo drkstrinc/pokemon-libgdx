@@ -28,10 +28,10 @@ public class BattleActionBox extends Table {
 
 		this.add(uiContainer);
 
-		labels[0] = new Label("-", skin);
-		labels[1] = new Label("-", skin);
-		labels[2] = new Label("-", skin);
-		labels[3] = new Label("-", skin);
+		labels[0] = new Label("FIGHT", skin);
+		labels[1] = new Label("PKMN", skin);
+		labels[2] = new Label("PACK", skin);
+		labels[3] = new Label("RUN", skin);
 
 		arrows[0] = new Image(skin, "arrow");
 		arrows[0].setScaling(Scaling.none);
@@ -42,14 +42,14 @@ public class BattleActionBox extends Table {
 		arrows[3] = new Image(skin, "arrow");
 		arrows[3].setScaling(Scaling.none);
 
-		uiContainer.add(arrows[0]).space(1f);
-		uiContainer.add(labels[0]).space(1f).align(Align.left);
-		uiContainer.add(arrows[1]).space(1f);
-		uiContainer.add(labels[1]).space(1f).align(Align.left).row();
-		uiContainer.add(arrows[2]).space(1f);
-		uiContainer.add(labels[2]).space(1f).align(Align.left);
-		uiContainer.add(arrows[3]).space(1f);
-		uiContainer.add(labels[3]).space(1f).align(Align.left);
+		uiContainer.add(arrows[0]);
+		uiContainer.add(labels[0]).align(Align.left);
+		uiContainer.add(arrows[1]);
+		uiContainer.add(labels[1]).align(Align.left).row();
+		uiContainer.add(arrows[2]);
+		uiContainer.add(labels[2]).align(Align.left);
+		uiContainer.add(arrows[3]);
+		uiContainer.add(labels[3]).align(Align.left);
 
 		setSelection(0);
 	}

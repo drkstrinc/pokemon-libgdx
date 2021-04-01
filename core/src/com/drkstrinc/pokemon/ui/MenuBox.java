@@ -19,13 +19,13 @@ public class MenuBox extends ChoiceBox {
 		this.add(uiContainer).pad(5f);
 
 		// TODO: Dynamically add options based on Player progress
-		addOption("Pokedex");
-		addOption("Pokemon");
-		addOption("Pokegear");
-		addOption("Bag");
-		addOption(Pokemon.getPlayer().getName());
-		addOption("Save");
-		addOption("Exit");
+		addOption("POKEDEX");
+		addOption("POKEMON");
+		addOption("POKEGEAR");
+		addOption("BAG");
+		addOption(Pokemon.getPlayer().getName().toUpperCase());
+		addOption("SAVE");
+		addOption("EXIT");
 	}
 
 	@Override

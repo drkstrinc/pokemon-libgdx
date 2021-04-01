@@ -50,6 +50,7 @@ public class Pokemon extends Game {
 	private void initAssetManager() {
 		assetManager = new AssetManager();
 		assetManager.load("image/ui/gs_ui.atlas", TextureAtlas.class);
+		assetManager.load("image/ui/battle/battle_ui.atlas", TextureAtlas.class);
 		assetManager.load("image/battlers/battlers.atlas", TextureAtlas.class);
 		assetManager.finishLoading();
 
