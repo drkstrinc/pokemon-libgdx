@@ -9,7 +9,7 @@ public class Stats {
 	private int specialAttack;
 	private int specialDefense;
 
-	public Stats(int hp, int attack, int defense, int speed, int specialAttack, Integer specialDefense) {
+	public Stats(int hp, int attack, int defense, int speed, int specialAttack, int specialDefense) {
 		this.hp = hp;
 		this.attack = attack;
 		this.defense = defense;

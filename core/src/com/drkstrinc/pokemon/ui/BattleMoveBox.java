@@ -14,7 +14,7 @@ import com.drkstrinc.pokemon.monster.Move;
  * 
  * @author hydrozoa
  */
-public class MoveBox extends Table {
+public class BattleMoveBox extends Table {
 
 	private int selectorIndex = 0;
 
@@ -23,7 +23,7 @@ public class MoveBox extends Table {
 
 	private Table uiContainer;
 
-	public MoveBox(Skin skin) {
+	public BattleMoveBox(Skin skin) {
 		super(skin);
 		this.setBackground("choicebox");
 		this.uiContainer = new Table();

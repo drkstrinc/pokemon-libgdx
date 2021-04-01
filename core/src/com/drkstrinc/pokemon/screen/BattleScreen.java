@@ -20,7 +20,8 @@ import com.drkstrinc.pokemon.sound.MidiPlayer;
 import com.drkstrinc.pokemon.sound.SoundEffect;
 import com.drkstrinc.pokemon.ui.BattleActionBox;
 import com.drkstrinc.pokemon.ui.BattleMessageBox;
-import com.drkstrinc.pokemon.ui.MoveBox;
+import com.drkstrinc.pokemon.ui.BattleMoveBox;
+import com.drkstrinc.pokemon.ui.BattleMoveInfoBox;
 
 public class BattleScreen extends ScreenAdapter {
 
@@ -41,7 +42,8 @@ public class BattleScreen extends ScreenAdapter {
 
 	private BattleMessageBox messageBox;
 	private BattleActionBox actionBox;
-	private MoveBox moveBox;
+	private BattleMoveBox moveBox;
+	private BattleMoveInfoBox moveInfoBox;
 
 	private SpriteBatch batch;
 	private BitmapFont font;
@@ -64,6 +66,17 @@ public class BattleScreen extends ScreenAdapter {
 		Gdx.input.setInputProcessor(battleController);
 	}
 
+	private void loadBGM() {
+		bgm = new MidiPlayer("audio/bgm/WildBattle.mid");
+		bgm.play();
+	}
+
+	private void initBattle() {
+		battle = new Battle();
+		// TODO: hange to INIT after Battle Event Queue is implemented
+		battle.setState(BattleState.SELECT_ACTION);
+	}
+
 	private void initUI() {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
@@ -78,7 +91,6 @@ public class BattleScreen extends ScreenAdapter {
 		battleRoot = new Table();
 		battleRoot.align(Align.bottom);
 		battleRoot.setWidth(Constants.GAME_WIDTH);
-		battleRoot.add(stack);
 
 		// Message Box
 		messageBox = new BattleMessageBox(Pokemon.getSkin());
@@ -100,32 +112,48 @@ public class BattleScreen extends ScreenAdapter {
 		actionBox.setVisible(false);
 
 		Table actionTable = new Table();
-		actionTable.add(actionBox).align(Align.right);
+		actionTable.add(actionBox).align(Align.bottom);
 		actionTable.align(Align.right);
 		stack.add(actionTable);
 
-		uiStage.addActor(battleRoot);
-
 		// Move Box
-		moveBox = new MoveBox(Pokemon.getSkin());
+		moveBox = new BattleMoveBox(Pokemon.getSkin());
 		moveBox.align(Align.right);
 		moveBox.setVisible(false);
 
 		Table moveTable = new Table();
-		moveTable.add(moveBox).align(Align.right);
+		moveTable.add(moveBox).align(Align.bottom);
 		moveTable.align(Align.right);
 		stack.add(moveTable);
+
+		// Move Info Box (TODO: Make this display correctly)
+		moveInfoBox = new BattleMoveInfoBox(Pokemon.getSkin());
+		moveInfoBox.align(Align.top);
+		moveInfoBox.setVisible(false);
+
+		Table moveInfoTable = new Table();
+		moveInfoTable.align(Align.top);
+		moveInfoTable.add(moveInfoBox).align(Align.top);
+
+		battleRoot.add(stack).align(Align.bottom);
+
+		uiStage.addActor(battleRoot);
 	}
 
-	private void loadBGM() {
-		bgm = new MidiPlayer("audio/bgm/WildBattle.mid");
-		bgm.play();
-	}
+	@Override
+	public void render(float delta) {
+		batch.begin();
+		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(battle.getPlayerActivePokemon().getBackSprite(), 0, 64);
+		batch.draw(battle.getEnemyActivePokemon().getFrontSprite(),
+				Gdx.graphics.getWidth() - battle.getEnemyActivePokemon().getFrontSprite().getRegionWidth(),
+				Gdx.graphics.getHeight() - battle.getEnemyActivePokemon().getFrontSprite().getRegionHeight());
+		batch.end();
 
-	private void initBattle() {
-		battle = new Battle();
-		// TODO: hange to INIT after Battle Event Queue is implemented
-		battle.setState(BattleState.SELECT_ACTION);
+		updateBattleUI();
+
+		uiStage.act(delta);
+		uiStage.draw();
 	}
 
 	public void updateBattleUI() {
@@ -148,23 +176,8 @@ public class BattleScreen extends ScreenAdapter {
 		}
 	}
 
-	@Override
-	public void render(float delta) {
-		batch.begin();
-		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		batch.draw(battle.getPlayerActivePokemon().getBackSprite(), 0, 64);
-		batch.draw(battle.getEnemyActivePokemon().getFrontSprite(),
-				Gdx.graphics.getWidth() - battle.getEnemyActivePokemon().getFrontSprite().getRegionWidth(),
-				Gdx.graphics.getHeight() - battle.getEnemyActivePokemon().getFrontSprite().getRegionHeight());
-		batch.end();
-
-		updateBattleUI();
-
-		uiStage.act(delta);
-		uiStage.draw();
-	}
-
 	private void resetUI() {
+		moveInfoBox.setVisible(false);
 		moveBox.setVisible(false);
 		actionBox.setVisible(false);
 		messageBox.setVisible(false);
@@ -193,7 +206,13 @@ public class BattleScreen extends ScreenAdapter {
 		for (int i = 0; i <= 3; i++) {
 			moveBox.setLabel(i, battle.getPlayerActivePokemon().getMoves()[i].getDisplayName());
 		}
+		displayPP();
 		moveBox.setVisible(true);
+		moveInfoBox.setVisible(true);
+	}
+
+	private void displayPP() {
+		moveInfoBox.setText("PP: " + battle.getPlayerActivePokemon().getMoves()[moveBox.getSelection()].getCurrentPP());
 	}
 
 	public void chooseNextPokemon() {

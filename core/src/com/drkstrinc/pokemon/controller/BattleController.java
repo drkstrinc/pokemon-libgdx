@@ -9,16 +9,16 @@ import com.drkstrinc.pokemon.datatype.BattleState;
 import com.drkstrinc.pokemon.monster.Move;
 import com.drkstrinc.pokemon.sound.SoundEffect;
 import com.drkstrinc.pokemon.ui.BattleActionBox;
-import com.drkstrinc.pokemon.ui.MoveBox;
+import com.drkstrinc.pokemon.ui.BattleMoveBox;
 
 public class BattleController extends InputAdapter {
 
 	private Battle battle;
 
 	private BattleActionBox actionBox;
-	private MoveBox moveBox;
+	private BattleMoveBox moveBox;
 
-	public BattleController(Battle battle, BattleActionBox actionBox, MoveBox moveBox) {
+	public BattleController(Battle battle, BattleActionBox actionBox, BattleMoveBox moveBox) {
 		this.battle = battle;
 		this.actionBox = actionBox;
 		this.moveBox = moveBox;
@@ -92,9 +92,11 @@ public class BattleController extends InputAdapter {
 		if (sel == 0) {
 			battle.setState(BattleState.SELECT_MOVE);
 		} else if (sel == 1) {
-			battle.setState(BattleState.SELECT_PKMN);
+			Gdx.app.debug("BTL", "Not Implemented");
+			// battle.setState(BattleState.SELECT_PKMN);
 		} else if (sel == 2) {
-			battle.setState(BattleState.SELECT_ITEM);
+			Gdx.app.debug("BTL", "Not Implemented");
+			// battle.setState(BattleState.SELECT_ITEM);
 		} else if (sel == 3) {
 			battle.setState(BattleState.RUN);
 		}
