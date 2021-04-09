@@ -1,11 +1,10 @@
-package com.drkstrinc.pokemon.ui;
+package com.drkstrinc.pokemon.ui.battle;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
-import com.drkstrinc.pokemon.Constants;
 import com.drkstrinc.pokemon.datatype.MessageState;
 
 /**
@@ -13,10 +12,10 @@ import com.drkstrinc.pokemon.datatype.MessageState;
  * @author hydrozoa
  *
  */
-public class BattleMessageBox extends Table {
+public class MoveInfoBox extends Table {
 
 	private String targetText = "";
-	private int textviewWidth = 40;
+	private int textviewWidth = 30;
 
 	private float animTimer = 0f;
 	private float animationTotalTime = 0f;
@@ -26,7 +25,7 @@ public class BattleMessageBox extends Table {
 
 	private Label textLabel;
 
-	public BattleMessageBox(Skin skin) {
+	public MoveInfoBox(Skin skin) {
 		super(skin);
 		setBackground("speechbox");
 		textLabel = new Label("\n", skin);
@@ -45,7 +44,7 @@ public class BattleMessageBox extends Table {
 		return state == MessageState.IDLE;
 	}
 
-	private void setText(String text) {
+	public void setText(String text) {
 		if (!text.contains("\n")) {
 			text += "\n";
 		}
@@ -88,11 +87,11 @@ public class BattleMessageBox extends Table {
 
 	@Override
 	public float getPrefWidth() {
-		return Constants.GAME_WIDTH;
+		return 64f;
 	}
 
 	@Override
 	public float getPrefHeight() {
-		return 80f;
+		return 32f;
 	}
 }

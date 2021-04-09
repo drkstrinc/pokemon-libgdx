@@ -1,25 +1,104 @@
+
 battle_ui.png
-size:176,418
-repeat:none
+size: 176, 419
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
 BallEmpty
-bounds:14,14,14,14
+  rotate: false
+  xy: 14, 15
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
 BallFainted
-bounds:0,0,14,14
+  rotate: false
+  xy: 0, 1
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
 BallNormal
-bounds:44,94,14,14
+  rotate: false
+  xy: 44, 95
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
 BallStatus
-bounds:44,80,14,14
+  rotate: false
+  xy: 44, 81
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
 BattleEnemyBoxD
-bounds:0,108,176,46
+  rotate: false
+  xy: 0, 109
+  size: 176, 46
+  orig: 176, 46
+  offset: 0, 0
+  index: -1
 BattleEnemyBoxS
-bounds:0,200,176,62
+  rotate: false
+  xy: 0, 201
+  size: 176, 62
+  orig: 176, 62
+  offset: 0, 0
+  index: -1
 BattleOwned
-bounds:0,14,14,14
+  rotate: false
+  xy: 0, 15
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
 BattlePlayerBoxD
-bounds:0,154,176,46
+  rotate: false
+  xy: 0, 155
+  size: 176, 46
+  orig: 176, 46
+  offset: 0, 0
+  index: -1
 BattlePlayerBoxS
-bounds:0,262,176,78
+  rotate: false
+  xy: 0, 263
+  size: 176, 78
+  orig: 176, 78
+  offset: 0, 0
+  index: -1
 BattlePlayerSafari
-bounds:0,340,176,78
+  rotate: false
+  xy: 0, 341
+  size: 176, 78
+  orig: 176, 78
+  offset: 0, 0
+  index: -1
 BattleStatuses
-bounds:0,28,44,80
+  rotate: false
+  xy: 0, 29
+  size: 44, 80
+  orig: 44, 80
+  offset: 0, 0
+  index: -1
+green
+  rotate: false
+  xy: 0, 0
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+red
+  rotate: false
+  xy: 14, 14
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+yellow
+  rotate: false
+  xy: 58, 108
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1

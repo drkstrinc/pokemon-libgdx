@@ -78,6 +78,8 @@ public class Monster implements Serializable {
 	private Move[] currentMoves;
 	private Stats individualValues;
 
+	private Stats currentStats;
+
 	private int otId;
 	private String otName;
 
@@ -148,6 +150,7 @@ public class Monster implements Serializable {
 
 	private void calculateStats() {
 		// TODO: Use unique values to calculate final Stat values
+		currentStats = new Stats(25, 25, 25, 25, 25, 25);
 	}
 
 	private void initSprites() {
@@ -172,6 +175,18 @@ public class Monster implements Serializable {
 
 	public Move[] getMoves() {
 		return currentMoves;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public Stats getStats() {
+		return currentStats;
+	}
+
+	public void takeDamage(int damage) {
+		currentStats.setHP(currentStats.getHP() - damage);
 	}
 
 }

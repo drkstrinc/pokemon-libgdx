@@ -18,10 +18,12 @@ import com.drkstrinc.pokemon.controller.BattleController;
 import com.drkstrinc.pokemon.datatype.BattleState;
 import com.drkstrinc.pokemon.sound.MidiPlayer;
 import com.drkstrinc.pokemon.sound.SoundEffect;
-import com.drkstrinc.pokemon.ui.BattleActionBox;
-import com.drkstrinc.pokemon.ui.BattleMessageBox;
-import com.drkstrinc.pokemon.ui.BattleMoveBox;
-import com.drkstrinc.pokemon.ui.BattleMoveInfoBox;
+import com.drkstrinc.pokemon.ui.battle.ActionBox;
+import com.drkstrinc.pokemon.ui.battle.PlayerStatusBox;
+import com.drkstrinc.pokemon.ui.battle.MessageBox;
+import com.drkstrinc.pokemon.ui.battle.MoveBox;
+import com.drkstrinc.pokemon.ui.battle.MoveInfoBox;
+import com.drkstrinc.pokemon.ui.battle.EnemyStatusBox;
 
 public class BattleScreen extends ScreenAdapter {
 
@@ -39,11 +41,15 @@ public class BattleScreen extends ScreenAdapter {
 
 	private Stack stack;
 	private Table battleRoot;
+	private Table statusBoxRoot;
 
-	private BattleMessageBox messageBox;
-	private BattleActionBox actionBox;
-	private BattleMoveBox moveBox;
-	private BattleMoveInfoBox moveInfoBox;
+	private MessageBox messageBox;
+	private ActionBox actionBox;
+	private MoveBox moveBox;
+	private MoveInfoBox moveInfoBox;
+
+	private PlayerStatusBox playerStatus;
+	private EnemyStatusBox enemyStatus;
 
 	private SpriteBatch batch;
 	private BitmapFont font;
@@ -62,7 +68,7 @@ public class BattleScreen extends ScreenAdapter {
 	}
 
 	private void setupInput() {
-		battleController = new BattleController(battle, actionBox, moveBox);
+		battleController = new BattleController(battle, actionBox, moveBox, playerStatus, enemyStatus);
 		Gdx.input.setInputProcessor(battleController);
 	}
 
@@ -93,7 +99,7 @@ public class BattleScreen extends ScreenAdapter {
 		battleRoot.setWidth(Constants.GAME_WIDTH);
 
 		// Message Box
-		messageBox = new BattleMessageBox(Pokemon.getSkin());
+		messageBox = new MessageBox(Pokemon.getSkin());
 		messageBox.align(Align.left);
 		messageBox.setVisible(false);
 
@@ -103,7 +109,7 @@ public class BattleScreen extends ScreenAdapter {
 		stack.add(messageTable);
 
 		// Action Box
-		actionBox = new BattleActionBox(Pokemon.getSkin());
+		actionBox = new ActionBox(Pokemon.getSkin());
 		actionBox.align(Align.right);
 		actionBox.setVisible(false);
 
@@ -113,7 +119,7 @@ public class BattleScreen extends ScreenAdapter {
 		stack.add(actionTable);
 
 		// Move Box
-		moveBox = new BattleMoveBox(Pokemon.getSkin());
+		moveBox = new MoveBox(Pokemon.getSkin());
 		moveBox.align(Align.right);
 		moveBox.setVisible(false);
 
@@ -123,7 +129,7 @@ public class BattleScreen extends ScreenAdapter {
 		stack.add(moveTable);
 
 		// Move Info Box (TODO: Make this display correctly)
-		moveInfoBox = new BattleMoveInfoBox(Pokemon.getSkin());
+		moveInfoBox = new MoveInfoBox(Pokemon.getSkin());
 		moveInfoBox.align(Align.top);
 		moveInfoBox.setVisible(false);
 
@@ -133,7 +139,26 @@ public class BattleScreen extends ScreenAdapter {
 
 		battleRoot.add(stack).align(Align.bottom);
 
+		statusBoxRoot = new Table();
+		statusBoxRoot.align(Align.top);
+		statusBoxRoot.setFillParent(true);
+
+		// Player Status
+		playerStatus = new PlayerStatusBox(Pokemon.getSkin());
+		playerStatus.setText("PLAYER");
+		playerStatus.getHPBar().displayHPLeft(1f);
+		playerStatus.setHPText(25, 25);
+
+		// Enemy Status
+		enemyStatus = new EnemyStatusBox(Pokemon.getSkin());
+		enemyStatus.setText("ENEMY");
+		enemyStatus.getHPBar().displayHPLeft(1f);
+
+		statusBoxRoot.add(enemyStatus).expand().padTop(8f).padLeft(16f).align(Align.topLeft);
+		statusBoxRoot.add(playerStatus).expand().padTop(48f).padRight(16f).align(Align.right);
+
 		uiStage.addActor(battleRoot);
+		uiStage.addActor(statusBoxRoot);
 	}
 
 	@Override

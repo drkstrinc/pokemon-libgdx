@@ -42,7 +42,7 @@ public class Battle {
 	}
 
 	public void calculateDamage() {
-
+		enemyActiveMonster.takeDamage(10);
 	}
 
 	public void win() {

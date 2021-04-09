@@ -1,4 +1,4 @@
-package com.drkstrinc.pokemon.ui;
+package com.drkstrinc.pokemon.ui.battle;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -14,7 +14,7 @@ import com.drkstrinc.pokemon.monster.Move;
  * 
  * @author hydrozoa
  */
-public class BattleMoveBox extends Table {
+public class MoveBox extends Table {
 
 	private int selectorIndex = 0;
 
@@ -23,7 +23,7 @@ public class BattleMoveBox extends Table {
 
 	private Table uiContainer;
 
-	public BattleMoveBox(Skin skin) {
+	public MoveBox(Skin skin) {
 		super(skin);
 		this.setBackground("choicebox");
 		this.uiContainer = new Table();

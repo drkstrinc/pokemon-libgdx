@@ -32,7 +32,7 @@ limitMemory=true
 useIndexes=true
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
-inputFiles=[{path:unpacked/BallEmpty.png,type:Input,regionName:null},{path:unpacked/BattleStatuses.png,type:Input,regionName:null},{path:unpacked/BallFainted.png,type:Input,regionName:null},{path:unpacked/BallNormal.png,type:Input,regionName:null},{path:unpacked/BallStatus.PNG,type:Input,regionName:null},{path:unpacked/BattleEnemyBoxD.png,type:Input,regionName:null},{path:unpacked/BattleEnemyBoxS.png,type:Input,regionName:null},{path:unpacked/BattleOwned.png,type:Input,regionName:null},{path:unpacked/BattlePlayerBoxD.png,type:Input,regionName:null},{path:unpacked/BattlePlayerBoxS.png,type:Input,regionName:null},{path:unpacked/BattlePlayerSafari.png,type:Input,regionName:null}]
+inputFiles=[{path:unpacked/BallEmpty.png,type:Input,regionName:null},{path:unpacked/BattleStatuses.png,type:Input,regionName:null},{path:unpacked/BallFainted.png,type:Input,regionName:null},{path:unpacked/BallNormal.png,type:Input,regionName:null},{path:unpacked/BallStatus.PNG,type:Input,regionName:null},{path:unpacked/BattleEnemyBoxD.png,type:Input,regionName:null},{path:unpacked/BattleEnemyBoxS.png,type:Input,regionName:null},{path:unpacked/BattleOwned.png,type:Input,regionName:null},{path:unpacked/BattlePlayerBoxD.png,type:Input,regionName:null},{path:unpacked/BattlePlayerBoxS.png,type:Input,regionName:null},{path:unpacked/BattlePlayerSafari.png,type:Input,regionName:null},{path:unpacked/green.png,type:Input,regionName:null},{path:unpacked/red.png,type:Input,regionName:null},{path:unpacked/yellow.png,type:Input,regionName:null}]
 
 
 -PROJ-

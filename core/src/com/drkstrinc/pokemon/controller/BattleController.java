@@ -8,20 +8,27 @@ import com.drkstrinc.pokemon.battle.Battle;
 import com.drkstrinc.pokemon.datatype.BattleState;
 import com.drkstrinc.pokemon.monster.Move;
 import com.drkstrinc.pokemon.sound.SoundEffect;
-import com.drkstrinc.pokemon.ui.BattleActionBox;
-import com.drkstrinc.pokemon.ui.BattleMoveBox;
+import com.drkstrinc.pokemon.ui.battle.ActionBox;
+import com.drkstrinc.pokemon.ui.battle.PlayerStatusBox;
+import com.drkstrinc.pokemon.ui.battle.MoveBox;
+import com.drkstrinc.pokemon.ui.battle.EnemyStatusBox;
 
 public class BattleController extends InputAdapter {
 
 	private Battle battle;
 
-	private BattleActionBox actionBox;
-	private BattleMoveBox moveBox;
+	private ActionBox actionBox;
+	private MoveBox moveBox;
+	private PlayerStatusBox playerStatus;
+	private EnemyStatusBox enemyStatus;
 
-	public BattleController(Battle battle, BattleActionBox actionBox, BattleMoveBox moveBox) {
+	public BattleController(Battle battle, ActionBox actionBox, MoveBox moveBox, PlayerStatusBox playerStatus,
+			EnemyStatusBox enemyStatus) {
 		this.battle = battle;
 		this.actionBox = actionBox;
 		this.moveBox = moveBox;
+		this.playerStatus = playerStatus;
+		this.enemyStatus = enemyStatus;
 	}
 
 	@Override
@@ -107,12 +114,19 @@ public class BattleController extends InputAdapter {
 		if (battle.getPlayerActivePokemon().getMoves()[sel].getDisplayName() != Move.EMPTY) {
 			if (battle.getPlayerActivePokemon().getMoves()[sel].canUseMove()) {
 				battle.getPlayerActivePokemon().getMoves()[sel].useMove();
-				battle.setState(BattleState.SELECT_ACTION);
 				// TODO: Handle Move logic
+				battle.setState(BattleState.SELECT_ACTION);
+				battle.calculateDamage();
+				enemyStatus.getHPBar().displayHPLeft(battle.getEnemyActivePokemon().getStats().getHP() / 25f);
 			} else {
 				// Not enough PP or some other reason
 			}
 		}
+	}
+
+	private void updateStatus() {
+		playerStatus.setText(battle.getPlayerActivePokemon().getDisplayName());
+		enemyStatus.setText(battle.getEnemyActivePokemon().getDisplayName());
 	}
 
 }

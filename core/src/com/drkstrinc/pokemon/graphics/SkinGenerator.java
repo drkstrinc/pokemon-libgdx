@@ -32,6 +32,9 @@ public class SkinGenerator {
 		}
 
 		TextureAtlas uiAtlas = assetManager.get("image/ui/gs_ui.atlas");
+		TextureAtlas battleAtlas = assetManager.get("image/ui/battle/battle_ui.atlas");
+
+		skin.add("arrow", uiAtlas.findRegion("arrow"), TextureRegion.class);
 
 		NinePatch speechBoxOne = new NinePatch(uiAtlas.findRegion("speech1"), 12, 14, 16, 12);
 		skin.add("speechbox", speechBoxOne);
@@ -43,7 +46,11 @@ public class SkinGenerator {
 		battleinfobox.setPadLeft((int) battleinfobox.getTopHeight());
 		skin.add("battleinfobox", battleinfobox);
 
-		skin.add("arrow", uiAtlas.findRegion("arrow"), TextureRegion.class);
+		skin.add("battleplayerbox", battleAtlas.findRegion("BattlePlayerBoxS"), TextureRegion.class);
+		skin.add("battleenemybox", battleAtlas.findRegion("BattleEnemyBoxS"), TextureRegion.class);
+		skin.add("green", battleAtlas.findRegion("green"), TextureRegion.class);
+		skin.add("yellow", battleAtlas.findRegion("yellow"), TextureRegion.class);
+		skin.add("red", battleAtlas.findRegion("red"), TextureRegion.class);
 
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/rbygsc.ttf"));
 		FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();

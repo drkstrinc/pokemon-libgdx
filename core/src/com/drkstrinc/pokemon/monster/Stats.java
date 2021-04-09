@@ -22,4 +22,12 @@ public class Stats {
 		this(Integer.valueOf(statString[0]), Integer.valueOf(statString[1]), Integer.valueOf(statString[2]),
 				Integer.valueOf(statString[3]), Integer.valueOf(statString[4]), Integer.valueOf(statString[5]));
 	}
+
+	public int getHP() {
+		return hp;
+	}
+
+	public void setHP(int hp) {
+		this.hp = hp;
+	}
 }

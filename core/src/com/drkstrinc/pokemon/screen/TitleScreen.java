@@ -18,12 +18,19 @@ public class TitleScreen extends ScreenAdapter {
 	private MidiPlayer bgm;
 
 	private SpriteBatch batch;
-	private Texture titleImage;
+	private Texture backgroundImage;
+	private Texture logo;
+
+	private float backgroundX = 0;
 
 	public TitleScreen(Pokemon game) {
 		this.game = game;
 		batch = new SpriteBatch();
-		titleImage = new Texture(Gdx.files.internal("image/titles/Title.png"));
+
+		backgroundImage = new Texture(Gdx.files.internal("image/titles/Background.png"));
+		backgroundImage.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
+		logo = new Texture(Gdx.files.internal("image/titles/Logo.png"));
 	}
 
 	@Override
@@ -51,8 +58,15 @@ public class TitleScreen extends ScreenAdapter {
 
 	@Override
 	public void render(float delta) {
+		backgroundX += 2;
+		backgroundX = (backgroundX + Gdx.graphics.getDeltaTime()) % backgroundImage.getWidth();
+
 		batch.begin();
-		batch.draw(titleImage, 0, 0);
+
+		batch.draw(backgroundImage, 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight(), (int) backgroundX, 0,
+				backgroundImage.getWidth(), backgroundImage.getHeight(), false, false);
+		batch.draw(logo, 0, 0);
+
 		batch.end();
 	}
 
